@@ -1,4 +1,5 @@
 #pragma once
+#include "..\GameObjects\BackgroundBrush.h"
 
 #include <libhelpers\Dx\Renderer\IRenderer.h>
 
@@ -11,4 +12,5 @@ public:
     void OutputParametersChanged() override;
 
 private:
+    BackgroundBrush bgBrush;
 };

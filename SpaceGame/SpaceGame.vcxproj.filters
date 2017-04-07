@@ -8,11 +8,22 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Renderer\SpaceGameRenderer.h" />
+    <ClInclude Include="GameObjects\BackgroundBrush.h" />
+    <ClInclude Include="Geometry\TexVertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Renderer\SpaceGameRenderer.cpp" />
+    <ClCompile Include="GameObjects\BackgroundBrush.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\back.bmp" />
+    <Image Include="Assets\concept.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\Hlsl\TexVs.hlsl" />
+    <FxCompile Include="Shaders\Hlsl\TexPs.hlsl" />
   </ItemGroup>
 </Project>
