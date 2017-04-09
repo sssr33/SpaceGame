@@ -8,7 +8,11 @@ SpaceGameRenderer::~SpaceGameRenderer() {
 }
 
 void SpaceGameRenderer::Render() {
+    auto ctxLk = this->dxDev->LockCtxScoped();
+
+    this->bgBrush.Render(this->dxDev.get());
 }
 
 void SpaceGameRenderer::OutputParametersChanged() {
+    auto ctxLk = this->dxDev->LockCtxScoped();
 }
