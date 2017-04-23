@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Aligned.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\DataBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\DebugScopedWatch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxIncludes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers.h" />

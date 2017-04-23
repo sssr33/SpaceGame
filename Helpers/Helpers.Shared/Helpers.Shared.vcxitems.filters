@@ -122,6 +122,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowBaseData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowContainer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowMain.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\DataBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
