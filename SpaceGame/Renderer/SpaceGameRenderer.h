@@ -1,5 +1,6 @@
 #pragma once
 #include "..\GameObjects\BackgroundBrush.h"
+#include "..\GameObjects\RectRenderer.h"
 
 #include <libhelpers\Dx\Renderer\IRenderer.h>
 
@@ -13,4 +14,5 @@ public:
 
 private:
     BackgroundBrush bgBrush;
+    RectRenderer testRect;
 };

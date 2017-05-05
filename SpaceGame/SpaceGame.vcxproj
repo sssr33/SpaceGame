@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\BackgroundBrush.h" />
+    <ClInclude Include="GameObjects\RectRenderer.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Geometry\GeometryFactory.h" />
     <ClInclude Include="Geometry\TexVertex.h" />
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects\BackgroundBrush.cpp" />
+    <ClCompile Include="GameObjects\RectRenderer.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Geometry\GeometryFactory.cpp" />
     <ClCompile Include="Renderer\SpaceGameRenderer.cpp" />
@@ -201,6 +203,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\Hlsl\Color2DPs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\Hlsl\Color2DVs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shaders\Hlsl\TexPs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

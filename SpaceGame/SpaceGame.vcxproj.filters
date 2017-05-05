@@ -11,6 +11,7 @@
     <ClInclude Include="GameObjects\BackgroundBrush.h" />
     <ClInclude Include="Geometry\TexVertex.h" />
     <ClInclude Include="Geometry\GeometryFactory.h" />
+    <ClInclude Include="GameObjects\RectRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -19,6 +20,7 @@
     <ClCompile Include="Renderer\SpaceGameRenderer.cpp" />
     <ClCompile Include="GameObjects\BackgroundBrush.cpp" />
     <ClCompile Include="Geometry\GeometryFactory.cpp" />
+    <ClCompile Include="GameObjects\RectRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />
@@ -27,5 +29,7 @@
   <ItemGroup>
     <FxCompile Include="Shaders\Hlsl\TexVs.hlsl" />
     <FxCompile Include="Shaders\Hlsl\TexPs.hlsl" />
+    <FxCompile Include="Shaders\Hlsl\Color2DVs.hlsl" />
+    <FxCompile Include="Shaders\Hlsl\Color2DPs.hlsl" />
   </ItemGroup>
 </Project>
