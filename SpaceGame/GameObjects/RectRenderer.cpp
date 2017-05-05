@@ -22,8 +22,8 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
 
         for (auto &i : vertices) {
             i.color.r = 0;
-            i.color.g = 0;
-            i.color.b = 255;
+            i.color.g = 255;
+            i.color.b = 0;
             i.color.a = 255;
         }
 
@@ -61,7 +61,7 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
 
         D3D11_BUFFER_DESC bufDesc;
 
-        bufDesc.ByteWidth = sizeof(DirectX::XMMATRIX) * 3;
+        bufDesc.ByteWidth = sizeof(DirectX::XMMATRIX) * 3 + sizeof(DirectX::XMVECTOR);
         bufDesc.Usage = D3D11_USAGE_DEFAULT;
         bufDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         bufDesc.CPUAccessFlags = 0;
@@ -143,6 +143,7 @@ void RectRenderer::Render(DxDevice *dxDev) {
         DirectX::XMMATRIX mvp;
         DirectX::XMMATRIX toPixels;
         DirectX::XMMATRIX toProjected;
+        DirectX::XMVECTOR params;
     };
 
     CBuf cbufData;
@@ -152,10 +153,10 @@ void RectRenderer::Render(DxDevice *dxDev) {
 
     static float angle = 0.0f;
 
-    angle += 0.001f;
+    angle += 0.1f;
 
     cbufData.mvp = DirectX::XMMatrixIdentity();
-    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationZ(angle));
+    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(angle)));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f));
 
@@ -172,7 +173,18 @@ void RectRenderer::Render(DxDevice *dxDev) {
 
         cbufData.toPixels = DirectX::XMMatrixMultiply(cbufData.mvp, tmp);
         //cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, tmp);
-        cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, cbufData.mvp);
+        //cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, cbufData.mvp);
+
+        cbufData.toProjected = DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f);
+        cbufData.toProjected = DirectX::XMMatrixMultiply(cbufData.toProjected, tmp);
+        cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, cbufData.toProjected);
+
+        /*auto tmpVec = DirectX::XMVectorSet(HalfViewportWidth, HalfViewportHeight, 0.0f, 1.0f);
+
+        auto tmpVec2 = DirectX::XMVector3Transform(tmpVec, cbufData.toProjected);*/
+
+        cbufData.params.XF = HalfViewportWidth;
+        cbufData.params.YF = HalfViewportHeight;
     }
 
     //DirectX::XMVector3Project

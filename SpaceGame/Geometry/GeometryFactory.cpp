@@ -108,7 +108,8 @@ void GeometryFactory::CreateRectangle(float width, float height, float thickness
             DirectX::XMVECTOR posVecTmp = DirectX::XMVectorSet(vec0Tmp.x + vec1Tmp.x, vec0Tmp.y + vec1Tmp.y, 0.0f, 0.0f);
             posVecTmp = DirectX::XMVector2Normalize(posVecTmp);
 
-            posVecTmp = DirectX::XMVectorScale(posVecTmp, 2.0f);
+            /*posVecTmp = DirectX::XMVectorScale(posVecTmp, 0.5f);*/
+            posVecTmp = DirectX::XMVectorScale(posVecTmp, 1.5f);
 
             DirectX::XMFLOAT2 posVec;
 

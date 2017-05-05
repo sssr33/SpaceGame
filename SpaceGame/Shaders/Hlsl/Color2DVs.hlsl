@@ -3,6 +3,7 @@ cbuffer Matrices : register(b0) {
     matrix mvp;
     matrix toPixels;
     matrix toProjected;
+    float4 params;
 };
 
 struct VsInput {
@@ -22,13 +23,25 @@ PsInput main(VsInput input) {
     output.color = input.color;
 
     if (all(input.aaVec)) {
-        float4 aaTmp = mul(float4(input.aaVec, 0.0f, 1.0f), toProjected);
+        float4 aaTmp = float4(input.aaVec, 0.0f, 1.0f);
+        aaTmp.xy += params.xy;
+
+        aaTmp = mul(aaTmp, toProjected);
         aaTmp.zw = 0.0f;
         float4 posTmp = float4(input.pos, 0.0f, 1.0f) + aaTmp;
         output.pos = mul(posTmp, mvp);
         /*output.pos += float4(input.aaVec, 0.0f, 0.0f);
         output.pos = mul(output.pos, toProjected);*/
         output.color.a = 0;
+
+
+        //float4 aaTmp = mul(float4(input.aaVec, 0.0f, 1.0f), toProjected);
+        //aaTmp.zw = 0.0f;
+        //float4 posTmp = float4(input.pos, 0.0f, 1.0f) + aaTmp;
+        //output.pos = mul(posTmp, mvp);
+        ///*output.pos += float4(input.aaVec, 0.0f, 0.0f);
+        //output.pos = mul(output.pos, toProjected);*/
+        //output.color.a = 0;
 
         /*output.pos = mul(float4(input.pos, 0.0f, 1.0f), toPixels);
         output.pos += float4(input.aaVec, 0.0f, 0.0f);
