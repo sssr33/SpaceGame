@@ -5,6 +5,8 @@
 #include <libhelpers\HMath.h>
 
 void GeometryFactory::CreateRectangle(float width, float height, float thickness, DataBuffer<DirectX::XMFLOAT2> pos, DataBuffer<DirectX::XMFLOAT2> aaVec, DataBuffer<uint16_t> idx) {
+    GeometryFactory::CreateRectangle2(width, height, thickness);
+
     float halfWidth = width / 2;
     float halfHeight = height / 2;
     float halfThick = thickness / 2;
@@ -125,4 +127,92 @@ void GeometryFactory::CreateRectangle(float width, float height, float thickness
     calcAANormals(12, 4, pos, aaVec); // inner aa
 
     //
+}
+
+void GeometryFactory::CreateRectangle2(float width, float height, float thickness/*, DataBuffer<DirectX::XMFLOAT2> pos, DataBuffer<DirectX::XMFLOAT2> aaVec, DataBuffer<uint16_t> idx*/) {
+    struct FractIdx {
+        uint32_t num;
+        uint32_t den;
+    };
+    /*FractIdx fidx = { 0, 7 };
+    uint32_t finc = 2;*/
+
+    std::vector<uint32_t> indices;
+
+    const uint32_t offset[2][3] = {
+        { 0, 0, 1 },
+        { 1, 0, 0 }
+    };
+    const uint32_t select[2][3] = {
+        { 1, 0, 1 },
+        { 0, 1, 0 }
+    };
+    uint32_t idx[2] = { 0, 0 };
+    uint32_t idxStart[2] = { 0, 4 };
+    uint32_t idxCount[2] = { 4, 4 };
+
+    FractIdx findex[2] = {
+        { 0, 1 },
+        { 0, 1 }
+    };
+    uint32_t fincrement[2] = {
+        1,
+        1
+    };
+
+    for (uint32_t tri = 0, i = 0; tri < 8; tri++) {
+        uint32_t control = i % 2;
+        auto &sel = select[control];
+        auto &off = offset[control];
+        auto &fidx = findex[control];
+        auto &finc = fincrement[control];
+
+        for (uint32_t j = 0; j < 3; j++) {
+            uint32_t idxVal = idxStart[sel[j]] + ((idx[sel[j]] + off[j]) % idxCount[sel[j]]);
+            indices.push_back(idxVal);
+        }
+
+        idx[(control + 1) % 2]++;
+
+        fidx.num += finc;
+        if (fidx.num >= fidx.den) {
+            fidx.num %= fidx.den;
+            i++;
+        }
+    }
+
+    /*const uint32_t offset[2][3] = {
+        { 0, 1, 0 },
+        { 1, 0, 0 }
+    };
+    const uint32_t select[2][3] = {
+        { 0, 0, 1 },
+        { 1, 1, 0 }
+    };*/
+    /*const uint32_t offset[2][3] = {
+        { 0, 0, 1 },
+        { 1, 0, 0 }
+    };
+    const uint32_t select[2][3] = {
+        { 1, 0, 1 },
+        { 0, 1, 0 }
+    };
+    uint32_t idx[2] = { 0, 0 };
+    uint32_t idxStart[2] = { 0, 4 };
+    uint32_t idxCount[2] = { 4, 4 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        uint32_t control = i % 2;
+        auto &sel = select[control];
+        auto &off = offset[control];
+
+        for (uint32_t j = 0; j < 3; j++) {
+            uint32_t idxVal = idxStart[sel[j]] + ((idx[sel[j]] + off[j]) % idxCount[sel[j]]);
+            indices.push_back(idxVal);
+        }
+
+        idx[(control + 1) % 2]++;
+    }*/
+
+    int stop = 432;
 }
