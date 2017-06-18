@@ -133,6 +133,30 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
     struct FractIdx {
         uint32_t num;
         uint32_t den;
+
+        FractIdx simplified() const {
+            FractIdx res;
+            FractIdx tmp = *this;
+
+            while (true) {
+                if (tmp.num > tmp.den) {
+                    tmp.num = tmp.num - tmp.den;
+                }
+                else if (tmp.num < tmp.den) {
+                    tmp.den = tmp.den - tmp.num;
+                }
+                else if (tmp.num == tmp.den) {
+                    break;
+                }
+            }
+
+            if (tmp.num) {
+                res.num = this->num / tmp.num;
+                res.den = this->den / tmp.num;
+            }
+
+            return res;
+        }
     };
     /*FractIdx fidx = { 0, 7 };
     uint32_t finc = 2;*/
@@ -144,12 +168,16 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
         { 1, 0, 0 }
     };
     const uint32_t select[2][3] = {
+        { 0, 1, 0 },
         { 1, 0, 1 },
-        { 0, 1, 0 }
     };
     uint32_t idx[2] = { 0, 0 };
-    uint32_t idxStart[2] = { 0, 4 };
+    uint32_t idxStart[2] = { 4, 0 };
     uint32_t idxCount[2] = { 4, 4 };
+
+    FractIdx test = { 2, 6 };
+    auto t2 = test.simplified();
+    int stop22 = 234;
 
     FractIdx findex[2] = {
         { 0, 1 },
@@ -172,7 +200,7 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
             indices.push_back(idxVal);
         }
 
-        idx[(control + 1) % 2]++;
+        idx[control]++;
 
         fidx.num += finc;
         if (fidx.num >= fidx.den) {
@@ -180,6 +208,8 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
             i++;
         }
     }
+
+    int stop = 324;
 
     /*const uint32_t offset[2][3] = {
         { 0, 1, 0 },
@@ -213,6 +243,4 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
 
         idx[(control + 1) % 2]++;
     }*/
-
-    int stop = 432;
 }
