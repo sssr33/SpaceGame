@@ -5,7 +5,7 @@
 #include <libhelpers\HMath.h>
 
 void GeometryFactory::CreateRectangle(float width, float height, float thickness, DataBuffer<DirectX::XMFLOAT2> pos, DataBuffer<DirectX::XMFLOAT2> aaVec, DataBuffer<uint16_t> idx) {
-    GeometryFactory::CreateRectangle2(width, height, thickness);
+    GeometryFactory::CreateRectangle2(width, height, thickness, 0.3f);
 
     float halfWidth = width / 2;
     float halfHeight = height / 2;
@@ -129,7 +129,44 @@ void GeometryFactory::CreateRectangle(float width, float height, float thickness
     //
 }
 
-void GeometryFactory::CreateRectangle2(float width, float height, float thickness/*, DataBuffer<DirectX::XMFLOAT2> pos, DataBuffer<DirectX::XMFLOAT2> aaVec, DataBuffer<uint16_t> idx*/) {
+void GeometryFactory::CreateRectangle2(float width, float height, float thickness, float roundness) {
+    float lineLen = 1.0f - roundness;
+    //float halfWidth = width / 2.0f;
+    //float halfHeight = height / 2.0f;
+    // 0 - outer; 1 - inner
+    float halfWidth[2];
+    float halfHeight[2];
+
+    halfWidth[0] = (width + thickness) / 2.0f;
+    halfWidth[1] = (width - thickness) / 2.0f;
+    halfHeight[0] = (height + thickness) / 2.0f;
+    halfHeight[1] = (height - thickness) / 2.0f;
+
+    for (uint32_t i = 0; i < 2; i++) {
+        DirectX::XMFLOAT2 ltStart; // begin of quadratic curve
+        DirectX::XMFLOAT2 ltEnd; // end of quadratic curve; control point not used because sin/cos is used
+        DirectX::XMFLOAT2 rtStart;
+
+        ltStart.x = -halfWidth[i];
+        ltStart.y = halfHeight[i] * lineLen;
+
+        ltEnd.x = -halfWidth[i] * lineLen;
+        ltEnd.y = halfHeight[i];
+
+        rtStart.x = halfWidth[i] * lineLen;
+        rtStart.y = halfHeight[i];
+
+        if (!H::Math::NearEqual(ltStart, ltEnd)) {
+            // make quadratic curve segment
+        }
+
+        if (!H::Math::NearEqual(ltEnd, rtStart)) {
+            // make line segment
+        }
+    }
+}
+
+void GeometryFactory::GenLineIndexes(uint32_t topStart, uint32_t topCount, uint32_t bottomStart, uint32_t bottomCount, bool close) {
     struct FractIdx {
         uint32_t num;
         uint32_t den;
@@ -158,8 +195,6 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
             return res;
         }
     };
-    /*FractIdx fidx = { 0, 7 };
-    uint32_t finc = 2;*/
 
     std::vector<uint32_t> indices;
 
@@ -171,24 +206,26 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
         { 0, 1, 0 },
         { 1, 0, 1 },
     };
+    
+    uint32_t triCount = (topCount + bottomCount) - (close ? 0 : 2);
     uint32_t idx[2] = { 0, 0 };
-    uint32_t idxStart[2] = { 4, 0 };
-    uint32_t idxCount[2] = { 4, 4 };
+    uint32_t idxStart[2] = { bottomStart, topStart };
+    uint32_t idxCount[2] = { bottomCount, topCount };
 
-    FractIdx test = { 2, 6 };
-    auto t2 = test.simplified();
-    int stop22 = 234;
+    // if bottom has more indices then its index must change slower, and get more triangles
+    // fincrement used as increment for numerator
+    bool bottomFidx = bottomCount > topCount;
 
     FractIdx findex[2] = {
-        { 0, 1 },
-        { 0, 1 }
+        { 0, bottomFidx ? bottomCount : 1 },
+        { 0, bottomFidx ? 1 : topCount }
     };
     uint32_t fincrement[2] = {
-        1,
-        1
+        bottomFidx ? topCount : 1,
+        bottomFidx ? 1 : bottomCount
     };
 
-    for (uint32_t tri = 0, i = 0; tri < 8; tri++) {
+    for (uint32_t tri = 0, i = 0; tri < triCount; tri++) {
         uint32_t control = i % 2;
         auto &sel = select[control];
         auto &off = offset[control];
@@ -210,37 +247,4 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
     }
 
     int stop = 324;
-
-    /*const uint32_t offset[2][3] = {
-        { 0, 1, 0 },
-        { 1, 0, 0 }
-    };
-    const uint32_t select[2][3] = {
-        { 0, 0, 1 },
-        { 1, 1, 0 }
-    };*/
-    /*const uint32_t offset[2][3] = {
-        { 0, 0, 1 },
-        { 1, 0, 0 }
-    };
-    const uint32_t select[2][3] = {
-        { 1, 0, 1 },
-        { 0, 1, 0 }
-    };
-    uint32_t idx[2] = { 0, 0 };
-    uint32_t idxStart[2] = { 0, 4 };
-    uint32_t idxCount[2] = { 4, 4 };
-
-    for (uint32_t i = 0; i < 8; i++) {
-        uint32_t control = i % 2;
-        auto &sel = select[control];
-        auto &off = offset[control];
-
-        for (uint32_t j = 0; j < 3; j++) {
-            uint32_t idxVal = idxStart[sel[j]] + ((idx[sel[j]] + off[j]) % idxCount[sel[j]]);
-            indices.push_back(idxVal);
-        }
-
-        idx[(control + 1) % 2]++;
-    }*/
 }
