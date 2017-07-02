@@ -12,43 +12,71 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
     // geometry
     {
         // * 2 - for antialiasing geometry
-        uint16_t indices[24 * 3];
-        ColorVertex2D vertices[8 * 2];
+        /*uint16_t indices[24 * 3];
+        ColorVertex2D vertices[8 * 2];*/
 
-        GeometryFactory::CreateRectangle(1.0f, 1.0f, 0.01f, 
+        std::vector<DirectX::XMFLOAT2> pos;
+        std::vector<DirectX::XMFLOAT2> aa;
+        std::vector<uint32_t> indices2;
+
+        std::vector<ColorVertex2D> vertices;
+        std::vector<uint16_t> indices;
+
+        GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.3f, pos, aa, indices2);
+
+        this->indexCount = indices2.size();
+
+        /*GeometryFactory::CreateRectangle(1.0f, 1.0f, 0.01f, 
             DataBuffer<DirectX::XMFLOAT2>(vertices, &vertices->pos),
             DataBuffer<DirectX::XMFLOAT2>(vertices, &vertices->aaVec),
-            DataBuffer<uint16_t>(indices));
+            DataBuffer<uint16_t>(indices));*/
 
-        for (auto &i : vertices) {
+        /*for (auto &i : vertices) {
             i.color.r = 0;
             i.color.g = 255;
             i.color.b = 0;
             i.color.a = 255;
+        }*/
+
+        for (auto &i : indices2) {
+            indices.push_back(i);
+        }
+
+        for (size_t i = 0; i < pos.size(); i++) {
+            ColorVertex2D v;
+
+            v.aaVec = aa[i];
+            v.color.r = 0;
+            v.color.g = 255;
+            v.color.b = 0;
+            v.color.a = 255;
+            v.pos = pos[i];
+
+            vertices.push_back(v);
         }
 
         D3D11_BUFFER_DESC bufDesc;
         D3D11_SUBRESOURCE_DATA initData;
 
-        bufDesc.ByteWidth = sizeof(vertices);
+        bufDesc.ByteWidth = vertices.size() * sizeof(ColorVertex2D);
         bufDesc.Usage = D3D11_USAGE_DEFAULT;
         bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufDesc.CPUAccessFlags = 0;
         bufDesc.MiscFlags = 0;
         bufDesc.StructureByteStride = 0;
 
-        initData.pSysMem = vertices;
+        initData.pSysMem = vertices.data();
         initData.SysMemPitch = initData.SysMemSlicePitch = 0;
 
-        hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->vertexBuf.GetAddressOf());
+        hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->vertexBuf.ReleaseAndGetAddressOf());
         H::System::ThrowIfFailed(hr);
 
-        bufDesc.ByteWidth = sizeof(indices);
+        bufDesc.ByteWidth = indices.size() * sizeof(uint16_t);
         bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-        initData.pSysMem = indices;
+        initData.pSysMem = indices.data();
 
-        hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->idxBuf.GetAddressOf());
+        hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->idxBuf.ReleaseAndGetAddressOf());
         H::System::ThrowIfFailed(hr);
     }
 
@@ -129,6 +157,87 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
 void RectRenderer::Render(DxDevice *dxDev) {
     auto d3dCtx = dxDev->D3D();
 
+    {
+        HRESULT hr = S_OK;
+        auto d3dDev = dxDev->GetD3DDevice();
+        static float angle2 = 0.0f;
+
+        // geometry
+        {
+            // * 2 - for antialiasing geometry
+            /*uint16_t indices[24 * 3];
+            ColorVertex2D vertices[8 * 2];*/
+
+            std::vector<DirectX::XMFLOAT2> pos;
+            std::vector<DirectX::XMFLOAT2> aa;
+            std::vector<uint32_t> indices2;
+
+            std::vector<ColorVertex2D> vertices;
+            std::vector<uint16_t> indices;
+
+            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), pos, aa, indices2);
+            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.3f, pos, aa, indices2);
+            // with 1.0 roundness there is small bug with no aa part on north, sound, west, east furthest points of circle
+
+            this->indexCount = indices2.size();
+
+            /*GeometryFactory::CreateRectangle(1.0f, 1.0f, 0.01f,
+            DataBuffer<DirectX::XMFLOAT2>(vertices, &vertices->pos),
+            DataBuffer<DirectX::XMFLOAT2>(vertices, &vertices->aaVec),
+            DataBuffer<uint16_t>(indices));*/
+
+            /*for (auto &i : vertices) {
+            i.color.r = 0;
+            i.color.g = 255;
+            i.color.b = 0;
+            i.color.a = 255;
+            }*/
+
+            for (auto &i : indices2) {
+                indices.push_back(i);
+            }
+
+            for (size_t i = 0; i < pos.size(); i++) {
+                ColorVertex2D v;
+
+                v.aaVec = aa[i];
+                v.color.r = 0;
+                v.color.g = 255;
+                v.color.b = 0;
+                v.color.a = 255;
+                v.pos = pos[i];
+
+                vertices.push_back(v);
+            }
+
+            D3D11_BUFFER_DESC bufDesc;
+            D3D11_SUBRESOURCE_DATA initData;
+
+            bufDesc.ByteWidth = vertices.size() * sizeof(ColorVertex2D);
+            bufDesc.Usage = D3D11_USAGE_DEFAULT;
+            bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+            bufDesc.CPUAccessFlags = 0;
+            bufDesc.MiscFlags = 0;
+            bufDesc.StructureByteStride = 0;
+
+            initData.pSysMem = vertices.data();
+            initData.SysMemPitch = initData.SysMemSlicePitch = 0;
+
+            hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->vertexBuf.ReleaseAndGetAddressOf());
+            H::System::ThrowIfFailed(hr);
+
+            bufDesc.ByteWidth = indices.size() * sizeof(uint16_t);
+            bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+            initData.pSysMem = indices.data();
+
+            hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->idxBuf.ReleaseAndGetAddressOf());
+            H::System::ThrowIfFailed(hr);
+        }
+
+        angle2 += 0.01f;
+    }
+
     uint32_t numViewPorts = 1;
     D3D11_VIEWPORT viewport;
 
@@ -153,7 +262,7 @@ void RectRenderer::Render(DxDevice *dxDev) {
 
     static float angle = 0.0f;
 
-    angle += 0.1f;
+    //angle += 0.1f;
 
     cbufData.mvp = DirectX::XMMatrixIdentity();
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(angle)));
@@ -223,5 +332,6 @@ void RectRenderer::Render(DxDevice *dxDev) {
     /*d3dCtx->RSSetState(this->rsState.Get());
     d3dCtx->OMSetDepthStencilState(this->dsState.Get(), 0);*/
 
-    d3dCtx->DrawIndexed(72, 0, 0);
+    d3dCtx->DrawIndexed(this->indexCount, 0, 0);
+    //d3dCtx->DrawIndexed(3 * 4, 0, 0);
 }

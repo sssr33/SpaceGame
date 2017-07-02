@@ -556,6 +556,6 @@ namespace H {
         bool xNearEqu = DirectX::XMScalarNearEqual(a.x, b.x, epsilon);
         bool yNearEqu = DirectX::XMScalarNearEqual(a.y, b.y, epsilon);
 
-        return xNearEqu || yNearEqu;
+        return xNearEqu && yNearEqu;
     }
 }

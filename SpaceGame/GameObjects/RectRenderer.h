@@ -17,6 +17,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> vsCBuf;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> ps;
 
+    uint32_t indexCount;
+
     /*Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsState;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState;*/
 };
