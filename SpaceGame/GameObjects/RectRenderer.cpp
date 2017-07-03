@@ -16,13 +16,15 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
         ColorVertex2D vertices[8 * 2];*/
 
         std::vector<DirectX::XMFLOAT2> pos;
-        std::vector<DirectX::XMFLOAT2> aa;
+        std::vector<DirectX::XMFLOAT2> adjPrev;
+        std::vector<DirectX::XMFLOAT2> adjNext;
+        std::vector<float> aaDir;
         std::vector<uint32_t> indices2;
 
         std::vector<ColorVertex2D> vertices;
         std::vector<uint16_t> indices;
 
-        GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.3f, pos, aa, indices2);
+        GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
 
         this->indexCount = indices2.size();
 
@@ -45,12 +47,14 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
         for (size_t i = 0; i < pos.size(); i++) {
             ColorVertex2D v;
 
-            v.aaVec = aa[i];
             v.color.r = 0;
             v.color.g = 255;
             v.color.b = 0;
             v.color.a = 255;
             v.pos = pos[i];
+            v.adjPrev = adjPrev[i];
+            v.adjNext = adjNext[i];
+            v.aaDir = aaDir[i];
 
             vertices.push_back(v);
         }
@@ -102,6 +106,8 @@ RectRenderer::RectRenderer(DxDevice *dxDev) {
         D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
             { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 2, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
         };
 
@@ -169,15 +175,16 @@ void RectRenderer::Render(DxDevice *dxDev) {
             ColorVertex2D vertices[8 * 2];*/
 
             std::vector<DirectX::XMFLOAT2> pos;
-            std::vector<DirectX::XMFLOAT2> aa;
+            std::vector<DirectX::XMFLOAT2> adjPrev;
+            std::vector<DirectX::XMFLOAT2> adjNext;
+            std::vector<float> aaDir;
             std::vector<uint32_t> indices2;
 
             std::vector<ColorVertex2D> vertices;
             std::vector<uint16_t> indices;
 
-            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), pos, aa, indices2);
-            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 1.0f, pos, aa, indices2);
-            // with 1.0 roundness there is small bug with no aa part on north, sound, west, east furthest points of circle
+            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), pos, adjPrev, adjNext, aaDir, indices2);
+            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
 
             this->indexCount = indices2.size();
 
@@ -200,12 +207,14 @@ void RectRenderer::Render(DxDevice *dxDev) {
             for (size_t i = 0; i < pos.size(); i++) {
                 ColorVertex2D v;
 
-                v.aaVec = aa[i];
                 v.color.r = 0;
                 v.color.g = 255;
                 v.color.b = 0;
                 v.color.a = 255;
                 v.pos = pos[i];
+                v.adjPrev = adjPrev[i];
+                v.adjNext = adjNext[i];
+                v.aaDir = aaDir[i];
 
                 vertices.push_back(v);
             }
@@ -265,7 +274,7 @@ void RectRenderer::Render(DxDevice *dxDev) {
     angle += 0.1f;
 
     cbufData.mvp = DirectX::XMMatrixIdentity();
-    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(50.0f)));
+    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(80)));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
     //cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f));
@@ -281,7 +290,7 @@ void RectRenderer::Render(DxDevice *dxDev) {
             DirectX::XMMatrixScaling(Scale.XF, Scale.YF, 1.0f),
             DirectX::XMMatrixTranslation(Offset.XF, Offset.YF, 0.0f));
 
-        cbufData.toPixels = DirectX::XMMatrixMultiply(cbufData.mvp, tmp);
+        cbufData.toPixels = tmp;// DirectX::XMMatrixMultiply(cbufData.mvp, tmp);
         //cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, tmp);
         //cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, cbufData.mvp);
 

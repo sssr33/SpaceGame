@@ -9,7 +9,14 @@ class GeometryFactory {
 public:
     static void CreateRectangle(float width, float height, float thickness, DataBuffer<DirectX::XMFLOAT2> pos, DataBuffer<DirectX::XMFLOAT2> aaVec, DataBuffer<uint16_t> idx);
 
-    static void CreateRectangle2(float width, float height, float thickness, float roundness, std::vector<DirectX::XMFLOAT2> &pos, std::vector<DirectX::XMFLOAT2> &aa, std::vector<uint32_t> &indices);
+    static void CreateRectangle2(
+        float width, float height,
+        float thickness, float roundness,
+        std::vector<DirectX::XMFLOAT2> &pos,
+        std::vector<DirectX::XMFLOAT2> &adjPrev,
+        std::vector<DirectX::XMFLOAT2> &adjNext,
+        std::vector<float> &aaDir,
+        std::vector<uint32_t> &indices);
 
 private:
 

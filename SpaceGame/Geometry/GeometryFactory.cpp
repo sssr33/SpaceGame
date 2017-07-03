@@ -128,7 +128,15 @@ void GeometryFactory::CreateRectangle(float width, float height, float thickness
     //
 }
 
-void GeometryFactory::CreateRectangle2(float width, float height, float thickness, float roundness, std::vector<DirectX::XMFLOAT2> &pos, std::vector<DirectX::XMFLOAT2> &aa, std::vector<uint32_t> &indices) {
+void GeometryFactory::CreateRectangle2(
+    float width, float height,
+    float thickness, float roundness,
+    std::vector<DirectX::XMFLOAT2> &pos,
+    std::vector<DirectX::XMFLOAT2> &adjPrev,
+    std::vector<DirectX::XMFLOAT2> &adjNext,
+    std::vector<float> &aaDir,
+    std::vector<uint32_t> &indices)
+{
     float lineLen = 1.0f - roundness;
     //float halfWidth = width / 2.0f;
     //float halfHeight = height / 2.0f;
@@ -183,7 +191,9 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
                 pt.y = H::Math::Lerp(ltStart.y, ltEnd.y, softT.y);
 
                 pos.push_back(pt);
-                aa.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                aaDir.push_back(0.0f);
             }
         }
 
@@ -197,7 +207,9 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
                 pt.y = H::Math::Lerp(ltEnd.y, rtStart.y, t);
 
                 pos.push_back(pt);
-                aa.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                aaDir.push_back(0.0f);
             }
         }
 
@@ -208,7 +220,9 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
 
             H::Math::Rotate90CW(vertex.x, vertex.y);
             pos.push_back(vertex);
-            aa.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            aaDir.push_back(0.0f);
         }
 
         totalCount[i] = pos.size() - curIdx[i];
@@ -222,28 +236,32 @@ void GeometryFactory::CreateRectangle2(float width, float height, float thicknes
             auto vNext = pos[curIdx[i] + jNext];
             pos.push_back(vertex);
 
-            DirectX::XMFLOAT2 vec0Tmp(vertex.x - vPrev.x, vertex.y - vPrev.y);
-            DirectX::XMFLOAT2 vec1Tmp(vNext.x - vertex.x, vNext.y - vertex.y);
+            //DirectX::XMFLOAT2 vec0Tmp(vertex.x - vPrev.x, vertex.y - vPrev.y);
+            //DirectX::XMFLOAT2 vec1Tmp(vNext.x - vertex.x, vNext.y - vertex.y);
 
-            H::Math::Rotate90CCW(vec0Tmp.x, vec0Tmp.y);
-            H::Math::Rotate90CCW(vec1Tmp.x, vec1Tmp.y);
+            //H::Math::Rotate90CCW(vec0Tmp.x, vec0Tmp.y);
+            //H::Math::Rotate90CCW(vec1Tmp.x, vec1Tmp.y);
 
-            DirectX::XMVECTOR posVecTmp = DirectX::XMVectorSet(vec0Tmp.x + vec1Tmp.x, vec0Tmp.y + vec1Tmp.y, 0.0f, 0.0f);
-            posVecTmp = DirectX::XMVector2Normalize(posVecTmp);
+            //DirectX::XMVECTOR posVecTmp = DirectX::XMVectorSet(vec0Tmp.x + vec1Tmp.x, vec0Tmp.y + vec1Tmp.y, 0.0f, 0.0f);
+            //posVecTmp = DirectX::XMVector2Normalize(posVecTmp);
 
-            posVecTmp = DirectX::XMVectorScale(posVecTmp, 1.0f);
-            //posVecTmp = DirectX::XMVectorScale(posVecTmp, 1.5f);
+            ////posVecTmp = DirectX::XMVectorScale(posVecTmp, 1.0f);
+            ////posVecTmp = DirectX::XMVectorScale(posVecTmp, 1.5f);
 
-            DirectX::XMFLOAT2 posVec;
+            ////posVecTmp = DirectX::XMVectorScale(posVecTmp, 0.01f);
 
-            DirectX::XMStoreFloat2(&posVec, posVecTmp);
+            //DirectX::XMFLOAT2 posVec;
 
-            posVec.y = -posVec.y;
+            //DirectX::XMStoreFloat2(&posVec, posVecTmp);
 
-            posVec.x *= vecScale[i];
-            posVec.y *= vecScale[i];
+            //posVec.y = -posVec.y;
 
-            aa.push_back(posVec);
+            /*posVec.x *= vecScale[i];
+            posVec.y *= vecScale[i];*/
+
+            adjPrev.push_back(vPrev);
+            adjNext.push_back(vNext);
+            aaDir.push_back(vecScale[i]);
         }
     }
 
