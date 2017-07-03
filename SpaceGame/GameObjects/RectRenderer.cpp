@@ -175,8 +175,8 @@ void RectRenderer::Render(DxDevice *dxDev) {
             std::vector<ColorVertex2D> vertices;
             std::vector<uint16_t> indices;
 
-            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), pos, aa, indices2);
-            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.3f, pos, aa, indices2);
+            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), pos, aa, indices2);
+            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 1.0f, pos, aa, indices2);
             // with 1.0 roundness there is small bug with no aa part on north, sound, west, east furthest points of circle
 
             this->indexCount = indices2.size();
@@ -262,12 +262,13 @@ void RectRenderer::Render(DxDevice *dxDev) {
 
     static float angle = 0.0f;
 
-    //angle += 0.1f;
+    angle += 0.1f;
 
     cbufData.mvp = DirectX::XMMatrixIdentity();
-    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(angle)));
+    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(50.0f)));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
-    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f));
+    //cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f));
+    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f));
 
     {
         const float HalfViewportWidth = viewport.Width * 0.5f;
@@ -284,8 +285,8 @@ void RectRenderer::Render(DxDevice *dxDev) {
         //cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, tmp);
         //cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, cbufData.mvp);
 
-        cbufData.toProjected = DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f);
-        cbufData.toProjected = DirectX::XMMatrixMultiply(cbufData.toProjected, tmp);
+        //cbufData.toProjected = DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f);
+        cbufData.toProjected = tmp;// DirectX::XMMatrixMultiply(cbufData.toProjected, tmp);
         cbufData.toProjected = DirectX::XMMatrixInverse(nullptr, cbufData.toProjected);
 
         /*auto tmpVec = DirectX::XMVectorSet(HalfViewportWidth, HalfViewportHeight, 0.0f, 1.0f);
