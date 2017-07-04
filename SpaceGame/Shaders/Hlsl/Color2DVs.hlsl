@@ -19,11 +19,20 @@ struct PsInput {
     float4 color : COLOR0;
 };
 
-float2 rot90(float2 v) {
+float2 rot90cw(float2 v) {
     float2 rotated;
 
     rotated.x = -v.y;
     rotated.y = v.x;
+
+    return rotated;
+}
+
+float2 rot90ccw(float2 v) {
+    float2 rotated;
+
+    rotated.x = v.y;
+    rotated.y = -v.x;
 
     return rotated;
 }
@@ -41,6 +50,25 @@ float2 calcNorm2d(float2 a, float2 b) {
     }
 
     return vec;
+}
+
+float2 intersect(float2 p0, float2 v0, float2 p1, float2 v1) {
+    float2 intersection;
+
+    float d = v0.x * v1.y - v0.y * v1.x;
+
+    if (abs(d) < 0.0001f) {
+        intersection = p0;
+    }
+    else
+    {
+        float n = (p1.x - p0.x) * v1.y - (p1.y - p0.y) * v1.x;
+        float t = n / d;
+
+        intersection = p0 + v0 * t;
+    }
+
+    return intersection;
 }
 
 PsInput main(VsInput input) {
@@ -72,17 +100,37 @@ PsInput main(VsInput input) {
         /*float2 vecPrev2d = normalize(posPrevTmp2d - posTmp2d);
         float2 vecNext2d = normalize(posTmp2d - posNextTmp2d);*/
 
-        float2 vecPrev2d = calcNorm2d(posPrevTmp2d, posTmp2d);
+        float2 vecPrev2d = calcNorm2d(posTmp2d, posPrevTmp2d);
         float2 vecNext2d = calcNorm2d(posTmp2d, posNextTmp2d);
 
-        vecPrev2d = rot90(vecPrev2d);
-        vecNext2d = rot90(vecNext2d);
+        const float AAScale = 1.0f;
 
-        // TODO add better vector calculation, taking into accound needed thickness of AA
+        float2 pos2dPrevC = posTmp2d - vecPrev2d * AAScale;
+        float2 pos2dNextC = posTmp2d - vecNext2d * AAScale;
 
-        float2 aaVec = normalize(vecPrev2d + vecNext2d) * 1.0f * input.aaDir;
+        vecPrev2d = rot90ccw(vecPrev2d);
+        vecNext2d = rot90cw(vecNext2d);
 
-        posTmp2d += aaVec;
+        vecPrev2d *= input.aaDir;
+        vecNext2d *= input.aaDir;
+
+        //if (input.aaDir > 0.0)
+        {
+            pos2dPrevC += vecPrev2d * AAScale;
+            pos2dNextC += vecNext2d * AAScale;
+
+            vecPrev2d = rot90cw(vecPrev2d);
+            vecNext2d = rot90ccw(vecNext2d);
+        }
+
+        // add better vector calculation, taking into accound needed thickness of AA - complete with intersect
+        // TODO improve AA further for perspective projection and also for back faces(!)
+
+        posTmp2d = intersect(pos2dPrevC, vecPrev2d, pos2dNextC, vecNext2d);
+
+        //float2 aaVec = normalize(vecPrev2d + vecNext2d) * AAScale * input.aaDir;
+
+        //posTmp2d += aaVec;
 
         posTmp.xy = mul(float4(posTmp2d, 0.0f, 1.0f), toProjected).xy;
 
