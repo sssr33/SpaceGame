@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <Windows.h>
 #include <libhelpers\HMath.h>
+#include <libhelpers\HSystem.h>
 
 void GeometryFactory::CreateRectangle(float width, float height, float thickness, DataBuffer<DirectX::XMFLOAT2> pos, DataBuffer<DirectX::XMFLOAT2> aaVec, DataBuffer<uint16_t> idx) {
     float halfWidth = width / 2;
@@ -128,19 +129,20 @@ void GeometryFactory::CreateRectangle(float width, float height, float thickness
     //
 }
 
+// TODO comments(!!!), refactoring(!)
 void GeometryFactory::CreateRectangle2(
     float width, float height,
-    float thickness, float roundness,
+    float thickness, float roundnessOuter, float roundnessInner,
     std::vector<DirectX::XMFLOAT2> &pos,
     std::vector<DirectX::XMFLOAT2> &adjPrev,
     std::vector<DirectX::XMFLOAT2> &adjNext,
     std::vector<float> &aaDir,
     std::vector<uint32_t> &indices)
 {
-    float lineLen = 1.0f - roundness;
     //float halfWidth = width / 2.0f;
     //float halfHeight = height / 2.0f;
     // 0 - outer; 1 - inner
+    float lineLen[2];
     float halfWidth[2];
     float halfHeight[2];
     uint32_t curIdx[2];
@@ -148,10 +150,16 @@ void GeometryFactory::CreateRectangle2(
     uint32_t quadIdxCount[2];
     uint32_t lineIdxCount[2];
     uint32_t totalCount[2];
+    DirectX::XMFLOAT2 ltStart[2]; // begin of quadratic curve
+    DirectX::XMFLOAT2 ltEnd[2]; // end of quadratic curve; control point not used because sin/cos is used
+    DirectX::XMFLOAT2 rtStart[2];
     const float vecScale[2] = { 1.0f, -1.0f };
 
     //GeometryFactory::GenLineIndexes(0, 4, 10, 2, false);
     //GeometryFactory::GenLineIndexes(10, 2, 0, 4, false);
+
+    lineLen[0] = 1.0f - roundnessOuter;
+    lineLen[1] = 1.0f - roundnessInner;
 
     halfWidth[0] = (width + thickness) / 2.0f;
     halfWidth[1] = (width - thickness) / 2.0f;
@@ -159,24 +167,83 @@ void GeometryFactory::CreateRectangle2(
     halfHeight[1] = (height - thickness) / 2.0f;
 
     for (uint32_t i = 0; i < 2; i++) {
-        DirectX::XMFLOAT2 ltStart; // begin of quadratic curve
-        DirectX::XMFLOAT2 ltEnd; // end of quadratic curve; control point not used because sin/cos is used
-        DirectX::XMFLOAT2 rtStart;
+        ltStart[i].x = -halfWidth[i];
+        ltStart[i].y = halfHeight[i] * lineLen[i];
 
-        ltStart.x = -halfWidth[i];
-        ltStart.y = halfHeight[i] * lineLen;
+        ltEnd[i].x = -halfWidth[i] * lineLen[i];
+        ltEnd[i].y = halfHeight[i];
 
-        ltEnd.x = -halfWidth[i] * lineLen;
-        ltEnd.y = halfHeight[i];
+        rtStart[i].x = halfWidth[i] * lineLen[i];
+        rtStart[i].y = halfHeight[i];
+    }
 
-        rtStart.x = halfWidth[i] * lineLen;
-        rtStart.y = halfHeight[i];
+    // correcting inner shape so that it stay inside outer shape
+    if (!H::Math::NearEqual(ltStart[0], ltEnd[0])) {
+        DirectX::XMVECTOR midOuter, midInner;
+        DirectX::XMFLOAT2 softT;
+        float curRads = DirectX::XM_PIDIV2 * 0.5f;
 
+        softT.x = 1.0f - std::cos(curRads);
+        softT.y = std::sin(curRads);
+
+        midOuter.ZF = midInner.ZF = 0.0f;
+        midOuter.WF = midInner.WF = 1.0f;
+
+        midOuter.XF = H::Math::Lerp(ltStart[0].x, ltEnd[0].x, softT.x);
+        midOuter.YF = H::Math::Lerp(ltStart[0].y, ltEnd[0].y, softT.y);
+
+        float outerDist = DirectX::XMVector2Length(DirectX::XMVectorSubtract(DirectX::g_XMIdentityR3, midOuter)).XF;
+        outerDist -= thickness;
+
+        float k = 1.0f;
+
+        if (!H::Math::NearEqual(ltStart[1], ltEnd[1])) {
+            midInner.XF = H::Math::Lerp(ltStart[1].x, ltEnd[1].x, softT.x);
+            midInner.YF = H::Math::Lerp(ltStart[1].y, ltEnd[1].y, softT.y);
+        }
+        else if (!H::Math::NearEqual(ltEnd[1], rtStart[1])) {
+            midInner.XF = ltEnd[1].x;
+            midInner.YF = ltEnd[1].y;
+        }
+
+        float innerDist = DirectX::XMVector2Length(DirectX::XMVectorSubtract(DirectX::g_XMIdentityR3, midInner)).XF;
+
+        if (innerDist > outerDist) {
+            k = outerDist / innerDist;
+        }
+
+        // 6 multiplications
+        /*ltStart[1].x *= k;
+        ltStart[1].y *= k;
+
+        ltEnd[1].x *= k;
+        ltEnd[1].y *= k;
+
+        rtStart[1].x *= k;
+        rtStart[1].y *= k;*/
+
+        // 5 multiplications, but more assgnments
+        // for now this is used because it's the same algorithm as used previously in code
+        // TODO move ltStart, ltEnd, rtStart calculations for function
+        halfWidth[1] *= k;
+        halfHeight[1] *= k;
+
+        ltStart[1].x = -halfWidth[1];
+        ltStart[1].y = halfHeight[1] * lineLen[1];
+
+        ltEnd[1].x = -halfWidth[1] * lineLen[1];
+        ltEnd[1].y = halfHeight[1];
+
+        rtStart[1].x = halfWidth[1] * lineLen[1];
+        rtStart[1].y = halfHeight[1];
+    }
+
+    for (uint32_t i = 0; i < 2; i++) {
         curIdx[i] = (uint32_t)pos.size();
         quadIdxCount[i] = 0;
         lineIdxCount[i] = 0;
 
-        if (!H::Math::NearEqual(ltStart, ltEnd)) {
+        if (!H::Math::NearEqual(ltStart[i], ltEnd[i])) {
             // make quadratic curve segment
 
             for (float t = 0.0f; t < 1.0f; t += 1.0f / 20.0f, quadIdxCount[i]++) {
@@ -187,8 +254,8 @@ void GeometryFactory::CreateRectangle2(
                 softT.x = 1.0f - std::cos(curRads);
                 softT.y = std::sin(curRads);
 
-                pt.x = H::Math::Lerp(ltStart.x, ltEnd.x, softT.x);
-                pt.y = H::Math::Lerp(ltStart.y, ltEnd.y, softT.y);
+                pt.x = H::Math::Lerp(ltStart[i].x, ltEnd[i].x, softT.x);
+                pt.y = H::Math::Lerp(ltStart[i].y, ltEnd[i].y, softT.y);
 
                 pos.push_back(pt);
                 adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
@@ -197,14 +264,14 @@ void GeometryFactory::CreateRectangle2(
             }
         }
 
-        if (!H::Math::NearEqual(ltEnd, rtStart)) {
+        if (!H::Math::NearEqual(ltEnd[i], rtStart[i])) {
             // make line segment
 
             for (float t = 0.0f; t < 1.0f; t += 1.0f, lineIdxCount[i]++) {
                 DirectX::XMFLOAT2 pt;
 
-                pt.x = H::Math::Lerp(ltEnd.x, rtStart.x, t);
-                pt.y = H::Math::Lerp(ltEnd.y, rtStart.y, t);
+                pt.x = H::Math::Lerp(ltEnd[i].x, rtStart[i].x, t);
+                pt.y = H::Math::Lerp(ltEnd[i].y, rtStart[i].y, t);
 
                 pos.push_back(pt);
                 adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
@@ -288,9 +355,7 @@ void GeometryFactory::CreateRectangle2(
     paramsInnerAA.close = true;
 
     for (uint32_t i = 0; i < 4; i++) {
-        if (quadIdxCount[0] != 0) {
-            // TODO test when 0
-            assert(quadIdxCount[0] != 0 && quadIdxCount[1] != 0);
+        if (quadIdxCount[0] != 0 || quadIdxCount[1] != 0) {
             params.topCount = quadIdxCount[0];
             params.bottomCount = quadIdxCount[1];
 
@@ -314,9 +379,7 @@ void GeometryFactory::CreateRectangle2(
             paramsInnerAA.bottomIdx += paramsInnerAA.bottomCount;
         }
 
-        if (lineIdxCount[0] != 0) {
-            // TODO test when 0
-            assert(lineIdxCount[0] != 0 && lineIdxCount[1] != 0);
+        if (lineIdxCount[0] != 0 || lineIdxCount[1] != 0) {
             params.topCount = lineIdxCount[0];
             params.bottomCount = lineIdxCount[1];
 

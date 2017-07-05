@@ -183,7 +183,8 @@ void RectRenderer::Render(DxDevice *dxDev) {
             std::vector<ColorVertex2D> vertices;
             std::vector<uint16_t> indices;
 
-            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), pos, adjPrev, adjNext, aaDir, indices2);
+            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.7f, 0.1f, pos, adjPrev, adjNext, aaDir, indices2);
+            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), std::fabsf(std::sin(angle2 * 1.3f)), pos, adjPrev, adjNext, aaDir, indices2);
             //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
 
             this->indexCount = indices2.size();
@@ -274,7 +275,9 @@ void RectRenderer::Render(DxDevice *dxDev) {
     angle += 0.1f;
 
     cbufData.mvp = DirectX::XMMatrixIdentity();
-    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(80)));
+    // TODO fix 90 degree rotation in 3d bug
+    // TODO fix rendring when back faces visible as lines. Must be invisible unless front and back faces rasterized
+    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(angle)));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
     //cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f));

@@ -11,7 +11,7 @@ public:
 
     static void CreateRectangle2(
         float width, float height,
-        float thickness, float roundness,
+        float thickness, float roundnessOuter, float roundnessInner,
         std::vector<DirectX::XMFLOAT2> &pos,
         std::vector<DirectX::XMFLOAT2> &adjPrev,
         std::vector<DirectX::XMFLOAT2> &adjNext,
