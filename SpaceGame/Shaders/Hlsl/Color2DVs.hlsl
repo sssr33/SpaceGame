@@ -103,6 +103,14 @@ PsInput main(VsInput input) {
         float2 vecPrev2d = calcNorm2d(posTmp2d, posPrevTmp2d);
         float2 vecNext2d = calcNorm2d(posTmp2d, posNextTmp2d);
 
+        // take into account if backside visible to correctly transform AA vectors
+        // 1 - front
+        // -1 back
+        // sign(equation) - it's Z part of 3d cross product
+        // * -1.0f needed because of way vecNext2d vecPrev2d are calculated...
+        // it's possible to not use *-1 but then other parts need to be changed
+        float crossProd = sign(vecPrev2d.x * vecNext2d.y - vecPrev2d.y * vecNext2d.x) * -1.0f;
+
         const float AAScale = 1.0f;
 
         float2 pos2dPrevC = posTmp2d - vecPrev2d * AAScale;
@@ -111,8 +119,8 @@ PsInput main(VsInput input) {
         vecPrev2d = rot90ccw(vecPrev2d);
         vecNext2d = rot90cw(vecNext2d);
 
-        vecPrev2d *= input.aaDir;
-        vecNext2d *= input.aaDir;
+        vecPrev2d *= input.aaDir * crossProd;
+        vecNext2d *= input.aaDir * crossProd;
 
         //if (input.aaDir > 0.0)
         {

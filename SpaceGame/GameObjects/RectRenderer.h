@@ -19,6 +19,6 @@ private:
 
     uint32_t indexCount;
 
-    /*Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsState;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState;*/
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsState;
+    /*Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState;*/
 };
