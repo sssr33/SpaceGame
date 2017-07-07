@@ -184,8 +184,10 @@ void RectRenderer::Render(DxDevice *dxDev) {
             std::vector<uint16_t> indices;
 
             //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.0f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
-            GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), std::fabsf(std::sin(angle2 * 1.3f)), pos, adjPrev, adjNext, aaDir, indices2);
+            //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), std::fabsf(std::sin(angle2 * 1.3f)), pos, adjPrev, adjNext, aaDir, indices2);
             //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
+            //GeometryFactory::CreateRectangleFilled(1.0f, 1.0f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
+            GeometryFactory::CreateRectangleFilled(1.0f, 1.0f, std::fabsf(std::sin(angle2)), pos, adjPrev, adjNext, aaDir, indices2);
 
             this->indexCount = indices2.size();
             /*GeometryFactory::CreateRectangle(1.0f, 1.0f, 0.01f,

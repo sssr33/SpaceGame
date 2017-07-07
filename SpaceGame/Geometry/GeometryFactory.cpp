@@ -407,8 +407,144 @@ void GeometryFactory::CreateRectangle2(
     int stop = 234;
 }
 
+void GeometryFactory::CreateRectangleFilled(
+    float width, float height,
+    float roundnessOuter,
+    std::vector<DirectX::XMFLOAT2> &pos,
+    std::vector<DirectX::XMFLOAT2> &adjPrev,
+    std::vector<DirectX::XMFLOAT2> &adjNext,
+    std::vector<float> &aaDir,
+    std::vector<uint32_t> &indices)
+{
+    float lineLen;
+    float halfWidth;
+    float halfHeight;
+    uint32_t curIdx;
+    uint32_t curIdxAA;
+    uint32_t quadIdxCount;
+    uint32_t lineIdxCount;
+    uint32_t totalCount;
+    DirectX::XMFLOAT2 ltStart; // begin of quadratic curve
+    DirectX::XMFLOAT2 ltEnd; // end of quadratic curve; control point not used because sin/cos is used
+    DirectX::XMFLOAT2 rtStart;
+    const float vecScale = 1.0f;
+
+    lineLen = 1.0f - roundnessOuter;
+
+    halfWidth = width / 2.0f;
+    halfHeight = height / 2.0f;
+
+    ltStart.x = -halfWidth;
+    ltStart.y = halfHeight * lineLen;
+
+    ltEnd.x = -halfWidth * lineLen;
+    ltEnd.y = halfHeight;
+
+    rtStart.x = halfWidth * lineLen;
+    rtStart.y = halfHeight;
+
+    curIdx = (uint32_t)pos.size();
+    quadIdxCount = 0;
+    lineIdxCount = 0;
+
+    if (!H::Math::NearEqual(ltStart, ltEnd)) {
+        // make quadratic curve segment
+
+        for (float t = 0.0f; t < 1.0f; t += 1.0f / 20.0f, quadIdxCount++) {
+            DirectX::XMFLOAT2 softT;
+            DirectX::XMFLOAT2 pt;
+            float curRads = DirectX::XM_PIDIV2 * t;
+
+            softT.x = 1.0f - std::cos(curRads);
+            softT.y = std::sin(curRads);
+
+            pt.x = H::Math::Lerp(ltStart.x, ltEnd.x, softT.x);
+            pt.y = H::Math::Lerp(ltStart.y, ltEnd.y, softT.y);
+
+            pos.push_back(pt);
+            adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            aaDir.push_back(0.0f);
+        }
+    }
+
+    if (!H::Math::NearEqual(ltEnd, rtStart)) {
+        // make line segment
+
+        for (float t = 0.0f; t < 1.0f; t += 1.0f, lineIdxCount++) {
+            DirectX::XMFLOAT2 pt;
+
+            pt.x = H::Math::Lerp(ltEnd.x, rtStart.x, t);
+            pt.y = H::Math::Lerp(ltEnd.y, rtStart.y, t);
+
+            pos.push_back(pt);
+            adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            aaDir.push_back(0.0f);
+        }
+    }
+
+    size_t vertexCount = pos.size() - curIdx;
+
+    for (size_t j = 0; j < vertexCount * 3; j++) {
+        auto vertex = pos[curIdx + j];
+
+        H::Math::Rotate90CW(vertex.x, vertex.y);
+        pos.push_back(vertex);
+        adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+        adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+        aaDir.push_back(0.0f);
+    }
+
+    totalCount = pos.size() - curIdx;
+    curIdxAA = (uint32_t)pos.size();
+
+    for (uint32_t j = 0; j < totalCount; j++) {
+        uint32_t jPrev = j == 0 ? totalCount - 1 : j - 1;
+        uint32_t jNext = j == (totalCount - 1) ? 0 : j + 1;
+        auto vPrev = pos[curIdx + jPrev];
+        auto vertex = pos[curIdx + j];
+        auto vNext = pos[curIdx + jNext];
+        pos.push_back(vertex);
+
+        adjPrev.push_back(vPrev);
+        adjNext.push_back(vNext);
+        aaDir.push_back(vecScale);
+    }
+
+    uint32_t centerIdx = pos.size();
+
+    pos.push_back(DirectX::XMFLOAT2(0.0f, 0.0f));
+    adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+    adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+    aaDir.push_back(0.0f);
+
+    GenLineIndexesParams params(indices);
+    GenLineIndexesParams paramsOuterAA(indices);
+
+    params.topBegin = curIdx;
+    params.bottomBegin = centerIdx;
+    params.topTotalCount = totalCount;// curIdx[1] - curIdx[0];
+    params.topCount = params.topTotalCount;
+    params.bottomTotalCount = 1;// (uint32_t)pos.size() - curIdx[1];
+    params.bottomCount = params.bottomTotalCount;
+    params.close = true; // to connect segments
+    params.fill = true;
+
+    paramsOuterAA.topBegin = curIdxAA;
+    paramsOuterAA.bottomBegin = curIdx;
+    paramsOuterAA.topTotalCount = totalCount;
+    paramsOuterAA.topCount = paramsOuterAA.topTotalCount;
+    paramsOuterAA.bottomTotalCount = totalCount;
+    paramsOuterAA.bottomCount = paramsOuterAA.bottomTotalCount;
+    paramsOuterAA.close = true;
+
+    GeometryFactory::GenLineIndexes(params);
+    GeometryFactory::GenLineIndexes(paramsOuterAA);
+}
+
 GeometryFactory::GenLineIndexesParams::GenLineIndexesParams(std::vector<uint32_t> &indices, uint32_t topIdx, uint32_t bottomIdx)
-    : indices(indices), topIdx(topIdx), bottomIdx(bottomIdx)
+    : indices(indices), topIdx(topIdx), bottomIdx(bottomIdx), fill(false)
 {}
 
 void GeometryFactory::GenLineIndexes(const GenLineIndexesParams &params) {
@@ -450,7 +586,17 @@ void GeometryFactory::GenLineIndexes(const GenLineIndexesParams &params) {
         { 1, 0, 1 },
     };
 
-    uint32_t triCount = (params.topCount + params.bottomCount) - (params.close ? 0 : 2);
+    uint32_t triCount = (params.topCount + params.bottomCount);
+    if (params.close) {
+        if (params.fill) {
+            triCount -= 1;
+        }
+        // to close not filled geometry we need 2 additional triangles
+    }
+    else {
+        triCount -= 2;
+    }
+
     uint32_t idx[2] = { params.bottomIdx, params.topIdx };
     uint32_t idxStart[2] = { params.bottomBegin, params.topBegin };
     uint32_t idxCount[2] = { params.bottomTotalCount, params.topTotalCount };
