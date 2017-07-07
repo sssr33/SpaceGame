@@ -52,13 +52,41 @@ float2 calcNorm2d(float2 a, float2 b) {
     return vec;
 }
 
-float2 intersect(float2 p0, float2 v0, float2 p1, float2 v1) {
+float2 intersect(float2 p0, float2 v0, float2 p1, float2 v1, float2 defaultPt, float crossProd) {
     float2 intersection;
 
     float d = v0.x * v1.y - v0.y * v1.x;
 
-    if (abs(d) < 0.0001f) {
-        intersection = p0;
+    float n = (p1.x - p0.x) * v1.y - (p1.y - p0.y) * v1.x;
+    float t = n / d;
+
+    intersection = p0 + v0 * t;
+
+    float2 vec = intersection - defaultPt;
+    float vecLen = length(vec);
+
+    // it's heuristic but makes rendering better(but not perfect) at 3d rotations near 90
+    const float maxLen = 50.0f;
+    if (vecLen > maxLen) {
+        intersection = lerp(defaultPt, intersection, maxLen / vecLen);
+
+        modf(intersection, intersection);
+        intersection += 0.5f * crossProd;
+    }
+
+    //if (abs(d) < 0.01f) {
+    //    v0 = rot90ccw(v0);
+    //    float2 defaultPt2 = defaultPt - v0 * 5;
+
+    //    intersection = defaultPt;//lerp(defaultPt, intersection, abs(d) / 0.01f); // defaultPt2;// 
+    //}
+    //else {
+    //    //modf(intersection, intersection);
+    //    //intersection += 0.5f;
+    //}
+
+    /*if (abs(d) < 0.01f) {
+        intersection = defaultPt;
     }
     else
     {
@@ -66,7 +94,7 @@ float2 intersect(float2 p0, float2 v0, float2 p1, float2 v1) {
         float t = n / d;
 
         intersection = p0 + v0 * t;
-    }
+    }*/
 
     return intersection;
 }
@@ -134,7 +162,7 @@ PsInput main(VsInput input) {
         // add better vector calculation, taking into accound needed thickness of AA - complete with intersect
         // TODO improve AA further for perspective projection and also for back faces(!)
 
-        posTmp2d = intersect(pos2dPrevC, vecPrev2d, pos2dNextC, vecNext2d);
+        posTmp2d = intersect(pos2dPrevC, vecPrev2d, pos2dNextC, vecNext2d, posTmp2d, crossProd);
 
         //float2 aaVec = normalize(vecPrev2d + vecNext2d) * AAScale * input.aaDir;
 

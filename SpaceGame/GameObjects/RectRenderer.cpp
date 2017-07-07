@@ -272,10 +272,10 @@ void RectRenderer::Render(DxDevice *dxDev) {
     static float angle = 0.0f;
 
     angle += 0.4f;
-
+    //DirectX::XMVector2Dot()
     cbufData.mvp = DirectX::XMMatrixIdentity();
-    // TODO fix 90 degree rotation in 3d bug
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(angle)));
+    cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(30.0f)));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixTranslation(0.0f, 0.0f, 1.0f));
     //cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixOrthographicLH(ar * 2.0f, 2.0f, 0.001f, 10.0f));
     cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f));
