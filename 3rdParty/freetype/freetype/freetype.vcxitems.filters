@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d6273f0d-5305-40ad-b3c9-56ef64c1af4e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\autofit\autofit.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\bdf\bdf.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\cff\cff.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftbase.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftbbox.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftbitmap.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\bzip2\ftbzip2.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\cache\ftcache.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftcid.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftdebug.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftfntfmt.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftfstype.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftgasp.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftglyph.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftgxval.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\gzip\ftgzip.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftinit.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftlcdfil.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\lzw\ftlzw.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftmm.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftotval.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftpatent.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftpfr.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftstroke.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftsynth.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftsystem.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\fttype1.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\base\ftwinfnt.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\pcf\pcf.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\pfr\pfr.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\psaux\psaux.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\pshinter\pshinter.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\raster\raster.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\sfnt\sfnt.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\smooth\smooth.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\truetype\truetype.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\type1\type1.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\cid\type1cid.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\type42\type42.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub\SpaceGame\3rdParty\freetype\freetype\src\winfonts\winfnt.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

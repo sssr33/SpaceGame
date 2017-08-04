@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{555312FD-6E98-4983-98FB-8AB5570A76CB}</ItemsProjectGuid>
+    <ItemsRootNamespace>bzip2</ItemsRootNamespace>
+    <ItemsProjectName>bzip2</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+    <ItemsSccProjectName>SAK</ItemsSccProjectName>
+    <ItemsSccAuxPath>SAK</ItemsSccAuxPath>
+    <ItemsSccLocalPath>SAK</ItemsSccLocalPath>
+    <ItemsSccProvider>SAK</ItemsSccProvider>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)blocksort.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)bzlib.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)compress.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)crctable.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)decompress.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)huffman.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)randtable.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)bzlib.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)bzlib_private.h" />
+  </ItemGroup>
+</Project>

@@ -162,7 +162,16 @@
   <ItemGroup>
     <ClInclude Include="GameObjects\BackgroundBrush.h" />
     <ClInclude Include="GameObjects\RectRenderer.h" />
-    <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="GameWindow.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Geometry\GeometryFactory.h" />
     <ClInclude Include="Geometry\TexVertex.h" />
     <ClInclude Include="Renderer\SpaceGameRenderer.h" />
@@ -179,6 +188,18 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\3rdParty\bzip2\bzip2.sl.Desktop\bzip2.sl.Desktop.vcxproj">
+      <Project>{564931c5-385c-4628-ac11-16785e9dee10}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdParty\freetype\freetype.sl.Desktop\freetype.sl.Desktop.vcxproj">
+      <Project>{b6d86122-2b07-4bda-a527-3bc8eaff83f8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdParty\harfbuzz\harfbuzz.sl.Desktop\harfbuzz.sl.Desktop.vcxproj">
+      <Project>{02890020-3d69-47c9-b1e4-58eaab1d02cd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdParty\zlib\zlib.sl.Desktop\zlib.sl.Desktop.vcxproj">
+      <Project>{e803eaaa-ce04-446f-85b5-8b29a5f1a338}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Helpers\Helpers.Desktop\Helpers.Desktop.vcxproj">
       <Project>{68e45821-1434-4594-a8da-ec8d7b6f7cce}</Project>
     </ProjectReference>

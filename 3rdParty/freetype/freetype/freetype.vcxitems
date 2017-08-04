@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{B6527FA6-3060-4BBF-8933-08F90AADC45B}</ItemsProjectGuid>
+    <ItemsRootNamespace>freetype</ItemsRootNamespace>
+    <ItemsProjectName>freetype</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+    <ItemsSccProjectName>SAK</ItemsSccProjectName>
+    <ItemsSccAuxPath>SAK</ItemsSccAuxPath>
+    <ItemsSccLocalPath>SAK</ItemsSccLocalPath>
+    <ItemsSccProvider>SAK</ItemsSccProvider>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\autofit\autofit.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftbase.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftbbox.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftbitmap.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftcid.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftdebug.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftfntfmt.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftfstype.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftgasp.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftglyph.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftgxval.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftinit.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftlcdfil.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftmm.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftotval.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftpatent.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftpfr.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftstroke.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftsynth.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftsystem.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\fttype1.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\base\ftwinfnt.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\bdf\bdf.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\bzip2\ftbzip2.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\cache\ftcache.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\cff\cff.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\cid\type1cid.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\gzip\ftgzip.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\lzw\ftlzw.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\pcf\pcf.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\pfr\pfr.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\psaux\psaux.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\pshinter\pshinter.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\raster\raster.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\sfnt\sfnt.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\smooth\smooth.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\truetype\truetype.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\type1\type1.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\type42\type42.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\winfonts\winfnt.c" />
+  </ItemGroup>
+</Project>
