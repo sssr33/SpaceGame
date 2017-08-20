@@ -986,10 +986,14 @@
 
       if ( do_scale )
       {
+          int maxx = 0, maxy = 0;
+
         for ( ; vec < limit; vec++ )
         {
           vec->x = FT_MulFix( vec->x, x_scale );
           vec->y = FT_MulFix( vec->y, y_scale );
+          maxx = max(maxx, vec->x);
+          maxy = max(maxy, vec->y);
         }
 
         loader->pp1 = outline->points[n_points - 4];
@@ -1003,7 +1007,49 @@
     {
       loader->zone.n_points += 4;
 
+      {
+          FT_Vector*  vec = outline->points;
+          FT_Vector*  limit = outline->points + n_points;
+          int w, h;
+          int minx = INT_MAX, miny = INT_MAX;
+          int maxx = INT_MIN, maxy = INT_MIN;
+
+          for (; vec < limit; vec++)
+          {
+              minx = min(minx, vec->x);
+              miny = min(miny, vec->y);
+              maxx = max(maxx, vec->x);
+              maxy = max(maxy, vec->y);
+          }
+
+          w = maxx - minx;
+          h = maxy - miny;
+
+          int stop = 324;
+      }
+
       error = TT_Hint_Glyph( loader, 0 );
+
+      {
+          FT_Vector*  vec = outline->points;
+          FT_Vector*  limit = outline->points + n_points;
+          int w, h;
+          int minx = INT_MAX, miny = INT_MAX;
+          int maxx = INT_MIN, maxy = INT_MIN;
+
+          for (; vec < limit; vec++)
+          {
+              minx = min(minx, vec->x);
+              miny = min(miny, vec->y);
+              maxx = max(maxx, vec->x);
+              maxy = max(maxy, vec->y);
+          }
+
+          w = maxx - minx;
+          h = maxy - miny;
+
+          int stop = 324;
+      }
     }
 
     return error;

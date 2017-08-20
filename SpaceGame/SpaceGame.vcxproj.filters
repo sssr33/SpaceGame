@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="Fonts\LICENSE_OFL.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -12,6 +13,7 @@
     <ClInclude Include="Geometry\TexVertex.h" />
     <ClInclude Include="Geometry\GeometryFactory.h" />
     <ClInclude Include="GameObjects\RectRenderer.h" />
+    <ClInclude Include="Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -21,6 +23,7 @@
     <ClCompile Include="GameObjects\BackgroundBrush.cpp" />
     <ClCompile Include="Geometry\GeometryFactory.cpp" />
     <ClCompile Include="GameObjects\RectRenderer.cpp" />
+    <ClCompile Include="Text\TextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />
@@ -31,5 +34,11 @@
     <FxCompile Include="Shaders\Hlsl\TexPs.hlsl" />
     <FxCompile Include="Shaders\Hlsl\Color2DVs.hlsl" />
     <FxCompile Include="Shaders\Hlsl\Color2DPs.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\NotoSans-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\README" />
   </ItemGroup>
 </Project>

@@ -54,6 +54,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\pfr\pfr.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\psaux\psaux.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\pshinter\pshinter.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\psnames\psnames.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\raster\raster.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\sfnt\sfnt.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\smooth\smooth.c" />
