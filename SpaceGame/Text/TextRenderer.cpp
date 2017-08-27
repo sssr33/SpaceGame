@@ -6,7 +6,7 @@
 #include FT_BBOX_H
 #include <libhelpers\HSystem.h>
 
-TextRenderer::TextRenderer() {
+TextRenderer::TextRenderer(const std::wstring &str) {
     FT_Error error = FT_Err_Ok;
     FT_Library library;
     FT_Face face;
@@ -32,7 +32,7 @@ TextRenderer::TextRenderer() {
         int stop = 432;
     }
 
-    int load_flags = FT_LOAD_NO_BITMAP;// | FT_LOAD_NO_SCALE;// FT_LOAD_DEFAULT;
+    int load_flags = FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING | FT_LOAD_NO_SCALE;// FT_LOAD_DEFAULT;
 
     error = FT_Load_Char(
         face,          /* handle to face object */
@@ -52,11 +52,14 @@ TextRenderer::TextRenderer() {
     box.xMax = FT_MulFix(box.xMax, 20480);
     box.yMax = FT_MulFix(box.yMax, 20480);
 
+    //const int fracPrec = 1 << 11;
+    const int precIncr = (1 << 16) / emSize;
+
     auto getPixSize = [&](int size, FT_Pos &width, FT_Pos &height) {
-        const int half = 1 << 6 >> 1;
-        size *= 64;
-        width = ((size * metrics.width + half) / emSize);// +(!!((size * metrics.width + half) % emSize)) * 64;
-        height = ((size * metrics.height + half) / emSize);// +(!!((size * metrics.height + half) % emSize)) * 64;
+        const int half = (emSize * precIncr) / 2;// 64 / 2;
+        size *= 64 * precIncr;
+        width = ((size * metrics.width + half) / (emSize * precIncr));// +(!!((size * metrics.width + half) % emSize));// *64;
+        height = ((size * metrics.height + half) / (emSize * precIncr));// +(!!((size * metrics.height + half) % emSize));// *64;
 
         int stop = 432;
 
@@ -77,12 +80,18 @@ TextRenderer::TextRenderer() {
 
     getPixSize(10, w, h);
 
-    load_flags = FT_LOAD_NO_BITMAP;
+    load_flags = FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING;
 
     error = FT_Load_Char(
         face,          /* handle to face object */
         'A',   /* glyph index           */
         load_flags);  /* load flags, see below */
+    if (error != FT_Err_Ok) {
+        int stop = 432;
+    }
+
+    error = FT_Render_Glyph(face->glyph,   /* glyph slot  */
+        FT_RENDER_MODE_NORMAL); /* render mode */
     if (error != FT_Err_Ok) {
         int stop = 432;
     }

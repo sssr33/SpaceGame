@@ -1,8 +1,10 @@
 #pragma once
 
+#include <string>
+
 class TextRenderer {
 public:
-    TextRenderer();
+    TextRenderer(const std::wstring &str);
     ~TextRenderer();
 
 private:

@@ -4,8 +4,32 @@
 #include "stdafx.h"
 #include "GameWindow.h"
 
+#include <libhelpers\StopWatch.h>
+#include <set>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+struct MemoryRecord {
+    size_t sz;
+    void *mem;
+
+    MemoryRecord(size_t sz)
+        : sz(sz), mem(nullptr)
+    {}
+
+    bool operator<(const MemoryRecord &other) const {
+        return this->sz < other.sz;
+    }
+};
+
 int main() {
     CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+    {
+
+        int stop = 342;
+    }
 
     HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);

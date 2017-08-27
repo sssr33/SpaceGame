@@ -178,6 +178,8 @@
     <ClInclude Include="Renderer\SpaceGameRenderer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Texture\TextureAtlas.h" />
+    <ClInclude Include="Texture\TextureAtlasPage.h" />
     <ClInclude Include="Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +190,8 @@
     <ClCompile Include="Renderer\SpaceGameRenderer.cpp" />
     <ClCompile Include="SpaceGame.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Texture\TextureAtlas.cpp" />
+    <ClCompile Include="Texture\TextureAtlasPage.cpp" />
     <ClCompile Include="Text\TextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
