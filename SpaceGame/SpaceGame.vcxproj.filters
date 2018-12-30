@@ -14,8 +14,11 @@
     <ClInclude Include="Geometry\GeometryFactory.h" />
     <ClInclude Include="GameObjects\RectRenderer.h" />
     <ClInclude Include="Text\TextRenderer.h" />
-    <ClInclude Include="Texture\TextureAtlas.h" />
     <ClInclude Include="Texture\TextureAtlasPage.h" />
+    <ClInclude Include="Text\IFontAtlas.h" />
+    <ClInclude Include="Text\FontAtlasFreetype.h" />
+    <ClInclude Include="Text\IFontAtlasSymbol.h" />
+    <ClInclude Include="Text\IFontAtlasBitmapLock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -26,8 +29,8 @@
     <ClCompile Include="Geometry\GeometryFactory.cpp" />
     <ClCompile Include="GameObjects\RectRenderer.cpp" />
     <ClCompile Include="Text\TextRenderer.cpp" />
-    <ClCompile Include="Texture\TextureAtlas.cpp" />
     <ClCompile Include="Texture\TextureAtlasPage.cpp" />
+    <ClCompile Include="Text\FontAtlasFreetype.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

@@ -74,25 +74,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\!VS_TMP\Build\$(PlatformToolset)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)\!VS_TMP\Intermediate\$(PlatformToolset)\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\!VS_TMP\Build\$(PlatformToolset)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)\!VS_TMP\Intermediate\$(PlatformToolset)\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\!VS_TMP\Build\$(PlatformToolset)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)\!VS_TMP\Intermediate\$(PlatformToolset)\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\!VS_TMP\Build\$(PlatformToolset)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)\!VS_TMP\Intermediate\$(PlatformToolset)\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -161,6 +161,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Text\FontAtlasFreetype.h" />
     <ClInclude Include="GameObjects\BackgroundBrush.h" />
     <ClInclude Include="GameObjects\RectRenderer.h" />
     <ClInclude Include="GameWindow.h">
@@ -178,11 +179,14 @@
     <ClInclude Include="Renderer\SpaceGameRenderer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Texture\TextureAtlas.h" />
     <ClInclude Include="Texture\TextureAtlasPage.h" />
+    <ClInclude Include="Text\IFontAtlas.h" />
+    <ClInclude Include="Text\IFontAtlasBitmapLock.h" />
+    <ClInclude Include="Text\IFontAtlasSymbol.h" />
     <ClInclude Include="Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Text\FontAtlasFreetype.cpp" />
     <ClCompile Include="GameObjects\BackgroundBrush.cpp" />
     <ClCompile Include="GameObjects\RectRenderer.cpp" />
     <ClCompile Include="GameWindow.cpp" />
@@ -190,7 +194,6 @@
     <ClCompile Include="Renderer\SpaceGameRenderer.cpp" />
     <ClCompile Include="SpaceGame.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Texture\TextureAtlas.cpp" />
     <ClCompile Include="Texture\TextureAtlasPage.cpp" />
     <ClCompile Include="Text\TextRenderer.cpp" />
   </ItemGroup>

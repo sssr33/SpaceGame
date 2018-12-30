@@ -11,7 +11,7 @@ SpaceGameRenderer::~SpaceGameRenderer() {
 }
 
 void SpaceGameRenderer::Render() {
-    TextRenderer text;
+    TextRenderer text(L"TEST");
 
     auto ctxLk = this->dxDev->LockCtxScoped();
 

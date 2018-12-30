@@ -138,6 +138,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\TypeConverter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UniqueHandle.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\unique_ptr_extensions.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UtfConvert.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\var_ptr.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\Window.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowBaseData.h" />
