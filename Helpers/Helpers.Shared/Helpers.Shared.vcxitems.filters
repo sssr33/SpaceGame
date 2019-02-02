@@ -124,6 +124,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowMain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\DataBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UtfConvert.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Structs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
@@ -191,5 +192,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\Window.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowBaseData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowMain.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Structs.cpp" />
   </ItemGroup>
 </Project>

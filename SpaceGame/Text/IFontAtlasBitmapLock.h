@@ -1,19 +1,47 @@
 #pragma once
 
 #include <cstdint>
+#include <libhelpers/Structs.h>
 
-struct IFontAtlasBitmapBytes {
+enum class FontAtlasPixelFormat {
+    Unknown,
+    Gray8,
+    RGB24,
+    BGR24,
+    RGB32,
+    BGR32,
+    RGBA32,
+    BGRA32
+};
+
+struct FontAtlasBitmapBytesInfo {
+    FontAtlasPixelFormat pixelFormat;
     const void *data;
-    uint32_t width;
-    uint32_t height;
+    Structs::SizeU size;
     uint32_t pitch;
     uint32_t bitmapId;
     uint32_t changeId;
+};
 
-    uint32_t symbolLeft;
-    uint32_t symbolTop;
-    uint32_t symbolWidth;
-    uint32_t symbolHeight;
+struct FontAtlasBitmapSymbolInfo {
+    Structs::RectU dataRect; // in FontAtlasBitmapBytesInfo.data
+    Structs::PointU partLeftTop; // // position inside complete char bitmap. If <IsBitmapPart> == false then it equals 0;0
+    Structs::SizeU charSize; // size of complete char bitmap. If <IsBitmapPart> == false then charSize == dataRect.size
+
+    bool IsBitmapPart() const;
+};
+
+struct FontAtlasBitmapBytes {
+    FontAtlasBitmapBytes(
+        const FontAtlasBitmapBytesInfo &bytesInfo,
+        const FontAtlasBitmapSymbolInfo &symbolInfo);
+
+    const FontAtlasBitmapBytesInfo &GetBytesInfo() const;
+    const FontAtlasBitmapSymbolInfo &GetSymbolInfo() const;
+
+private:
+    FontAtlasBitmapBytesInfo bytesInfo;
+    FontAtlasBitmapSymbolInfo symbolInfo;
 };
 
 /*
@@ -23,5 +51,5 @@ class IFontAtlasBitmapLock {
 public:
     virtual ~IFontAtlasBitmapLock() = default;
 
-    virtual IFontAtlasBitmapBytes GetBytes() = 0;
+    virtual FontAtlasBitmapBytes GetBytes() = 0;
 };

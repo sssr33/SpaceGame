@@ -161,7 +161,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Text\FontAtlasFreetype.h" />
+    <ClInclude Include="Text\Freetype\HFreetype.h" />
+    <ClInclude Include="Text\Freetype\FontAtlasFreetypeSymbol.h" />
+    <ClInclude Include="Text\Freetype\FontAtlasFreetypeBitmapLock.h" />
+    <ClInclude Include="Text\Freetype\FontAtlasFreetype.h" />
     <ClInclude Include="GameObjects\BackgroundBrush.h" />
     <ClInclude Include="GameObjects\RectRenderer.h" />
     <ClInclude Include="GameWindow.h">
@@ -180,13 +183,18 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture\TextureAtlasPage.h" />
+    <ClInclude Include="Text\Freetype\FreetypeSafe.h" />
+    <ClInclude Include="Text\Freetype\FreetypeUnique.h" />
     <ClInclude Include="Text\IFontAtlas.h" />
     <ClInclude Include="Text\IFontAtlasBitmapLock.h" />
     <ClInclude Include="Text\IFontAtlasSymbol.h" />
     <ClInclude Include="Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Text\FontAtlasFreetype.cpp" />
+    <ClCompile Include="Text\Freetype\HFreetype.cpp" />
+    <ClCompile Include="Text\Freetype\FontAtlasFreetypeSymbol.cpp" />
+    <ClCompile Include="Text\Freetype\FontAtlasFreetypeBitmapLock.cpp" />
+    <ClCompile Include="Text\Freetype\FontAtlasFreetype.cpp" />
     <ClCompile Include="GameObjects\BackgroundBrush.cpp" />
     <ClCompile Include="GameObjects\RectRenderer.cpp" />
     <ClCompile Include="GameWindow.cpp" />
@@ -195,6 +203,8 @@
     <ClCompile Include="SpaceGame.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Texture\TextureAtlasPage.cpp" />
+    <ClCompile Include="Text\Freetype\FreetypeUnique.cpp" />
+    <ClCompile Include="Text\IFontAtlasBitmapLock.cpp" />
     <ClCompile Include="Text\TextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>

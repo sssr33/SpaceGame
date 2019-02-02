@@ -1,11 +1,12 @@
 #include "TextRenderer.h"
+#include "Freetype/FontAtlasFreetype.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
 #include FT_GLYPH_H
 #include FT_BBOX_H
-#include <libhelpers\HSystem.h>
+#include <libhelpers/HSystem.h>
 #include <libhelpersDesktop/Filesystem/StreamFILE.h>
 
 struct Size2D {
@@ -83,14 +84,9 @@ double GetFontSize(FT_BBox box, double height, FT_UShort units_per_EM);
 
 TextRenderer::TextRenderer(const std::wstring &str) {
     Filesystem::StreamFILE stream(LR"(Fonts\\NotoSans-Regular.ttf)", Filesystem::StreamFILEMode::ReadOnly);
+    FontAtlasFreetype atlasFreeType(stream, Structs::SizeU(512, 512));
 
-    auto sz = stream.GetSize();
-
-    std::vector<uint8_t> fontMem;
-
-    fontMem.resize((size_t)sz);
-
-    stream.Read(fontMem.data(), fontMem.size());
+    auto symbol = atlasFreeType.RenderSymbol('I', 8.12f);
 
     TestFonts2();
 

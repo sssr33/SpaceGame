@@ -5,7 +5,7 @@
 #include <memory>
 
 // Metrics normalized relative to font height
-struct IFontAtlasSymbolMetrics {
+struct FontAtlasSymbolMetrics {
     float left;
     float top;
     float width;
@@ -18,7 +18,7 @@ class IFontAtlasSymbol {
 public:
     virtual ~IFontAtlasSymbol() = default;
 
-    virtual IFontAtlasSymbolMetrics GetMetrics() = 0;
+    virtual FontAtlasSymbolMetrics GetMetrics() = 0;
     virtual uint32_t GetCharCode() = 0;
 };
 

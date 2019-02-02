@@ -113,6 +113,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ScopedTimer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ScopedValue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\StopWatch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Structs.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Text\UriCodec.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\condition_variable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Json\JsonObjectNative.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\MatrixMultiStack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\MatrixStack.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Structs.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Text\UriCodec.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\ICancellationToken.cpp" />
