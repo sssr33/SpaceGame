@@ -1,12 +1,13 @@
 #include "FontAtlasFreetype.h"
 #include "HFreetype.h"
 #include "FontAtlasFreetypeSymbol.h"
+#include "FreetypeSymbolRenderer.h"
 
 #include <cassert>
 #include <libhelpers/HMathCP.h>
 #include <libhelpers/unique_ptr_extensions.h>
 
-FontAtlasFreetype::FontAtlasFreetype(std::vector<uint8_t> fontData, const Structs::SizeU &texPageSize)
+FontAtlasFreetype::FontAtlasFreetype(std::vector<uint8_t> fontData, const Structs::Size<uint32_t> &texPageSize)
     : fontData(std::move(fontData)), texPageSize(texPageSize)
 {
     FT_Error error = FT_Err_Ok;
@@ -23,24 +24,19 @@ FontAtlasFreetype::FontAtlasFreetype(std::vector<uint8_t> fontData, const Struct
     }
 }
 
-FontAtlasFreetype::FontAtlasFreetype(Filesystem::IStream &stream, const Structs::SizeU &texPageSize)
+FontAtlasFreetype::FontAtlasFreetype(Filesystem::IStream &stream, const Structs::Size<uint32_t> &texPageSize)
     : FontAtlasFreetype(FontAtlasFreetype::ReadStream(stream), texPageSize)
 {}
 
 std::shared_ptr<IFontAtlasSymbol> FontAtlasFreetype::GetDefaultSymbol(uint32_t charCode) {
-    auto tmp = std::make_shared<FontAtlasFreetypeSymbol>();
-    return tmp;
+    throw std::runtime_error("not implemented");
 }
 
 std::shared_ptr<IFontAtlasSymbol> FontAtlasFreetype::GetSymbol(uint32_t charCode, float fontPixelHeight) {
-    auto tmp = std::make_shared<FontAtlasFreetypeSymbol>();
-    return tmp;
+    throw std::runtime_error("not implemented");
 }
 
 std::shared_ptr<IFontAtlasRenderedSymbol> FontAtlasFreetype::RenderSymbol(uint32_t charCode, float fontPixelHeight) {
-    FT_Error error = FT_Err_Ok;
-    auto tmp = std::make_shared<FontAtlasFreetypeSymbol>();
-
     auto &symbolData = this->GetSymbolData(charCode);
 
     auto symbol = symbolData.GetSymbolData(fontPixelHeight);
@@ -112,30 +108,13 @@ std::shared_ptr<IFontAtlasRenderedSymbol> FontAtlasFreetype::RenderSymbolInterna
     float fontSize = fontPixelHeight / fntHeight;
     FT_F26Dot6 ftFontSize = (FT_F26Dot6)std::ceil(fontSize * 64.f);
 
-    FT_Error error = FT_Err_Ok;
+    FreetypeSymbolRenderer renderer(ftFontSize, this->ftFace.get(), this->texPageSize, this->lastTexPage);
 
-    error = FT_Set_Char_Size(this->ftFace.get(), 0, ftFontSize, 0, 0);
-    H::Freetype::ThrowIfFailed(error);
+    auto symbol = renderer.Render(charCode);
 
-    error = FT_Load_Char(this->ftFace.get(), charCode, FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING);
-    H::Freetype::ThrowIfFailed(error);
+    this->lastTexPage = renderer.GetLastTexPage();
 
-    error = FT_Render_Glyph(this->ftFace->glyph, FT_RENDER_MODE_NORMAL);
-    H::Freetype::ThrowIfFailed(error);
-
-    auto bmpWidth = this->ftFace->glyph->bitmap.width;
-    auto bmpHeight = this->ftFace->glyph->bitmap.rows;
-
-    if (!this->lastTexPage) {
-
-    }
-
-    return nullptr;
-}
-
-std::shared_ptr<TextureAtlasPage> FontAtlasFreetype::GetTexPage(const Structs::SizeU &charTexSize) {
-    std::shared_ptr<TextureAtlasPage> texPage;
-    return texPage;
+    return symbol;
 }
 
 std::vector<uint8_t> FontAtlasFreetype::ReadStream(Filesystem::IStream &stream) {

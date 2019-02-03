@@ -1,13 +1,18 @@
 #include "FontAtlasFreetypeBitmapLock.h"
 
-FontAtlasFreetypeBitmapLock::FontAtlasFreetypeBitmapLock() {
-}
+FontAtlasFreetypeBitmapLock::FontAtlasFreetypeBitmapLock(std::vector<FreetypeSymbolPart> parts)
+    : parts(std::move(parts))
+{}
 
-FontAtlasFreetypeBitmapLock::~FontAtlasFreetypeBitmapLock() {
-}
+std::vector<FontAtlasBitmapBytes> FontAtlasFreetypeBitmapLock::GetBytes() {
+    std::vector<FontAtlasBitmapBytes> bytes;
 
-FontAtlasBitmapBytes FontAtlasFreetypeBitmapLock::GetBytes() {
-    FontAtlasBitmapBytes bytes{ FontAtlasBitmapBytesInfo(), FontAtlasBitmapSymbolInfo() };
+    bytes.reserve(this->parts.size());
+
+    for (auto &i : this->parts) {
+        bytes.push_back(FontAtlasBitmapBytes(
+            i.texPage->GetBytesInfo(), i.symbolInfo));
+    }
 
     return bytes;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "FreetypeUnique.h"
+#include "FreeTypeTexAtlasPage.h"
 #include "../IFontAtlas.h"
-#include "../../Texture/TextureAtlasPage.h"
 
 #include <memory>
 #include <cstdint>
@@ -13,8 +13,8 @@
 
 class FontAtlasFreetype : public IFontAtlas {
 public:
-    FontAtlasFreetype(std::vector<uint8_t> fontData, const Structs::SizeU &texPageSize);
-    FontAtlasFreetype(Filesystem::IStream &stream, const Structs::SizeU &texPageSize);
+    FontAtlasFreetype(std::vector<uint8_t> fontData, const Structs::Size<uint32_t> &texPageSize);
+    FontAtlasFreetype(Filesystem::IStream &stream, const Structs::Size<uint32_t> &texPageSize);
 
     std::shared_ptr<IFontAtlasSymbol> GetDefaultSymbol(uint32_t charCode) override;
     std::shared_ptr<IFontAtlasSymbol> GetSymbol(uint32_t charCode, float fontPixelHeight) override;
@@ -40,16 +40,12 @@ private:
 
     std::map<uint32_t, SymbolData> symbolData;
 
-    Structs::SizeU texPageSize;
-    std::shared_ptr<TextureAtlasPage> lastTexPage;
+    Structs::Size<uint32_t> texPageSize;
+    std::shared_ptr<FreeTypeTexAtlasPage> lastTexPage;
 
     SymbolData &GetSymbolData(uint32_t charCode);
 
     std::shared_ptr<IFontAtlasRenderedSymbol> RenderSymbolInternal(uint32_t charCode, float fontPixelHeight);
-
-
-
-    std::shared_ptr<TextureAtlasPage> GetTexPage(const Structs::SizeU &charTexSize);
 
     static std::vector<uint8_t> ReadStream(Filesystem::IStream &stream);
     static uint32_t RoundFontHeight(float fontPixelHeight);

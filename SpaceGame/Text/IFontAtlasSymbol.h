@@ -3,15 +3,12 @@
 
 #include <cstdint>
 #include <memory>
+#include <libhelpers/Structs.h>
 
 // Metrics normalized relative to font height
 struct FontAtlasSymbolMetrics {
-    float left;
-    float top;
-    float width;
-    float heigth;
-    float xAdvance;
-    float yAdvance;
+    Structs::Rect<float> rect;
+    Structs::Size<float> advance;
 };
 
 class IFontAtlasSymbol {

@@ -84,7 +84,7 @@ double GetFontSize(FT_BBox box, double height, FT_UShort units_per_EM);
 
 TextRenderer::TextRenderer(const std::wstring &str) {
     Filesystem::StreamFILE stream(LR"(Fonts\\NotoSans-Regular.ttf)", Filesystem::StreamFILEMode::ReadOnly);
-    FontAtlasFreetype atlasFreeType(stream, Structs::SizeU(512, 512));
+    FontAtlasFreetype atlasFreeType(stream, Structs::Size<uint32_t>(512, 512));
 
     auto symbol = atlasFreeType.RenderSymbol('I', 8.12f);
 

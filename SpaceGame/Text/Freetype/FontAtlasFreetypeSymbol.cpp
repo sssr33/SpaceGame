@@ -1,21 +1,23 @@
 #include "FontAtlasFreetypeSymbol.h"
 #include "FontAtlasFreetypeBitmapLock.h"
 
-FontAtlasFreetypeSymbol::FontAtlasFreetypeSymbol() {
-}
+FontAtlasFreetypeSymbol::FontAtlasFreetypeSymbol(
+    const FontAtlasSymbolMetrics &metrics,
+    uint32_t charCode,
+    std::vector<FreetypeSymbolPart> parts)
+    : metrics(metrics), charCode(charCode)
+    , parts(std::move(parts))
+{}
 
 FontAtlasSymbolMetrics FontAtlasFreetypeSymbol::GetMetrics() {
-    FontAtlasSymbolMetrics metrics;
-
-    return metrics;
+    return this->metrics;
 }
 
 uint32_t FontAtlasFreetypeSymbol::GetCharCode() {
-    return -1;
+    return this->charCode;
 }
 
 std::shared_ptr<IFontAtlasBitmapLock> FontAtlasFreetypeSymbol::LockBitmap() {
-    auto lk = std::make_shared<FontAtlasFreetypeBitmapLock>();
-
+    auto lk = std::make_shared<FontAtlasFreetypeBitmapLock>(this->parts);
     return lk;
 }

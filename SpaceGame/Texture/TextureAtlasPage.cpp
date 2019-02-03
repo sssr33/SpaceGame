@@ -3,57 +3,61 @@
 #include <cassert>
 #include <algorithm>
 
-TextureAtlasPage::TextureAtlasPage(uint32_t byteWidth, uint32_t byteHeight)
-    : byteWidth(byteWidth), byteHeight(byteHeight)
-    , curX(0), curY(0), nextY(0)
-    , memory(byteWidth * byteHeight)
+TextureAtlasPage::TextureAtlasPage(const Structs::Size<uint32_t> &byteSize)
+    : byteSize(byteSize)
+    , curPt(0, 0), nextY(0)
+    , memory(this->byteSize.width * this->byteSize.height)
 {}
 
-uint32_t TextureAtlasPage::GetByteWidth() const {
-    return this->byteWidth;
-}
-
-uint32_t TextureAtlasPage::GetByteHeight() const {
-    return this->byteHeight;
+Structs::Size<uint32_t> TextureAtlasPage::GetByteSize() const {
+    return this->byteSize;
 }
 
 const void *TextureAtlasPage::GetMemory() const {
     return this->memory.data();
 }
 
-bool TextureAtlasPage::IsSpaceAvailable(uint32_t byteWidth, uint32_t byteHeight) const {
+bool TextureAtlasPage::IsSpaceAvailable(const Structs::Size<uint32_t> &byteSize) const {
     bool curAvailable = false;
     bool nextAvailable = false;
 
-    this->IsSpaceAvailable(byteWidth, byteHeight, curAvailable, nextAvailable);
+    this->IsSpaceAvailable(byteSize, curAvailable, nextAvailable);
 
     bool available = curAvailable || nextAvailable;
 
     return curAvailable;
 }
 
-bool TextureAtlasPage::IsSpaceAvailable(uint32_t byteWidth, uint32_t byteHeight, uint32_t borderX, uint32_t borderY) const {
-    return this->IsSpaceAvailable(byteWidth + borderX, byteHeight + borderY);
+bool TextureAtlasPage::IsSpaceAvailable(const Structs::Size<uint32_t> &byteSize, const Structs::Size<uint32_t> &byteBorderSize) const {
+    auto totalSize = Structs::Size<uint32_t>(
+        byteSize.width + byteBorderSize.width,
+        byteSize.height + byteBorderSize.height);
+
+    return this->IsSpaceAvailable(totalSize);
 }
 
-TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, uint32_t byteWidth, uint32_t byteHeight) {
-    return this->AddTexture(texMemory, byteWidth, byteHeight, 0, 0);
+TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, const Structs::Size<uint32_t> &byteSize) {
+    return this->AddTexture(texMemory, byteSize, 0, 0);
 }
 
-TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, uint32_t byteWidth, uint32_t byteHeight, uint32_t stride) {
-    return this->AddTexture(texMemory, byteWidth, byteHeight, stride, 0, 0);
+TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, const Structs::Size<uint32_t> &byteSize, uint32_t stride) {
+    return this->AddTexture(texMemory, byteSize, stride, Structs::Size<uint32_t>(0, 0));
 }
 
-TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, uint32_t byteWidth, uint32_t byteHeight, uint32_t borderX, uint32_t borderY) {
-    return this->AddTexture(texMemory, byteWidth, byteHeight, byteWidth, borderX, borderY);
+TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, const Structs::Size<uint32_t> &byteSize, const Structs::Size<uint32_t> &byteBorderSize) {
+    return this->AddTexture(texMemory, byteSize, byteSize.width, byteBorderSize);
 }
 
-TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, uint32_t byteWidth, uint32_t byteHeight, uint32_t stride, uint32_t borderX, uint32_t borderY) {
+TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texMemory, const Structs::Size<uint32_t> &byteSize, uint32_t stride, const Structs::Size<uint32_t> &byteBorderSize) {
     bool curAvailable = false;
     bool nextAvailable = false;
     AddTextureResult addResult;
 
-    this->IsSpaceAvailable(byteWidth + borderX, byteHeight + borderY, curAvailable, nextAvailable);
+    auto totalSize = Structs::Size<uint32_t>(
+        byteSize.width + byteBorderSize.width,
+        byteSize.height + byteBorderSize.height);
+
+    this->IsSpaceAvailable(totalSize, curAvailable, nextAvailable);
 
     if (!curAvailable && !nextAvailable) {
         return addResult;
@@ -61,39 +65,38 @@ TextureAtlasPage::AddTextureResult TextureAtlasPage::AddTexture(const void *texM
     else if (!curAvailable) {
         assert(nextAvailable);
 
-        this->curX = 0;
-        this->curY = this->nextY;
+        this->curPt.x = 0;
+        this->curPt.y = this->nextY;
     }
 
     auto texMemBytes = static_cast<const uint8_t*>(texMemory);
 
-    for (uint32_t y = 0; y < byteHeight; y++) {
-        auto dstLine = &this->memory[this->curX + (this->curY + y) * this->byteWidth];
+    for (uint32_t y = 0; y < byteSize.height; y++) {
+        auto dstLine = &this->memory[this->curPt.x + (this->curPt.y + y) * this->byteSize.width];
         auto srcLine = &texMemBytes[stride * y];
 
-        std::memcpy(dstLine, srcLine, byteWidth);
+        std::memcpy(dstLine, srcLine, byteSize.width);
     }
 
     addResult.added = true;
-    addResult.x = this->curX;
-    addResult.y = this->curY;
+    addResult.leftTop = this->curPt;
 
-    this->curX += byteWidth + borderX;
-    this->nextY = (std::max)(this->nextY, this->curY + byteHeight + borderY);
+    this->curPt.x += byteSize.width + byteBorderSize.width;
+    this->nextY = (std::max)(this->nextY, this->curPt.y + byteSize.height + byteBorderSize.height);
 
     return addResult;
 }
 
-void TextureAtlasPage::IsSpaceAvailable(uint32_t byteWidth, uint32_t byteHeight, bool &curAvailable, bool &nextAvailable) const {
-    auto curFreeWidth = this->curX - this->byteWidth;
-    auto curFreeHeight = this->curY - this->byteHeight;
-    auto nextFreeWidth = this->byteWidth;
-    auto nextFreeHeight = this->nextY - this->byteHeight;
+void TextureAtlasPage::IsSpaceAvailable(const Structs::Size<uint32_t> &byteSize, bool &curAvailable, bool &nextAvailable) const {
+    auto curFreeWidth = this->curPt.x - this->byteSize.width;
+    auto curFreeHeight = this->curPt.y - this->byteSize.height;
+    auto nextFreeWidth = this->byteSize.width;
+    auto nextFreeHeight = this->nextY - this->byteSize.height;
 
-    bool curWidthAvailable = curFreeWidth >= byteWidth;
-    bool curHeightAvailable = curFreeHeight >= byteHeight;
-    bool nextWidthAvailable = nextFreeWidth >= byteWidth;
-    bool nextHeightAvailable = nextFreeHeight >= byteHeight;
+    bool curWidthAvailable = curFreeWidth >= byteSize.width;
+    bool curHeightAvailable = curFreeHeight >= byteSize.height;
+    bool nextWidthAvailable = nextFreeWidth >= byteSize.width;
+    bool nextHeightAvailable = nextFreeHeight >= byteSize.height;
 
     curAvailable = curWidthAvailable && curHeightAvailable;
     nextAvailable = nextWidthAvailable && nextHeightAvailable;
@@ -103,7 +106,7 @@ void TextureAtlasPage::IsSpaceAvailable(uint32_t byteWidth, uint32_t byteHeight,
 
 
 TextureAtlasPage::AddTextureResult::AddTextureResult()
-    : added(false), x(0), y(0)
+    : added(false), leftTop(0, 0)
 {}
 
 TextureAtlasPage::AddTextureResult::operator bool() const {

@@ -1,10 +1,14 @@
 #pragma once
+#include "FreetypeSymbolPart.h"
 #include "../IFontAtlasBitmapLock.h"
 
 class FontAtlasFreetypeBitmapLock : public IFontAtlasBitmapLock {
 public:
-    FontAtlasFreetypeBitmapLock();
-    ~FontAtlasFreetypeBitmapLock();
+    FontAtlasFreetypeBitmapLock(
+        std::vector<FreetypeSymbolPart> parts);
 
-    FontAtlasBitmapBytes GetBytes() override;
+    std::vector<FontAtlasBitmapBytes> GetBytes() override;
+
+private:
+    std::vector<FreetypeSymbolPart> parts;
 };
