@@ -27,6 +27,11 @@
     <ClInclude Include="Text\Freetype\FreetypeSymbolPart.h" />
     <ClInclude Include="Text\Freetype\FreetypeSymbolRenderer.h" />
     <ClInclude Include="Text\Freetype\FreeTypeTexAtlasPage.h" />
+    <ClInclude Include="Text\IFontRenderer.h" />
+    <ClInclude Include="Text\IDxFontAtlas.h" />
+    <ClInclude Include="Pixel\IPixelSink.h" />
+    <ClInclude Include="Pixel\IPixelSource.h" />
+    <ClInclude Include="Pixel\PixelPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
