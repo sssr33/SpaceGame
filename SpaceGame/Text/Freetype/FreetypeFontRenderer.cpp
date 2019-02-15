@@ -18,7 +18,7 @@ FreetypeFontRenderer::FreetypeFontRenderer(std::vector<uint8_t> fontData)
 
     if (!(this->ftFace->face_flags & FT_FACE_FLAG_SCALABLE)) {
         // for now only scalable fonts are supported
-        throw std::runtime_error("FontAtlasFreetype : only scalable fonts are supported");
+        throw std::runtime_error("FreetypeFontRenderer : only scalable fonts are supported");
     }
 }
 
@@ -50,7 +50,7 @@ void FreetypeFontRenderer::Render(
     auto selectedIdx = sinkBuilder.SelectFormat(&fmt, 1);
 
     if (selectedIdx != 0) {
-        throw std::runtime_error("FontAtlasFreetype : only FontPixelFormat::Gray8 is supported");
+        throw std::runtime_error("FreetypeFontRenderer : only FontPixelFormat::Gray8 is supported");
     }
 
     auto &bitmap = this->ftFace->glyph->bitmap;
