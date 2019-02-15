@@ -4,10 +4,10 @@
 
 struct PixelPlane {
     uint32_t pitch;
-    void *dest;
+    void *memory;
 };
 
 struct PixelPlaneReadonly {
     uint32_t pitch;
-    void const *dest;
+    void const *src;
 };

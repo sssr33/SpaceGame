@@ -6,6 +6,6 @@ public:
     virtual ~IPixelSink() = 0;
 
     virtual void Write(
-        PixelPlaneReadonly *plane,
+        const PixelPlaneReadonly *plane,
         size_t planeCount) = 0;
 };

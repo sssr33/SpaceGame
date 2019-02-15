@@ -32,6 +32,7 @@
     <ClInclude Include="Pixel\IPixelSink.h" />
     <ClInclude Include="Pixel\IPixelSource.h" />
     <ClInclude Include="Pixel\PixelPlane.h" />
+    <ClInclude Include="Text\Freetype\FreetypeFontRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="Text\Freetype\HFreetype.cpp" />
     <ClCompile Include="Text\Freetype\FreetypeSymbolRenderer.cpp" />
     <ClCompile Include="Text\Freetype\FreeTypeTexAtlasPage.cpp" />
+    <ClCompile Include="Text\Freetype\FreetypeFontRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

@@ -10,6 +10,12 @@ enum class FontPixelFormat {
     BGRA32
 };
 
+struct NormalizedMetrics {
+    Structs::Rect<float> rect;
+    float vertAdvance;
+    float horzAdvance;
+};
+
 class IFontSink : public IPixelSink {
 public:
     virtual ~IFontSink() = default;
@@ -23,6 +29,7 @@ public:
 
     virtual size_t SelectFormat(const FontPixelFormat *fmt, size_t count) = 0;
     virtual void SetSize(const Structs::Size<uint32_t> &size) = 0;
+    virtual void SetMetrics(const NormalizedMetrics &metrics) = 0;
 
     virtual IFontSink &GetSink() = 0;
 };
@@ -32,7 +39,7 @@ public:
     virtual ~IFontRenderer() = default;
 
     virtual void Render(
-        float fontHeight,
+        float fontPixelHeight,
         uint32_t charCode,
         IFontSinkBuilder &sinkBuilder) = 0;
 };

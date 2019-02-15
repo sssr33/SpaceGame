@@ -161,6 +161,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Text\Freetype\FreetypeFontRenderer.h" />
     <ClInclude Include="Text\Freetype\FreetypeSymbolRenderer.h" />
     <ClInclude Include="Text\Freetype\FreetypeSymbolPart.h" />
     <ClInclude Include="Text\Freetype\FreeTypeTexAtlasPage.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Text\Freetype\FreetypeFontRenderer.cpp" />
     <ClCompile Include="Text\Freetype\FreetypeSymbolRenderer.cpp" />
     <ClCompile Include="Text\Freetype\FreeTypeTexAtlasPage.cpp" />
     <ClCompile Include="Text\Freetype\HFreetype.cpp" />
