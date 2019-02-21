@@ -125,6 +125,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\DataBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UtfConvert.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Structs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\POTVector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />

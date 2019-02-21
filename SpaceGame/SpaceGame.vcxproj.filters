@@ -33,6 +33,9 @@
     <ClInclude Include="Pixel\IPixelSource.h" />
     <ClInclude Include="Pixel\PixelPlane.h" />
     <ClInclude Include="Text\Freetype\FreetypeFontRenderer.h" />
+    <ClInclude Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlas.h" />
+    <ClInclude Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlasSymbol.h" />
+    <ClInclude Include="Text\IDxSymbol.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -53,6 +56,8 @@
     <ClCompile Include="Text\Freetype\FreetypeSymbolRenderer.cpp" />
     <ClCompile Include="Text\Freetype\FreeTypeTexAtlasPage.cpp" />
     <ClCompile Include="Text\Freetype\FreetypeFontRenderer.cpp" />
+    <ClCompile Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlas.cpp" />
+    <ClCompile Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlasSymbol.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

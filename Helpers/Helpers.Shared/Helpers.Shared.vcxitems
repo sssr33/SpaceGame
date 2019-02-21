@@ -106,6 +106,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ObservableToken.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Observer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\PointerWrappers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\POTVector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\rational.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\raw_ptr.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\result.h" />
