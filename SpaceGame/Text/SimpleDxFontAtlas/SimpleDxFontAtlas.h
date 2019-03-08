@@ -28,4 +28,32 @@ private:
     std::map<uint32_t, SymbolData> symbolData;
 
     SymbolData &GetSymbolData(uint32_t charCode);
+
+    class Sink : public IFontSink {
+    public:
+
+        void Write(
+            const PixelPlaneReadonly *plane,
+            size_t planeCount) override;
+
+        void SetSegment(const Structs::Rect<uint32_t> &rect) override;
+
+        void SetSize(const Structs::Size<uint32_t> &size);
+
+    private:
+        Structs::Size<uint32_t> size;
+    };
+
+    class SinkBuilder : public IFontSinkBuilder {
+    public:
+
+        size_t SelectFormat(const FontPixelFormat *fmt, size_t count) override;
+        void SetSize(const Structs::Size<uint32_t> &size) override;
+        void SetMetrics(const NormalizedMetrics &metrics) override;
+
+        IFontSink &GetSink() override;
+    private:
+        Sink sink;
+        NormalizedMetrics metrics;
+    };
 };

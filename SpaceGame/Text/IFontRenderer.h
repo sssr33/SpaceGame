@@ -20,7 +20,7 @@ class IFontSink : public IPixelSink {
 public:
     virtual ~IFontSink() = default;
 
-    virtual void SetSegment(const Structs::Rect<uint32_t> &size) = 0;
+    virtual void SetSegment(const Structs::Rect<uint32_t> &rect) = 0;
 };
 
 class IFontSinkBuilder {

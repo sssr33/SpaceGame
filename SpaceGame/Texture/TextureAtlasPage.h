@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <array>
 #include <libhelpers/Structs.h>
 
 class TextureAtlasPage {
@@ -21,8 +22,9 @@ public:
 
     const void *GetMemory() const;
 
+    std::vector<Structs::Size<uint32_t>> GetAvailableRects() const;
+
     bool IsSpaceAvailable(const Structs::Size<uint32_t> &byteSize) const;
-    bool IsSpaceAvailable(const Structs::Size<uint32_t> &byteSize, const Structs::Size<uint32_t> &byteBorderSize) const;
 
     AddTextureResult AddTexture(const void *texMemory, const Structs::Size<uint32_t> &byteSize);
     AddTextureResult AddTexture(const void *texMemory, const Structs::Size<uint32_t> &byteSize, uint32_t stride);
@@ -35,5 +37,11 @@ private:
     uint32_t nextY;
     std::vector<uint8_t> memory;
 
-    void IsSpaceAvailable(const Structs::Size<uint32_t> &byteSize, bool &curAvailable, bool &nextAvailable) const;
+    struct IsSpaceAvailableRes {
+        bool curAvailable;
+        bool nextAvailable;
+    };
+
+    IsSpaceAvailableRes IsSpaceAvailableInternal(const Structs::Size<uint32_t> &byteSize) const;
+    static bool IsSizeAvailable(uint32_t point, uint32_t size, uint32_t desiredSize);
 };

@@ -3,7 +3,7 @@
 
 class IPixelSink {
 public:
-    virtual ~IPixelSink() = 0;
+    virtual ~IPixelSink() = default;
 
     virtual void Write(
         const PixelPlaneReadonly *plane,
