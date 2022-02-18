@@ -1,6 +1,6 @@
 #include "GeometryFactory.h"
 
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 #include <Windows.h>
 #include <libhelpers\HMath.h>

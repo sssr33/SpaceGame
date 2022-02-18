@@ -3,6 +3,8 @@
 #include <libhelpers\HMath.h>
 #include <libhelpers\HSystem.h>
 
+#include <cmath>
+
 const uint32_t HwndOutput::BufferCount = 2;
 const DXGI_FORMAT HwndOutput::BufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 

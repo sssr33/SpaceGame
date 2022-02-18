@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <utility>
+#include <cmath>
 
 template<class Idx, class T>
 struct POTPair {

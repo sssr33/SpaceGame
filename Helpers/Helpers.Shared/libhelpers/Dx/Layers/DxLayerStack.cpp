@@ -1,6 +1,8 @@
 #include "DxLayerStack.h"
 #include "libhelpers\HSystem.h"
 
+#include <cmath>
+
 DxLayerStack::PushScope0::PushScope0() {}
 
 DxLayerStack::PushScope0::PushScope0(PushScope0 &&other) 

@@ -7,6 +7,8 @@
 #include "..\..\HSystem.h"
 #include "..\..\HColor.h"
 
+#include <cmath>
+
 TexBuf9::TexBuf9()
 	: sharingHandle(nullptr), ready(false)
 {

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <algorithm>
+#include <stdexcept>
 
 SimpleDxFontAtlas::SimpleDxFontAtlas(
     ID3D11Device *d3dDev, ID3D11DeviceContext *d3dCtx,

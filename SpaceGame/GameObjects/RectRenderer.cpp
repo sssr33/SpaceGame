@@ -4,6 +4,7 @@
 
 #include <libhelpers\HSystem.h>
 #include <libhelpers\HMath.h>
+#include <cmath>
 
 RectRenderer::RectRenderer(DxDevice *dxDev) {
     HRESULT hr = S_OK;

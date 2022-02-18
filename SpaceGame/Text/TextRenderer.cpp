@@ -8,6 +8,7 @@
 #include FT_BBOX_H
 #include <libhelpers/HSystem.h>
 #include <libhelpersDesktop/Filesystem/StreamFILE.h>
+#include <cmath>
 
 struct Size2D {
     int width = 0;

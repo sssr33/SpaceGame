@@ -1,5 +1,7 @@
 #include "HMath.h"
 
+#include <cmath>
+
 namespace H {
     const D2D1_MATRIX_3X2_F &MathIdentity<D2D1_MATRIX_3X2_F>::Get() {
         static const D2D1_MATRIX_3X2_F val = D2D1::IdentityMatrix();

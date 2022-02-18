@@ -4,6 +4,8 @@
 #include "FreetypeSymbolRenderer.h"
 
 #include <cassert>
+#include <stdexcept>
+#include <cmath>
 #include <libhelpers/HMathCP.h>
 #include <libhelpers/unique_ptr_extensions.h>
 
