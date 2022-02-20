@@ -1,4 +1,5 @@
 #include "GameWindow.h"
+#include "Renderer/GameRenderer/DxRenderer/MakeDxRenderer.h"
 
 GameWindow::GameWindow(WindowBaseData &baseData)
     : Window(baseData)
@@ -12,7 +13,8 @@ ProcessMsgResult GameWindow::ProcessMsg(uint32_t msg, WPARAM wparam, LPARAM lpar
 
     switch (msg) {
     case WM_CREATE: {
-        this->renderer = std::make_unique<HwndRenderer<SpaceGameRenderer>>(this->GetHwnd());
+        GameRenderer::MakeDxRenderer dxRendererFactory;
+        this->renderer = std::make_unique<HwndRenderer<SpaceGameRenderer>>(this->GetHwnd(), dxRendererFactory);
         break;
     }
     case WM_SIZE: {

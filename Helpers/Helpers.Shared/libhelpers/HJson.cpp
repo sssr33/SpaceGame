@@ -1,7 +1,8 @@
 #include "HJson.h"
 
 #include <locale>
-#include <codecvt>
+//#include <codecvt>
+#include <cassert>
 
 namespace H {
 	::Json::Value Json::Serialize(bool v) {
@@ -45,11 +46,13 @@ namespace H {
 	}
 
 	::Json::Value Json::Serialize(const std::wstring & str) {
-		using convert_type = std::codecvt_utf8<wchar_t>;
+		/*using convert_type = std::codecvt_utf8<wchar_t>;
 		std::wstring_convert<convert_type, wchar_t> converter;
 		std::string converted_str = converter.to_bytes(str);
 
-		return Json::Serialize(converted_str);
+		return Json::Serialize(converted_str);*/
+		assert(false);
+		return ::Json::Value();
 	}
 
 	::Json::Value Json::Serialize(const char *str) {
@@ -58,11 +61,13 @@ namespace H {
 	}
 
 	::Json::Value Json::Serialize(const wchar_t *str) {
-		using convert_type = std::codecvt_utf8<wchar_t>;
+		/*using convert_type = std::codecvt_utf8<wchar_t>;
 		std::wstring_convert<convert_type, wchar_t> converter;
 		std::string converted_str = converter.to_bytes(str);
 
-		return Json::Serialize(converted_str);
+		return Json::Serialize(converted_str);*/
+		assert(false);
+		return ::Json::Value();
 	}
 
 	::Json::Value Json::Serialize(const D2D1_RECT_F & v) {
@@ -267,14 +272,15 @@ namespace H {
 	}
 
 	bool Json::Deserialize(const ::Json::Value& json, std::wstring & out) {
-		if (json.isString()) {
+		/*if (json.isString()) {
 			using convert_type = std::codecvt_utf8<wchar_t>;
 			std::wstring_convert<convert_type, wchar_t> converter;
 			std::string tmp;
 			tmp = json.asString();
 			out = converter.from_bytes(tmp);
 			return true;
-		}
+		}*/
+		assert(false);
 		return false;
 	}
 

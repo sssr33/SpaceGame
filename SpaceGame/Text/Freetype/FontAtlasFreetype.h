@@ -23,7 +23,7 @@ public:
 private:
     class SymbolData {
     public:
-        std::weak_ptr<IFontAtlasSymbol> default;
+        std::weak_ptr<IFontAtlasSymbol> defaultSymbol;
 
         std::shared_ptr<IFontAtlasRenderedSymbol> GetSymbolData(float fontPixelHeight) const;
         void SetSymbolData(float fontPixelHeight, std::weak_ptr<IFontAtlasRenderedSymbol> data);

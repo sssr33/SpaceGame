@@ -1,6 +1,7 @@
 #include "StreamFILE.h"
 
 #include <cassert>
+#include <stdexcept>
 #include <libhelpers/unique_ptr_extensions.h>
 #include <libhelpers/UtfConvert.h>
 
@@ -37,13 +38,13 @@ namespace Filesystem {
         : StreamFILE(std::wstring(path), mode)
     {}
 
-    StreamFILE::StreamFILE(const std::string &pathUtf8, StreamFILEMode mode)
+    /*StreamFILE::StreamFILE(const std::string &pathUtf8, StreamFILEMode mode)
         : StreamFILE(ConvertToUtf16(pathUtf8), mode)
     {}
 
     StreamFILE::StreamFILE(const char *pathUtf8, StreamFILEMode mode)
         : StreamFILE(ConvertToUtf16(pathUtf8), mode)
-    {}
+    {}*/
 
     bool StreamFILE::CanRead() const {
         return true;

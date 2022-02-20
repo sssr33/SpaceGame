@@ -30,11 +30,11 @@
 namespace H {
 	class System {
 	public:
-		static void DebuggerBreak(wchar_t* CallingFuncName = nullptr);
-		static void Assert(bool expression, wchar_t* CallingFuncName = nullptr);
+		static void DebuggerBreak(const wchar_t* CallingFuncName = nullptr);
+		static void Assert(bool expression, const wchar_t* CallingFuncName = nullptr);
 		static void DebugOutput(const std::string &v);
 		static std::wstring FixPathWinRT(const std::wstring &v);
-		static void ThrowIfFailed(HRESULT hr, wchar_t* CallingFuncName = nullptr);
+		static void ThrowIfFailed(HRESULT hr, const wchar_t* CallingFuncName = nullptr);
 
 		static std::vector<uint8_t> LoadPackageFile(const std::string &path);
 		static std::vector<uint8_t> LoadPackageFile(const std::wstring &path);

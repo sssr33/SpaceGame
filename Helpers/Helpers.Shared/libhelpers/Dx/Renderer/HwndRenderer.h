@@ -10,10 +10,10 @@
 template<class T>
 class HwndRenderer {
 public:
-    template<class... Args>
-    HwndRenderer(HWND hwnd, Args&&... args)
+    template<class RendererFactoryT, class... Args>
+    HwndRenderer(HWND hwnd, RendererFactoryT rendererFactory, Args&&... args)
         : output(&this->dxDev, hwnd),
-        renderer(&this->dxDev, &this->output, std::forward<Args>(args)...),
+        renderer(rendererFactory(&this->dxDev, &this->output), std::forward<Args>(args)...),
         renderThreadState(RenderThreadState::Pause),
         newSize(0.0f, 0.0f), resizeRequested(false)
     {
@@ -33,6 +33,10 @@ public:
 
     T *operator->() {
         return &this->renderer;
+    }
+
+    DxDevice& GetDxDevice() {
+        return dxDev;
     }
 
     void ContinueRendering() {

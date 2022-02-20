@@ -25,6 +25,7 @@ public:
 	// https://msdn.microsoft.com/en-us/library/windows/desktop/dd756649%28v=vs.85%29.aspx
 	static const float D2DDefaultDPI;
 
+	DxDevice(const DxDeviceParams& params);
 	DxDevice(const DxDeviceParams *params = nullptr);
 	~DxDevice();
 

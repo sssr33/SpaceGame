@@ -1,6 +1,7 @@
 #include "JsonObjectNative.h"
 
-#include <codecvt>
+//#include <codecvt>
+#include <cassert>
 
 JsonObjectNativeRef::JsonObjectNativeRef(::Json::Value &obj) 
 	: obj(obj)
@@ -49,11 +50,12 @@ void JsonObjectNativeRef::SetVal(const std::string &v) {
 }
 
 void JsonObjectNativeRef::SetVal(const std::wstring &v) {
-	using convert_type = std::codecvt_utf8<wchar_t>;
+	/*using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter;
 	std::string converted_str = converter.to_bytes(v);
 
-	this->obj = converted_str;
+	this->obj = converted_str;*/
+	assert(false);
 }
 
 void JsonObjectNativeRef::SetVal(const char *v) {
@@ -61,11 +63,12 @@ void JsonObjectNativeRef::SetVal(const char *v) {
 }
 
 void JsonObjectNativeRef::SetVal(const wchar_t *v) {
-	using convert_type = std::codecvt_utf8<wchar_t>;
+	/*using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter;
 	std::string converted_str = converter.to_bytes(v);
 
-	this->obj = converted_str;
+	this->obj = converted_str;*/
+	assert(false);
 }
 
 void JsonObjectNativeRef::GetVal(bool &v) {
@@ -101,11 +104,12 @@ void JsonObjectNativeRef::GetVal(std::string &v) {
 }
 
 void JsonObjectNativeRef::GetVal(std::wstring &v) {
-	auto tmp = this->obj.asString();
+	/*auto tmp = this->obj.asString();
 	using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter;
 
-	v = converter.from_bytes(tmp);
+	v = converter.from_bytes(tmp);*/
+	assert(false);
 }
 
 JsonObject &JsonObjectNativeRef::Get(const char *name) {

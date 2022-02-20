@@ -126,6 +126,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UtfConvert.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Structs.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\POTVector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HashString.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
@@ -148,7 +149,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\ToString.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\TypeConverter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IOutput.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\SwapChainPanelOutput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStackResources.cpp" />

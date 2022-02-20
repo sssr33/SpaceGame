@@ -22,6 +22,10 @@ DxDeviceParams::DxDeviceParams(uint32_t d3d11CreateFlags)
 // https://msdn.microsoft.com/en-us/library/windows/desktop/dd756649%28v=vs.85%29.aspx
 const float DxDevice::D2DDefaultDPI = 96.0f;
 
+DxDevice::DxDevice(const DxDeviceParams& params)
+	: DxDevice(&params)
+{}
+
 DxDevice::DxDevice(const DxDeviceParams *params)
 	: featureLevel(D3D_FEATURE_LEVEL_9_1)
 {
@@ -197,7 +201,7 @@ bool DxDevice::SdkLayersAvailable() {
 
 DxVideoDevice::DxVideoDevice() 
 	: DxDevice(
-		&DxDeviceParams(
+		DxDeviceParams(
 			DxDeviceParams::DefaultD3D11CreateFlags | D3D11_CREATE_DEVICE_VIDEO_SUPPORT))
 {
 }

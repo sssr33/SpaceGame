@@ -3,7 +3,7 @@
 //#include "Logger\NativeLogger.h"
 
 namespace H {
-	void System::DebuggerBreak(wchar_t* str) {
+	void System::DebuggerBreak(const wchar_t* str) {
 		if (str) {
 			//logging::Logger::ReportMessage(str);
 		}
@@ -15,7 +15,7 @@ namespace H {
 #endif
 	}
 
-	void System::Assert(bool expression, wchar_t* str) {
+	void System::Assert(bool expression, const wchar_t* str) {
 		if (!expression) {
 			System::DebuggerBreak();
 
@@ -67,7 +67,7 @@ namespace H {
 		return fixed;
 	}
 
-	void System::ThrowIfFailed(HRESULT hr, wchar_t* str) {
+	void System::ThrowIfFailed(HRESULT hr, const wchar_t* str) {
 #if HAVE_WINRT == 1
 		if (FAILED(hr)) {
 			if (str) {

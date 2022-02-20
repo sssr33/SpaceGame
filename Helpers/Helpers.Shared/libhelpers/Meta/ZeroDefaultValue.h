@@ -8,7 +8,7 @@
 template<class T>
 struct ZeroDefaultValue {
 	static T Get() {
-		static_cast(false, "Not implemented");
+		static_assert(false, "Not implemented");
 	}
 };
 

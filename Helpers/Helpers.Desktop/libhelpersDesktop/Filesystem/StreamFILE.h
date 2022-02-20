@@ -17,8 +17,8 @@ namespace Filesystem {
     public:
         StreamFILE(std::wstring path, StreamFILEMode mode);
         StreamFILE(const wchar_t *path, StreamFILEMode mode);
-        StreamFILE(const std::string &pathUtf8, StreamFILEMode mode);
-        StreamFILE(const char *pathUtf8, StreamFILEMode mode);
+        /*StreamFILE(const std::string &pathUtf8, StreamFILEMode mode);
+        StreamFILE(const char *pathUtf8, StreamFILEMode mode);*/
 
         bool CanRead() const override;
         bool CanWrite() const override;

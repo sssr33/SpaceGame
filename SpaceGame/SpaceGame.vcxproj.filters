@@ -36,6 +36,19 @@
     <ClInclude Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlas.h" />
     <ClInclude Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlasSymbol.h" />
     <ClInclude Include="Text\IDxSymbol.h" />
+    <ClInclude Include="Renderer\GameRenderer\IGameRenderer.h" />
+    <ClInclude Include="Renderer\GameRenderer\IGameRendererFactory.h" />
+    <ClInclude Include="Renderer\GameRenderer\IGameRendererObject.h" />
+    <ClInclude Include="Renderer\GameRenderer\IBackgroundBrushRenderer.h" />
+    <ClInclude Include="Renderer\GameRenderer\GameRendererId.h" />
+    <ClInclude Include="Renderer\GameRenderer\IRectangleRenderer.h" />
+    <ClInclude Include="Renderer\GameRenderer\ITextRenderer.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\MakeDxRenderer.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\GameRendererDx.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\GameRendererFactoryDx.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -58,6 +71,14 @@
     <ClCompile Include="Text\Freetype\FreetypeFontRenderer.cpp" />
     <ClCompile Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlas.cpp" />
     <ClCompile Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlasSymbol.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\GameRendererId.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\IGameRenderer.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\MakeDxRenderer.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\GameRendererDx.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\GameRendererFactoryDx.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

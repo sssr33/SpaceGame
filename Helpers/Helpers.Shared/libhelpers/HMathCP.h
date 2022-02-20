@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 namespace H {
     // Math Cross Platform
     class MathCP {
@@ -121,7 +123,7 @@ namespace H {
             T end0 = start0 + length0;
             T end1 = start1 + length1;
 
-            return Math::IntersectRange(start0, end0, start1, end1);
+            return MathCP::IntersectRange(start0, end0, start1, end1);
         }
     };
 }

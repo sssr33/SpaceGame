@@ -2,6 +2,7 @@
 #include "config.h"
 #include "ImageUtilsEncodeOptions.h"
 #include "Hashers.h"
+#include "HSystem.h"
 
 #include <wincodec.h>
 #include <wrl.h>
@@ -85,16 +86,16 @@ public:
 
     // Encoding:
 #if HAVE_WINRT == 1
-    Microsoft::WRL::ComPtr<IWICBitmapEncoder> ImageUtils::CreateEncoder(
+    Microsoft::WRL::ComPtr<IWICBitmapEncoder> CreateEncoder(
         Windows::Storage::Streams::IRandomAccessStream ^stream,
         const GUID_ContainerFormat &containerFormat) const;
 #else
-    Microsoft::WRL::ComPtr<IWICBitmapEncoder> ImageUtils::CreateEncoder(
+    Microsoft::WRL::ComPtr<IWICBitmapEncoder> CreateEncoder(
         const std::wstring &path,
         const GUID_ContainerFormat &containerFormat) const;
 #endif
 
-    Microsoft::WRL::ComPtr<IWICBitmapEncoder> ImageUtils::CreateEncoder(
+    Microsoft::WRL::ComPtr<IWICBitmapEncoder> CreateEncoder(
         const Microsoft::WRL::ComPtr<IStream> &stream,
         const GUID_ContainerFormat &containerFormat) const;
 
@@ -103,7 +104,7 @@ public:
     template<class OptsImpl>
     Microsoft::WRL::ComPtr<IWICBitmapFrameEncode> CreateFrameForEncode(
         IWICBitmapEncoder *encoder,
-        ImageUtilsEncodeOptions<OptsImpl> &options) const
+        const ImageUtilsEncodeOptions<OptsImpl> &options) const
     {
         HRESULT hr = S_OK;
         Microsoft::WRL::ComPtr<IPropertyBag2> props;

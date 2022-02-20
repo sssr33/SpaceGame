@@ -81,6 +81,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSViewportState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\EnumClassBitFlagOperators.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Hashers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HashString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HColor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HJson.h" />
@@ -169,7 +170,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDeviceMt.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\MappedResource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IOutput.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\SwapChainPanelOutput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Filesystem\IFileFS.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Filesystem\IFilesystemFS.cpp" />
