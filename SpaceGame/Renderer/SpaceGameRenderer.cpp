@@ -1,24 +1,14 @@
 #include "SpaceGameRenderer.h"
-//#include "..\Text\TextRenderer.h"
-#include "../Text/Freetype/FreetypeFontRenderer.h"
-#include "../Text/SimpleDxFontAtlas/SimpleDxFontAtlas.h"
 
 #include <libhelpersDesktop/Filesystem/StreamFILE.h>
-#include <libhelpers/HashString.h>
 
 SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer> renderer)
     : renderer(std::move(renderer))
-    /*: IRenderer(dxDev, output), bgBrush(dxDev.get(), L"Assets\\back.bmp"),
-    testRect(dxDev.get())*/
 {
-    const auto x = HashString<uint32_t>("asda");
-
-    this->renderer->OperationBegin();
+    auto opScope = this->renderer->OperationBeginScoped();
 
     this->bgBrush = this->renderer->GetFactory().MakeBackgroundBrushRenderer(L"Assets\\back.bmp");
     this->testRect = this->renderer->GetFactory().MakeRectangleRenderer();
-
-    this->renderer->OperationEnd();
 
 }
 
@@ -38,15 +28,10 @@ void SpaceGameRenderer::Render() {
     //    auto symbol = fntAtlas->RenderSymbol(10.1f, 'A');*/
     //}
 
-    //this->bgBrush.Render(this->dxDev.get());
-    //this->testRect.Render(this->dxDev.get());
-
-    this->renderer->OperationBegin();
+    auto opScope = this->renderer->OperationBeginScoped();
 
     this->renderer->RenderBackgroundBrush(this->bgBrush);
     this->renderer->RenderRectangle(this->testRect);
-
-    this->renderer->OperationEnd();
 }
 
 void SpaceGameRenderer::OutputParametersChanged() {

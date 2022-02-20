@@ -1,7 +1,5 @@
 #pragma once
 #include "GameRenderer/IGameRenderer.h"
-#include "..\GameObjects\BackgroundBrush.h"
-#include "..\GameObjects\RectRenderer.h"
 
 #include <memory>
 #include <libhelpers\Dx\Renderer\IRenderer.h>
@@ -19,7 +17,4 @@ private:
 
     std::shared_ptr<GameRenderer::IBackgroundBrushRenderer> bgBrush;
     std::shared_ptr<GameRenderer::IRectangleRenderer> testRect;
-
-    /*BackgroundBrush bgBrush;
-    RectRenderer testRect;*/
 };

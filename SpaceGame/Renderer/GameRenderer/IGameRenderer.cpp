@@ -3,6 +3,11 @@
 #include <cassert>
 
 namespace GameRenderer {
+    IGameRenderer::OperationScope IGameRenderer::OperationBeginScoped() {
+        this->OperationBegin();
+        return OperationScope(this, OperationEndDestructor());
+    }
+
     void IGameRenderer::RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
         this->CheckedRender(obj, &IGameRenderer::DoRenderBackgroundBrush);
     }
@@ -23,5 +28,10 @@ namespace GameRenderer {
         }
 
         (this->*fn)(obj);
+    }
+
+    void IGameRenderer::OperationEndDestructor::operator()(IGameRenderer* renderer) {
+        assert(renderer);
+        renderer->OperationEnd();
     }
 }

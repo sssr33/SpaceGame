@@ -2,14 +2,24 @@
 #include "GameRendererId.h"
 #include "IGameRendererFactory.h"
 
+#include <libhelpers/ScopedValue.h>
+
 namespace GameRenderer {
     class IGameRenderer : public GameRendererId {
     public:
         using GameRendererId::GameRendererId;
 
+        struct OperationEndDestructor {
+            void operator()(IGameRenderer* renderer);
+        };
+
+        using OperationScope = ScopedValue<IGameRenderer*, OperationEndDestructor>;
+
         virtual ~IGameRenderer() = default;
 
         virtual IGameRendererFactory& GetFactory() = 0;
+
+        OperationScope OperationBeginScoped();
 
         // must be called before any render or factory.create operation(s)
         virtual void OperationBegin() = 0;

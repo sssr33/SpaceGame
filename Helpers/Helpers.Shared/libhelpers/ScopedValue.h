@@ -32,7 +32,7 @@ public:
 
 	~ScopedValue() {
 		if (this->valid) {
-			this->deleter(&this->val);
+			this->deleter(this->val);
 		}
 	}
 
