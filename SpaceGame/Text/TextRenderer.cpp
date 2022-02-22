@@ -247,10 +247,10 @@ TextRenderer::TextRenderer(const std::wstring &str) {
                 int stop = 432;
             }
 
-            uint32_t pixW = std::ceilf(width);
-            uint32_t pixH = std::ceilf(height);
-            uint32_t pixW2 = std::ceilf(width2);
-            uint32_t pixH2 = std::ceilf(height2);
+            uint32_t pixW = static_cast<uint32_t>(std::ceilf(width));
+            uint32_t pixH = static_cast<uint32_t>(std::ceilf(height));
+            uint32_t pixW2 = static_cast<uint32_t>(std::ceilf(width2));
+            uint32_t pixH2 = static_cast<uint32_t>(std::ceilf(height2));
 
             bool sameW = face->glyph->bitmap.width == pixW;
             bool sameH = face->glyph->bitmap.rows == pixH;
@@ -324,10 +324,10 @@ void TestFonts() {
             auto ex = FT_MulFix(noScale.metrics.horiBearingX, sz * noScale.units_per_EM);
             auto ey = FT_MulFix(noScale.metrics.horiBearingY, sz * noScale.units_per_EM);
 
-            ew = std::ceil(ew3);
-            eh = std::ceil(eh3);
-            ex = std::ceil(ex3);
-            ey = std::ceil(ey3);
+            ew = static_cast<FT_Long>(std::ceil(ew3));
+            eh = static_cast<FT_Long>(std::ceil(eh3));
+            ex = static_cast<FT_Long>(std::ceil(ex3));
+            ey = static_cast<FT_Long>(std::ceil(ey3));
 
             float width2 = (float)ew / 64.f;
             float height2 = (float)eh / 64.f;
@@ -348,8 +348,8 @@ void TestFonts() {
 
             Size2D sizeDouble;
 
-            sizeDouble.width = width2;
-            sizeDouble.height = height2;
+            sizeDouble.width = static_cast<int>(width2);
+            sizeDouble.height = static_cast<int>(height2);
 
             /*auto ew = wscale * (double)sz;
             auto eh = hscale * (double)sz;
@@ -515,8 +515,8 @@ void TestFonts2() {
             auto fntSize12 = (fntSize11);
             auto fntSize22 = (fntSize21);
 
-            auto scaled1 = GetSymbolInfo(FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING, fntSize12, symbol);
-            auto scaled2 = GetSymbolInfo(FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING, fntSize22, symbol);
+            auto scaled1 = GetSymbolInfo(FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING, static_cast<int>(fntSize12), symbol);
+            auto scaled2 = GetSymbolInfo(FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING, static_cast<int>(fntSize22), symbol);
 
             auto ps1 = GetPixelSize(noScale.outlineCBox, std::floor(fntSize12) / 64.0, noScale.units_per_EM, 0);
             auto ps2 = GetPixelSize(noScale.outlineBox, std::floor(fntSize22) / 64.0, noScale.units_per_EM, 0);
@@ -570,10 +570,10 @@ Size2D GetPixelSize(FT_BBox box, double size, FT_UShort units_per_EM, int pixHei
     auto box2 = box;
     auto box3 = box;
 
-    box2.xMin = FT_MulFix(box.xMin, size * units_per_EM);
-    box2.yMin = FT_MulFix(box.yMin, size * units_per_EM);
-    box2.xMax = FT_MulFix(box.xMax, size * units_per_EM);
-    box2.yMax = FT_MulFix(box.yMax, size * units_per_EM);
+    box2.xMin = FT_MulFix(box.xMin, static_cast<FT_Long>(size * units_per_EM));
+    box2.yMin = FT_MulFix(box.yMin, static_cast<FT_Long>(size * units_per_EM));
+    box2.xMax = FT_MulFix(box.xMax, static_cast<FT_Long>(size * units_per_EM));
+    box2.yMax = FT_MulFix(box.yMax, static_cast<FT_Long>(size * units_per_EM));
 
     //if (size == 39) {
     //    int stop = 23;
@@ -622,8 +622,8 @@ Size2D GetPixelSize(FT_BBox box, double size, FT_UShort units_per_EM, int pixHei
     float tmpWidth = (float)boxSize.width / 64.0f;
     float tmpHeight = (float)boxSize.height / 64.0f;
 
-    boxSize.width = std::ceilf(tmpWidth);
-    boxSize.height = std::ceilf(tmpHeight);
+    boxSize.width = static_cast<int>(std::ceilf(tmpWidth));
+    boxSize.height = static_cast<int>(std::ceilf(tmpHeight));
 
     if (dheight2 != boxSize.height || dwidtht2 != boxSize.width) {
         int stop = 34;
@@ -659,7 +659,7 @@ double GetFontSize2(FT_BBox box, double height, FT_UShort units_per_EM) {
         int stop = 324;
     }
 
-    auto fontSize2 = FT_DivFix(height, desHTmp2);
+    auto fontSize2 = FT_DivFix(static_cast<FT_Long>(height), desHTmp2);
 
     //box3.yMin = FT_MulFix(box3.yMin, fontSize2 * units_per_EM);
     //box3.yMax = FT_MulFix(box3.yMax, fontSize2 * units_per_EM);

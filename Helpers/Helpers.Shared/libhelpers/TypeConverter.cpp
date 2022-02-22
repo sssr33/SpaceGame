@@ -1,12 +1,19 @@
 #include "TypeConverter.h"
 
+#include <algorithm>
+#include <iterator>
+
 std::wstring TypeConverter<std::wstring, std::string>::Convert(const std::string &v) {
 	std::wstring tmp(v.begin(), v.end());
 	return tmp;
 }
 
 std::string TypeConverter<std::string, std::wstring>::Convert(const std::wstring &v) {
-	std::string tmp(v.begin(), v.end());
+	std::string tmp;
+
+	tmp.reserve(v.size());
+	std::transform(v.begin(), v.end(), std::back_inserter(tmp), [](wchar_t ch) { return static_cast<char>(ch); });
+
 	return tmp;
 }
 
