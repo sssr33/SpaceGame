@@ -11,7 +11,7 @@ namespace GameRenderer {
 
         std::shared_ptr<IBackgroundBrushRenderer> MakeBackgroundBrushRenderer(const std::wstring& texName) override;
         std::shared_ptr<IRectangleRenderer> MakeRectangleRenderer() override;
-        std::shared_ptr<ITextRenderer> MakeTextRenderer() override;
+        std::shared_ptr<ITextRenderer> MakeTextRenderer(const std::wstring_view& font, float fontSize, const std::wstring_view& text) override;
 
     private:
         DxDevice* dxDev = nullptr;

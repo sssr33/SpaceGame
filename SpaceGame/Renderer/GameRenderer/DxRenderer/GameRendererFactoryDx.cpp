@@ -2,6 +2,7 @@
 
 #include "BackgroundBrushRendererDx.h"
 #include "RectangleRendererDx.h"
+#include "TextRendererDx.h"
 
 namespace GameRenderer {
     GameRendererFactoryDx::GameRendererFactoryDx(uint32_t rendererId, DxDevice* dxDev, IOutput* output)
@@ -18,7 +19,7 @@ namespace GameRenderer {
         return std::make_shared<RectangleRendererDx>(this->GetRendererId(), this->dxDev);
     }
 
-    std::shared_ptr<ITextRenderer> GameRendererFactoryDx::MakeTextRenderer() {
-        return nullptr;
+    std::shared_ptr<ITextRenderer> GameRendererFactoryDx::MakeTextRenderer(const std::wstring_view& font, float fontSize, const std::wstring_view& text) {
+        return std::make_shared<TextRendererDx>(this->GetRendererId(), this->dxDev, font, fontSize, text);
     }
 }

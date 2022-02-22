@@ -6,9 +6,11 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     : renderer(std::move(renderer))
 {
     auto opScope = this->renderer->OperationBeginScoped();
+    auto& rendererFactory = this->renderer->GetFactory();
 
-    this->bgBrush = this->renderer->GetFactory().MakeBackgroundBrushRenderer(L"Assets\\back.bmp");
-    this->testRect = this->renderer->GetFactory().MakeRectangleRenderer();
+    this->bgBrush = rendererFactory.MakeBackgroundBrushRenderer(L"Assets\\back.bmp");
+    this->testRect = rendererFactory.MakeRectangleRenderer();
+    this->testText = rendererFactory.MakeTextRenderer(L"Arial", 15.f, L"Exit");
 
 }
 
@@ -32,6 +34,7 @@ void SpaceGameRenderer::Render() {
 
     this->renderer->RenderBackgroundBrush(this->bgBrush);
     this->renderer->RenderRectangle(this->testRect);
+    this->renderer->RenderText(this->testText);
 }
 
 void SpaceGameRenderer::OutputParametersChanged() {

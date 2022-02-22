@@ -16,6 +16,6 @@ namespace GameRenderer {
 
         virtual std::shared_ptr<IBackgroundBrushRenderer> MakeBackgroundBrushRenderer(const std::wstring& texName) = 0;
         virtual std::shared_ptr<IRectangleRenderer> MakeRectangleRenderer() = 0;
-        virtual std::shared_ptr<ITextRenderer> MakeTextRenderer() = 0;
+        virtual std::shared_ptr<ITextRenderer> MakeTextRenderer(const std::wstring_view& font, float fontSize, const std::wstring_view& text) = 0;
     };
 }

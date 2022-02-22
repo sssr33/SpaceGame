@@ -1,6 +1,7 @@
 #include "GameRendererDx.h"
 #include "BackgroundBrushRendererDx.h"
 #include "RectangleRendererDx.h"
+#include "TextRendererDx.h"
 
 #include <libhelpers/HashString.h>
 
@@ -35,6 +36,7 @@ namespace GameRenderer {
     }
 
     void GameRendererDx::DoRenderText(const std::shared_ptr<ITextRenderer>& obj) {
-
+        TextRendererDx& devObj = static_cast<TextRendererDx&>(*obj);
+        devObj.Render(this->dxDev);
     }
 }
