@@ -282,15 +282,26 @@ void GeometryFactory::CreateRectangle2(
 
         size_t vertexCount = pos.size() - curIdx[i];
 
-        for (size_t j = 0; j < vertexCount * 3; j++) {
-            auto vertex = pos[curIdx[i] + j];
+        auto mirrorVerterx = [&pos, &adjPrev, &adjNext, &aaDir, &curIdx, &i](size_t start, size_t vertexCount, bool mirrorX, bool mirrorY)
+        {
+            auto mirror = DirectX::XMFLOAT2(mirrorX ? -1.f : 1.f, mirrorY ? -1.f : 1.f);
 
-            H::Math::Rotate90CW(vertex.x, vertex.y);
-            pos.push_back(vertex);
-            adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
-            adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
-            aaDir.push_back(0.0f);
-        }
+            for (size_t j = start; j < vertexCount; j++) {
+                auto vertex = pos[curIdx[i] + (vertexCount - 1 - (j - start))];
+
+                vertex.x *= mirror.x;
+                vertex.y *= mirror.y;
+
+                pos.push_back(vertex);
+                adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+                aaDir.push_back(0.0f);
+            }
+        };
+
+        mirrorVerterx(0, vertexCount, true, false);
+        mirrorVerterx(vertexCount, vertexCount * 2, false, true);
+        mirrorVerterx(vertexCount * 2, vertexCount * 3, true, false);
 
         totalCount[i] = pos.size() - curIdx[i];
         curIdxAA[i] = (uint32_t)pos.size();
@@ -486,15 +497,26 @@ void GeometryFactory::CreateRectangleFilled(
 
     size_t vertexCount = pos.size() - curIdx;
 
-    for (size_t j = 0; j < vertexCount * 3; j++) {
-        auto vertex = pos[curIdx + j];
+    auto mirrorVerterx = [&pos, &adjPrev, &adjNext, &aaDir, &curIdx](size_t start, size_t vertexCount, bool mirrorX, bool mirrorY)
+    {
+        auto mirror = DirectX::XMFLOAT2(mirrorX ? -1.f : 1.f, mirrorY ? -1.f : 1.f);
 
-        H::Math::Rotate90CW(vertex.x, vertex.y);
-        pos.push_back(vertex);
-        adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
-        adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
-        aaDir.push_back(0.0f);
-    }
+        for (size_t j = start; j < vertexCount; j++) {
+            auto vertex = pos[curIdx + (vertexCount - 1 - (j - start))];
+
+            vertex.x *= mirror.x;
+            vertex.y *= mirror.y;
+
+            pos.push_back(vertex);
+            adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
+            aaDir.push_back(0.0f);
+        }
+    };
+
+    mirrorVerterx(0, vertexCount, true, false);
+    mirrorVerterx(vertexCount, vertexCount * 2, false, true);
+    mirrorVerterx(vertexCount * 2, vertexCount * 3, true, false);
 
     totalCount = pos.size() - curIdx;
     curIdxAA = (uint32_t)pos.size();
