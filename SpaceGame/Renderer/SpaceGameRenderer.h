@@ -15,6 +15,8 @@ public:
 private:
     std::shared_ptr<GameRenderer::IGameRenderer> renderer;
 
+    float rectRoundnessAngle = 0.f;
+
     std::shared_ptr<GameRenderer::IBackgroundBrushRenderer> bgBrush;
     std::shared_ptr<GameRenderer::IRectangleRenderer> testRect;
     std::shared_ptr<GameRenderer::ITextRenderer> testText;

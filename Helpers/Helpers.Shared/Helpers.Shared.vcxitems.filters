@@ -127,6 +127,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Structs.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\POTVector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HashString.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
@@ -194,5 +195,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowBaseData.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowMain.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Structs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Vector.cpp" />
   </ItemGroup>
 </Project>

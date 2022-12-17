@@ -15,7 +15,7 @@ struct RGBA8Color {
             uint8_t b;
             uint8_t a;
         };
-        uint32_t val;
+        uint32_t val = 0x000000FF;
     };
 };
 
