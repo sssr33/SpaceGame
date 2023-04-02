@@ -17,13 +17,43 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
     rectGeom.color.r = 0;
     rectGeom.color.g = 255;
-    rectGeom.color.b = 0.;
+    rectGeom.color.b = 0;
 
     rectGeom.width = 1.5f;
 
     rectGeom.roundness = this->rectRoundnessAngle;
 
     this->testRect->SetGeometryParams(rectGeom);
+
+
+    float startY = 0.f;
+    float stepY = 0.02f;
+    float height = 0.00001f;
+
+    for (int i = 0; i < 40; i++) {
+        auto rectRender = rendererFactory.MakeRectangleRenderer();
+        auto rectRender2 = rendererFactory.MakeRectangleRenderer();
+
+        GameRenderer::FilledRectangleGeometryParams rectGeom2;
+
+        rectGeom2.height = height;
+
+        auto transform = rectRender->GetRectangleTransform();
+
+        transform.position.y = i * stepY;
+        transform.rotation.z = DirectX::XMConvertToRadians(45.f);
+
+        rectRender->SetGeometryParams(rectGeom2);
+        rectRender->SetRectangleTransform(transform);
+
+        transform.rotation.z = DirectX::XMConvertToRadians(-45.f);
+
+        rectRender2->SetGeometryParams(rectGeom2);
+        rectRender2->SetRectangleTransform(transform);
+
+        this->bgCrossHatchFill.push_back(std::move(rectRender));
+        this->bgCrossHatchFill.push_back(std::move(rectRender2));
+    }
 }
 
 SpaceGameRenderer::~SpaceGameRenderer() {
@@ -53,8 +83,15 @@ void SpaceGameRenderer::Render() {
     geomParams.roundness = std::fabs(std::sin(this->rectRoundnessAngle));
     this->testRect->SetGeometryParams(geomParams);
 
+    auto alphaBlendScope = this->renderer->PushAlphaBlendingScoped(true);
+
     this->renderer->RenderBackgroundBrush(this->bgBrush);
-    this->renderer->RenderRectangle(this->testRect);
+    //this->renderer->RenderRectangle(this->testRect);
+
+    for (auto& i : this->bgCrossHatchFill) {
+        this->renderer->RenderRectangle(i);
+    }
+
     this->renderer->RenderText(this->testText);
 
     this->rectRoundnessAngle += 0.01f;

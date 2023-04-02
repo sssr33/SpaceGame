@@ -13,7 +13,12 @@ namespace GameRenderer {
             void operator()(IGameRenderer* renderer);
         };
 
+        struct AlphaBlendPopDestructor {
+            void operator()(IGameRenderer* renderer);
+        };
+
         using OperationScope = ScopedValue<IGameRenderer*, OperationEndDestructor>;
+        using AlphaBlendScope = ScopedValue<IGameRenderer*, AlphaBlendPopDestructor>;
 
         virtual ~IGameRenderer() = default;
 
@@ -25,6 +30,10 @@ namespace GameRenderer {
         virtual void OperationBegin() = 0;
         // must be called after render or factory.create operation(s)
         virtual void OperationEnd() = 0;
+
+        AlphaBlendScope PushAlphaBlendingScoped(bool premultiplied);
+        virtual void PushAlphaBlending(bool premultiplied) = 0;
+        virtual void PopAlphaBlending() = 0;
 
         void RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj);
         void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj);

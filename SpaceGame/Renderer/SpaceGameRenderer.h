@@ -2,6 +2,7 @@
 #include "GameRenderer/IGameRenderer.h"
 
 #include <memory>
+#include <vector>
 #include <libhelpers\Dx\Renderer\IRenderer.h>
 
 class SpaceGameRenderer : public IRenderer {
@@ -20,4 +21,7 @@ private:
     std::shared_ptr<GameRenderer::IBackgroundBrushRenderer> bgBrush;
     std::shared_ptr<GameRenderer::IRectangleRenderer> testRect;
     std::shared_ptr<GameRenderer::ITextRenderer> testText;
+
+
+    std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> bgCrossHatchFill;
 };

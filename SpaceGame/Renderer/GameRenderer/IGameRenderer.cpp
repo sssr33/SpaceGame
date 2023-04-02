@@ -8,6 +8,11 @@ namespace GameRenderer {
         return OperationScope(this, OperationEndDestructor());
     }
 
+    IGameRenderer::AlphaBlendScope IGameRenderer::PushAlphaBlendingScoped(bool premultiplied) {
+        this->PushAlphaBlending(premultiplied);
+        return AlphaBlendScope(this, AlphaBlendPopDestructor());
+    }
+
     void IGameRenderer::RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
         this->CheckedRender(obj, &IGameRenderer::DoRenderBackgroundBrush);
     }
@@ -33,5 +38,10 @@ namespace GameRenderer {
     void IGameRenderer::OperationEndDestructor::operator()(IGameRenderer* renderer) {
         assert(renderer);
         renderer->OperationEnd();
+    }
+
+    void IGameRenderer::AlphaBlendPopDestructor::operator()(IGameRenderer* renderer) {
+        assert(renderer);
+        renderer->PopAlphaBlending();
     }
 }
