@@ -2,6 +2,7 @@
 #include "GameRendererId.h"
 #include "IGameRendererFactory.h"
 
+#include <libhelpers/Math/Box.h>
 #include <libhelpers/ScopedValue.h>
 
 namespace GameRenderer {
@@ -17,8 +18,13 @@ namespace GameRenderer {
             void operator()(IGameRenderer* renderer);
         };
 
+        struct ScissorPopDestructor {
+            void operator()(IGameRenderer* renderer);
+        };
+
         using OperationScope = ScopedValue<IGameRenderer*, OperationEndDestructor>;
         using AlphaBlendScope = ScopedValue<IGameRenderer*, AlphaBlendPopDestructor>;
+        using ScissorScope = ScopedValue<IGameRenderer*, ScissorPopDestructor>;
 
         virtual ~IGameRenderer() = default;
 
@@ -34,6 +40,10 @@ namespace GameRenderer {
         AlphaBlendScope PushAlphaBlendingScoped(bool premultiplied);
         virtual void PushAlphaBlending(bool premultiplied) = 0;
         virtual void PopAlphaBlending() = 0;
+
+        ScissorScope PushScissorScoped(const Math::IBox& scissorBox);
+        virtual void PushScissor(const Math::IBox& scissorBox) = 0;
+        virtual void PopScissor() = 0;
 
         void RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj);
         void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj);

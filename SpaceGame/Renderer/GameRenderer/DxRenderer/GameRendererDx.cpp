@@ -31,7 +31,6 @@ namespace GameRenderer {
 
         BlendState state;
         d3d->OMGetBlendState(state.blendState.GetAddressOf(), state.blendFactor.data(), &state.sampleMask);
-        this->blendStateStack.push(state);
 
         if (premultiplied) {
             this->PushAlphaBlendStatePremultiplied();
@@ -39,6 +38,9 @@ namespace GameRenderer {
         else {
             this->PushAlphaBlendState();
         }
+
+        // push to stack after new state create for exception safety
+        this->blendStateStack.push(state);
     }
 
     void GameRendererDx::PopAlphaBlending() {
@@ -52,6 +54,63 @@ namespace GameRenderer {
         const auto& state = this->blendStateStack.top();
         state.Set(d3d);
         this->blendStateStack.pop();
+    }
+
+    void GameRendererDx::PushScissor(const Math::IBox& scissorBox) {
+        auto d3d = this->dxDev->D3D();
+
+        ScissorState state;
+        D3D11_RASTERIZER_DESC rsDesc = {};
+
+        d3d->RSGetState(state.rasterState.GetAddressOf());
+
+        if (state.rasterState) {
+            state.rasterState->GetDesc(&rsDesc);
+        }
+        else {
+            rsDesc.FillMode = D3D11_FILL_SOLID;
+            rsDesc.CullMode = D3D11_CULL_BACK;
+            rsDesc.DepthClipEnable = TRUE;
+        }
+
+        UINT numRects = 0;
+        d3d->RSGetScissorRects(&numRects, nullptr);
+        state.rects.resize(numRects);
+        d3d->RSGetScissorRects(&numRects, state.rects.data());
+
+        rsDesc.ScissorEnable = TRUE;
+
+        HRESULT hr = S_OK;
+        auto dev = this->dxDev->GetD3DDevice();
+        Microsoft::WRL::ComPtr<ID3D11RasterizerState> newRsState;
+        D3D11_RECT scissorRect;
+
+        hr = dev->CreateRasterizerState(&rsDesc, newRsState.GetAddressOf());
+        H::System::ThrowIfFailed(hr);
+
+        scissorRect.left = static_cast<LONG>(scissorBox.left);
+        scissorRect.top = static_cast<LONG>(scissorBox.top);
+        scissorRect.right = static_cast<LONG>(scissorBox.right);
+        scissorRect.bottom = static_cast<LONG>(scissorBox.bottom);
+
+        d3d->RSSetState(newRsState.Get());
+        d3d->RSSetScissorRects(1, &scissorRect);
+
+        // push to stack after new state create for exception safety
+        this->scissorStateStack.push(state);
+    }
+
+    void GameRendererDx::PopScissor() {
+        if (this->scissorStateStack.empty()) {
+            assert(false);
+            return;
+        }
+
+        auto d3d = this->dxDev->D3D();
+
+        const auto& state = this->scissorStateStack.top();
+        state.Set(d3d);
+        this->scissorStateStack.pop();
     }
 
     void GameRendererDx::DoRenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
@@ -116,5 +175,13 @@ namespace GameRenderer {
 
     void GameRendererDx::BlendState::Set(ID3D11DeviceContext* d3d) const {
         d3d->OMSetBlendState(this->blendState.Get(), this->blendFactor.data(), this->sampleMask);
+    }
+
+
+
+
+    void GameRendererDx::ScissorState::Set(ID3D11DeviceContext* d3d) const {
+        d3d->RSSetState(this->rasterState.Get());
+        d3d->RSSetScissorRects(static_cast<UINT>(this->rects.size()), this->rects.data());
     }
 }

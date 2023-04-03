@@ -13,6 +13,11 @@ namespace GameRenderer {
         return AlphaBlendScope(this, AlphaBlendPopDestructor());
     }
 
+    IGameRenderer::ScissorScope IGameRenderer::PushScissorScoped(const Math::IBox& scissorBox) {
+        this->PushScissor(scissorBox);
+        return ScissorScope(this, ScissorPopDestructor());
+    }
+
     void IGameRenderer::RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
         this->CheckedRender(obj, &IGameRenderer::DoRenderBackgroundBrush);
     }
@@ -43,5 +48,10 @@ namespace GameRenderer {
     void IGameRenderer::AlphaBlendPopDestructor::operator()(IGameRenderer* renderer) {
         assert(renderer);
         renderer->PopAlphaBlending();
+    }
+
+    void IGameRenderer::ScissorPopDestructor::operator()(IGameRenderer* renderer) {
+        assert(renderer);
+        renderer->PopScissor();
     }
 }

@@ -88,8 +88,19 @@ void SpaceGameRenderer::Render() {
     this->renderer->RenderBackgroundBrush(this->bgBrush);
     //this->renderer->RenderRectangle(this->testRect);
 
-    for (auto& i : this->bgCrossHatchFill) {
-        this->renderer->RenderRectangle(i);
+    {
+        Math::IBox box;
+
+        box.left = 634;
+        box.top = 161;
+        box.right = box.left + 157;
+        box.bottom = box.top + 121;
+
+        auto scissorScope = this->renderer->PushScissorScoped(box);
+
+        for (auto& i : this->bgCrossHatchFill) {
+            this->renderer->RenderRectangle(i);
+        }
     }
 
     this->renderer->RenderText(this->testText);

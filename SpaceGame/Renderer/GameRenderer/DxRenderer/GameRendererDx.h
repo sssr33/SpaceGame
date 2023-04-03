@@ -19,6 +19,9 @@ namespace GameRenderer {
         void PushAlphaBlending(bool premultiplied) override;
         void PopAlphaBlending() override;
 
+        void PushScissor(const Math::IBox& scissorBox) override;
+        void PopScissor() override;
+
     private:
         struct BlendState {
             Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
@@ -27,6 +30,13 @@ namespace GameRenderer {
 
             BlendState() = default;
             BlendState(ID3D11Device* dev, D3D11_BLEND srcBlend, D3D11_BLEND destBlend, D3D11_BLEND srcBlendAlpha, D3D11_BLEND destBlendAlpha);
+
+            void Set(ID3D11DeviceContext* d3d) const;
+        };
+
+        struct ScissorState {
+            Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
+            std::vector<D3D11_RECT> rects;
 
             void Set(ID3D11DeviceContext* d3d) const;
         };
@@ -46,5 +56,7 @@ namespace GameRenderer {
         std::stack<BlendState> blendStateStack;
         BlendState alphaBlend;
         BlendState alphaBlendPremultiplied;
+
+        std::stack<ScissorState> scissorStateStack;
     };
 }
