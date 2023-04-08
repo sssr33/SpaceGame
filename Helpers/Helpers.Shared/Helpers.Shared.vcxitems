@@ -46,6 +46,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSScissorState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\ShaderResourcesState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMMathHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMVectorBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Filesystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Filesystem\CreateModeFS.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Json\JsonObjectNative.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Macros.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Box.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Matrix.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Vector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\MatrixMultiStack.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\MatrixStack.h" />
@@ -163,6 +165,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\D2DTransformState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\OMBlendState.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMMathHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMVectorBox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\AABB.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
@@ -195,6 +198,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Json\JsonObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Json\JsonObjectNative.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Box.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Matrix.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Vector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\MatrixMultiStack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\MatrixStack.cpp" />

@@ -129,6 +129,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HashString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Vector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Box.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Matrix.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMMathHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
@@ -198,5 +200,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Structs.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Vector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Box.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Math\Matrix.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMMathHelpers.cpp" />
   </ItemGroup>
 </Project>

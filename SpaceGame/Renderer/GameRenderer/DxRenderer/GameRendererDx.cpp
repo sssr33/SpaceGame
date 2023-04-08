@@ -18,6 +18,16 @@ namespace GameRenderer {
         return this->factory;
     }
 
+    Math::Vector2 GameRendererDx::GetScreenPixelSize() {
+        uint32_t numViewPorts = 1;
+        D3D11_VIEWPORT viewport;
+        auto d3dCtx = dxDev->D3D();
+
+        d3dCtx->RSGetViewports(&numViewPorts, &viewport);
+
+        return { viewport.Width, viewport.Height };
+    }
+
     void GameRendererDx::OperationBegin() {
         this->dxDev->LockCtx();
     }
@@ -56,7 +66,7 @@ namespace GameRenderer {
         this->blendStateStack.pop();
     }
 
-    void GameRendererDx::PushScissor(const Math::IBox& scissorBox) {
+    void GameRendererDx::PushScissor(const Math::Vector2& scissorCenter, const Math::Vector2& scissorHalfSize) {
         auto d3d = this->dxDev->D3D();
 
         ScissorState state;
@@ -83,15 +93,10 @@ namespace GameRenderer {
         HRESULT hr = S_OK;
         auto dev = this->dxDev->GetD3DDevice();
         Microsoft::WRL::ComPtr<ID3D11RasterizerState> newRsState;
-        D3D11_RECT scissorRect;
+        D3D11_RECT scissorRect = this->TransformScissorToScreen(d3d, scissorCenter, scissorHalfSize);
 
         hr = dev->CreateRasterizerState(&rsDesc, newRsState.GetAddressOf());
         H::System::ThrowIfFailed(hr);
-
-        scissorRect.left = static_cast<LONG>(scissorBox.left);
-        scissorRect.top = static_cast<LONG>(scissorBox.top);
-        scissorRect.right = static_cast<LONG>(scissorBox.right);
-        scissorRect.bottom = static_cast<LONG>(scissorBox.bottom);
 
         d3d->RSSetState(newRsState.Get());
         d3d->RSSetScissorRects(1, &scissorRect);
@@ -113,6 +118,25 @@ namespace GameRenderer {
         this->scissorStateStack.pop();
     }
 
+    void GameRendererDx::PushWorldMatrix(const Math::Matrix4& m) {
+        this->worldMatrixStack.push(GameRendererDx::ToXMMatrix(m));
+    }
+
+    void GameRendererDx::PushWorldMatrixAdditive(const Math::Matrix4& m) {
+        auto newMatrix = GameRendererDx::ToXMMatrix(m);
+
+        if (!this->worldMatrixStack.empty()) {
+            const auto& curMatrix = this->worldMatrixStack.top();
+            newMatrix = DirectX::XMMatrixMultiply(curMatrix, newMatrix);
+        }
+
+        this->worldMatrixStack.push(newMatrix);
+    }
+
+    void GameRendererDx::PopWorldMatrix() {
+        this->worldMatrixStack.pop();
+    }
+
     void GameRendererDx::DoRenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
         BackgroundBrushRendererDx& devObj = static_cast<BackgroundBrushRendererDx&>(*obj);
         devObj.Render(this->dxDev);
@@ -120,7 +144,7 @@ namespace GameRenderer {
 
     void GameRendererDx::DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj) {
         RectangleRendererDx& devObj = static_cast<RectangleRendererDx&>(*obj);
-        devObj.Render(this->dxDev);
+        devObj.Render(this->dxDev, this->GetCurrentWorldMatrix());
     }
 
     void GameRendererDx::DoRenderText(const std::shared_ptr<ITextRenderer>& obj) {
@@ -146,6 +170,48 @@ namespace GameRenderer {
 
         auto d3d = this->dxDev->D3D();
         this->alphaBlendPremultiplied.Set(d3d);
+    }
+
+    D3D11_RECT GameRendererDx::TransformScissorToScreen(ID3D11DeviceContext* d3d, const Math::Vector2& scissorCenter, const Math::Vector2& scissorHalfSize) {
+        const auto screenPixSize = this->GetScreenPixelSize();
+        const float ar = screenPixSize.x / screenPixSize.y;
+
+        auto transform = DirectX::XMMatrixScaling(scissorHalfSize.x, scissorHalfSize.y, 1.f);
+        transform = DirectX::XMMatrixMultiply(transform, DirectX::XMMatrixTranslation(scissorCenter.x, scissorCenter.y, 1.f));
+        transform = DirectX::XMMatrixMultiply(transform, this->GetCurrentWorldMatrix());
+        transform = DirectX::XMMatrixMultiply(transform, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f));
+
+        auto leftTop = DirectX::XMVectorSet(-0.5f, 0.5f, 0.f, 1.f);
+        auto rightBottom = DirectX::XMVectorSet(0.5f, -0.5f, 0.f, 1.f);
+
+        leftTop = DirectX::XMVector3Project(leftTop, 0.f, 0.f, screenPixSize.x, screenPixSize.y, 0.f, 1.f, transform, DirectX::XMMatrixIdentity(), DirectX::XMMatrixIdentity());
+        rightBottom = DirectX::XMVector3Project(rightBottom, 0.f, 0.f, screenPixSize.x, screenPixSize.y, 0.f, 1.f, transform, DirectX::XMMatrixIdentity(), DirectX::XMMatrixIdentity());
+
+        D3D11_RECT box;
+
+        box.left = static_cast<int>(DirectX::XMVectorGetX(leftTop));
+        box.top = static_cast<int>(DirectX::XMVectorGetY(leftTop));
+        box.right = static_cast<int>(DirectX::XMVectorGetX(rightBottom));
+        box.bottom = static_cast<int>(DirectX::XMVectorGetY(rightBottom));
+
+        return box;
+    }
+
+    DirectX::XMMATRIX GameRendererDx::GetCurrentWorldMatrix() const {
+        if (this->worldMatrixStack.empty()) {
+            return DirectX::XMMatrixIdentity();
+        }
+
+        return this->worldMatrixStack.top();
+    }
+
+    DirectX::XMMATRIX GameRendererDx::ToXMMatrix(const Math::Matrix4& m) {
+        return DirectX::XMMatrixSet(
+            m._00, m._01, m._02, m._03,
+            m._10, m._11, m._12, m._13,
+            m._20, m._21, m._22, m._23,
+            m._30, m._31, m._32, m._33
+            );
     }
 
 

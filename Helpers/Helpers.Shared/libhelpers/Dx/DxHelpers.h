@@ -5,3 +5,5 @@
 #include "State\OMRenderTargetState.h"
 #include "State\RSViewportState.h"
 #include "State\D3DTargetState.h"
+
+#include "XMMathHelpers.h"

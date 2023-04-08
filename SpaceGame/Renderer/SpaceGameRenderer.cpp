@@ -2,6 +2,7 @@
 
 #include <libhelpersDesktop/Filesystem/StreamFILE.h>
 #include <cmath>
+#include <libhelpers/Math/Matrix.h>
 
 SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer> renderer)
     : renderer(std::move(renderer))
@@ -10,49 +11,72 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     auto& rendererFactory = this->renderer->GetFactory();
 
     this->bgBrush = rendererFactory.MakeBackgroundBrushRenderer(L"Assets\\back.bmp");
-    this->testRect = rendererFactory.MakeRectangleRenderer();
     this->testText = rendererFactory.MakeTextRenderer(L"Arial", 15.f, L"Exit");
 
-    GameRenderer::FilledRectangleGeometryParams rectGeom;
+    {
+        this->testRect = rendererFactory.MakeRectangleRenderer();
 
-    rectGeom.color.r = 0;
-    rectGeom.color.g = 255;
-    rectGeom.color.b = 0;
+        GameRenderer::FilledRectangleGeometryParams rectGeom;
 
-    rectGeom.width = 1.5f;
+        rectGeom.color.r = 0;
+        rectGeom.color.g = 255;
+        rectGeom.color.b = 0;
 
-    rectGeom.roundness = this->rectRoundnessAngle;
+        rectGeom.width = 1.5f;
 
-    this->testRect->SetGeometryParams(rectGeom);
+        rectGeom.roundness = this->rectRoundnessAngle;
 
+        this->testRect->SetGeometryParams(rectGeom);
+    }
 
-    float startY = 0.f;
-    float stepY = 0.02f;
-    float height = 0.00001f;
+    {
+        float startY = 0.f;
+        float stepY = 0.02f;
+        float height = 0.00001f;
+        int lineCount = 40;
 
-    for (int i = 0; i < 40; i++) {
-        auto rectRender = rendererFactory.MakeRectangleRenderer();
-        auto rectRender2 = rendererFactory.MakeRectangleRenderer();
+        for (int i = 0; i < lineCount; i++) {
+            auto rectRender = rendererFactory.MakeRectangleRenderer();
+            auto rectRender2 = rendererFactory.MakeRectangleRenderer();
 
-        GameRenderer::FilledRectangleGeometryParams rectGeom2;
+            GameRenderer::FilledRectangleGeometryParams rectGeom;
 
-        rectGeom2.height = height;
+            rectGeom.height = height;
+            rectGeom.color.r = 0;
+            rectGeom.color.g = 255;
+            rectGeom.color.b = 0;
 
-        auto transform = rectRender->GetRectangleTransform();
+            auto transform = rectRender->GetRectangleTransform();
 
-        transform.position.y = i * stepY;
-        transform.rotation.z = DirectX::XMConvertToRadians(45.f);
+            transform.position.y = (i * stepY) + ((lineCount / -2) * stepY);
+            transform.rotation.z = DirectX::XMConvertToRadians(45.f);
 
-        rectRender->SetGeometryParams(rectGeom2);
-        rectRender->SetRectangleTransform(transform);
+            rectRender->SetGeometryParams(rectGeom);
+            rectRender->SetRectangleTransform(transform);
 
-        transform.rotation.z = DirectX::XMConvertToRadians(-45.f);
+            transform.rotation.z = DirectX::XMConvertToRadians(-45.f);
 
-        rectRender2->SetGeometryParams(rectGeom2);
-        rectRender2->SetRectangleTransform(transform);
+            rectRender2->SetGeometryParams(rectGeom);
+            rectRender2->SetRectangleTransform(transform);
 
-        this->bgCrossHatchFill.push_back(std::move(rectRender));
-        this->bgCrossHatchFill.push_back(std::move(rectRender2));
+            this->bgCrossHatchFill.push_back(std::move(rectRender));
+            this->bgCrossHatchFill.push_back(std::move(rectRender2));
+        }
+    }
+
+    {
+        this->shipLivesStateRect = rendererFactory.MakeRectangleRenderer();
+
+        GameRenderer::HollowRectangleGeometryParams rectGeom;
+
+        rectGeom.width = 0.16f;
+        rectGeom.height = 0.16f;
+        rectGeom.thickness = 0.005f;
+        rectGeom.color.r = 0;
+        rectGeom.color.g = 255;
+        rectGeom.color.b = 0;
+
+        this->shipLivesStateRect->SetGeometryParams(rectGeom);
     }
 }
 
@@ -89,18 +113,20 @@ void SpaceGameRenderer::Render() {
     //this->renderer->RenderRectangle(this->testRect);
 
     {
-        Math::IBox box;
+        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(0.f, 0.4f));
 
-        box.left = 634;
-        box.top = 161;
-        box.right = box.left + 157;
-        box.bottom = box.top + 121;
+        const Math::Vector2 scissorScale = { 0.16f, 0.16f };
+        const Math::Vector2 scissorPos = { 0.f, 0.f };
 
-        auto scissorScope = this->renderer->PushScissorScoped(box);
+        {
+            auto scissorScope = this->renderer->PushScissorScoped(scissorPos, scissorScale);
 
-        for (auto& i : this->bgCrossHatchFill) {
-            this->renderer->RenderRectangle(i);
+            for (auto& i : this->bgCrossHatchFill) {
+                this->renderer->RenderRectangle(i);
+            }
         }
+
+        this->renderer->RenderRectangle(this->shipLivesStateRect);
     }
 
     this->renderer->RenderText(this->testText);

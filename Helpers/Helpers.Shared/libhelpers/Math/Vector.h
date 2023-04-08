@@ -17,5 +17,7 @@ namespace Math {
         float y = 0.f;
         float z = 0.f;
         float w = 0.f;
+
+        float Dot(const Vector4& other) const noexcept;
     };
 }

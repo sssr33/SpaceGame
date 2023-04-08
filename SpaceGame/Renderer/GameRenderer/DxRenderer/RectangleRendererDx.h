@@ -14,11 +14,11 @@ namespace GameRenderer {
         RectangleTransform GetRectangleTransform() override;
         void SetRectangleTransform(const RectangleTransform& transform) override;
 
-        void Render(DxDevice* dxDev);
+        void Render(DxDevice* dxDev, const DirectX::XMMATRIX& worldTransform);
 
     private:
         void CheckGeometry(DxDevice* dxDev);
-        void CheckTransform(DxDevice* dxDev);
+        void CheckTransform(DxDevice* dxDev, const DirectX::XMMATRIX& worldTransform);
 
         GeometryParams geomParams;
         bool geomParamsUpdated = true;
@@ -27,6 +27,7 @@ namespace GameRenderer {
         bool transformUpdated = true;
         float lastScreenWidth = 0.f;
         float lastScreenHeight = 0.f;
+        DirectX::XMFLOAT4X4 prevWorldTransform;
 
         Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuf;
         Microsoft::WRL::ComPtr<ID3D11Buffer> idxBuf;

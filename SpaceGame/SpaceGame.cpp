@@ -24,12 +24,7 @@ struct MemoryRecord {
 };
 
 int main() {
-    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-    {
-
-        int stop = 342;
-    }
+    (void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);

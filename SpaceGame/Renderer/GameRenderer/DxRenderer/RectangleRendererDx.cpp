@@ -185,11 +185,11 @@ namespace GameRenderer {
         this->transformUpdated = true;
     }
 
-    void RectangleRendererDx::Render(DxDevice* dxDev) {
+    void RectangleRendererDx::Render(DxDevice* dxDev, const DirectX::XMMATRIX& worldTransform) {
         auto d3dCtx = dxDev->D3D();
 
         CheckGeometry(dxDev);
-        CheckTransform(dxDev);
+        CheckTransform(dxDev, worldTransform);
 
         uint32_t strides = sizeof(ColorVertex2D);
         uint32_t offset = 0;
@@ -290,7 +290,7 @@ namespace GameRenderer {
         H::System::ThrowIfFailed(hr);
     }
 
-    void RectangleRendererDx::CheckTransform(DxDevice* dxDev) {
+    void RectangleRendererDx::CheckTransform(DxDevice* dxDev, const DirectX::XMMATRIX& worldTransform) {
         auto d3dCtx = dxDev->D3D();
 
         uint32_t numViewPorts = 1;
@@ -298,7 +298,14 @@ namespace GameRenderer {
 
         d3dCtx->RSGetViewports(&numViewPorts, &viewport);
 
-        if (!this->transformUpdated && (this->lastScreenWidth != viewport.Width || this->lastScreenHeight != viewport.Height)) {
+        DirectX::XMFLOAT4X4 curWorldTransform;
+        DirectX::XMStoreFloat4x4(&curWorldTransform, worldTransform);
+
+        if (!this->transformUpdated &&
+            (this->lastScreenWidth != viewport.Width || this->lastScreenHeight != viewport.Height ||
+                !XMMathHelpers::Equals(this->prevWorldTransform, curWorldTransform)
+            ))
+        {
             this->transformUpdated = true;
         }
 
@@ -309,6 +316,7 @@ namespace GameRenderer {
         this->transformUpdated = false;
         this->lastScreenWidth = viewport.Width;
         this->lastScreenHeight = viewport.Height;
+        this->prevWorldTransform = curWorldTransform;
 
         struct CBuf {
             DirectX::XMMATRIX mvp;
@@ -327,6 +335,7 @@ namespace GameRenderer {
         cbufData.mvp = DirectX::XMMatrixScaling(scale.x, scale.y, 1.f);
         cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z));
         cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z));
+        cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, worldTransform);
         cbufData.mvp = DirectX::XMMatrixMultiply(cbufData.mvp, DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f));
 
         {

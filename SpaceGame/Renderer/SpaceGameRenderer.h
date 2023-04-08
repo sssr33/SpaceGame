@@ -24,4 +24,5 @@ private:
 
 
     std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> bgCrossHatchFill;
+    std::shared_ptr<GameRenderer::IRectangleRenderer> shipLivesStateRect;
 };

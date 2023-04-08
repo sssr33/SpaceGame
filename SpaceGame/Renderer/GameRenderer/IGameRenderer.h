@@ -2,7 +2,8 @@
 #include "GameRendererId.h"
 #include "IGameRendererFactory.h"
 
-#include <libhelpers/Math/Box.h>
+#include <libhelpers/Math/Vector.h>
+#include <libhelpers/Math/Matrix.h>
 #include <libhelpers/ScopedValue.h>
 
 namespace GameRenderer {
@@ -22,13 +23,20 @@ namespace GameRenderer {
             void operator()(IGameRenderer* renderer);
         };
 
+        struct WorldMatrixPopDestructor {
+            void operator()(IGameRenderer* renderer);
+        };
+
         using OperationScope = ScopedValue<IGameRenderer*, OperationEndDestructor>;
         using AlphaBlendScope = ScopedValue<IGameRenderer*, AlphaBlendPopDestructor>;
         using ScissorScope = ScopedValue<IGameRenderer*, ScissorPopDestructor>;
+        using WorldMatrixPopScope = ScopedValue<IGameRenderer*, WorldMatrixPopDestructor>;
 
         virtual ~IGameRenderer() = default;
 
         virtual IGameRendererFactory& GetFactory() = 0;
+
+        virtual Math::Vector2 GetScreenPixelSize() = 0;
 
         OperationScope OperationBeginScoped();
 
@@ -41,9 +49,15 @@ namespace GameRenderer {
         virtual void PushAlphaBlending(bool premultiplied) = 0;
         virtual void PopAlphaBlending() = 0;
 
-        ScissorScope PushScissorScoped(const Math::IBox& scissorBox);
-        virtual void PushScissor(const Math::IBox& scissorBox) = 0;
+        ScissorScope PushScissorScoped(const Math::Vector2& scissorCenter, const Math::Vector2& scissorHalfSize);
+        virtual void PushScissor(const Math::Vector2& scissorCenter, const Math::Vector2& scissorHalfSize) = 0;
         virtual void PopScissor() = 0;
+
+        WorldMatrixPopScope PushWorldMatrixScoped(const Math::Matrix4& m);
+        WorldMatrixPopScope PushWorldMatrixAdditiveScoped(const Math::Matrix4& m);
+        virtual void PushWorldMatrix(const Math::Matrix4& m) = 0;
+        virtual void PushWorldMatrixAdditive(const Math::Matrix4& m) = 0;
+        virtual void PopWorldMatrix() = 0;
 
         void RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj);
         void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj);

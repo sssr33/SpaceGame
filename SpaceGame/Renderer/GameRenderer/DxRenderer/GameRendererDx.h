@@ -4,6 +4,7 @@
 
 #include <libhelpers/Dx/Dx.h>
 #include <libhelpers/Dx/Renderer/IOutput.h>
+#include <libhelpers/AlignedAllocator.h>
 #include <stack>
 
 namespace GameRenderer {
@@ -13,14 +14,20 @@ namespace GameRenderer {
 
         IGameRendererFactory& GetFactory() override;
 
+        Math::Vector2 GetScreenPixelSize() override;
+
         void OperationBegin() override;
         void OperationEnd() override;
 
         void PushAlphaBlending(bool premultiplied) override;
         void PopAlphaBlending() override;
 
-        void PushScissor(const Math::IBox& scissorBox) override;
+        void PushScissor(const Math::Vector2& scissorCenter, const Math::Vector2& scissorHalfSize) override;
         void PopScissor() override;
+
+        void PushWorldMatrix(const Math::Matrix4& m) override;
+        void PushWorldMatrixAdditive(const Math::Matrix4& m) override;
+        void PopWorldMatrix() override;
 
     private:
         struct BlendState {
@@ -48,6 +55,12 @@ namespace GameRenderer {
         void PushAlphaBlendState();
         void PushAlphaBlendStatePremultiplied();
 
+        D3D11_RECT TransformScissorToScreen(ID3D11DeviceContext* d3d, const Math::Vector2& scissorCenter, const Math::Vector2& scissorHalfSize);
+
+        DirectX::XMMATRIX GetCurrentWorldMatrix() const;
+
+        static DirectX::XMMATRIX ToXMMatrix(const Math::Matrix4& m);
+
         DxDevice* dxDev = nullptr;
         IOutput* output = nullptr;
 
@@ -58,5 +71,7 @@ namespace GameRenderer {
         BlendState alphaBlendPremultiplied;
 
         std::stack<ScissorState> scissorStateStack;
+
+        std::stack<DirectX::XMMATRIX, std::deque<DirectX::XMMATRIX, aligned_allocator<DirectX::XMMATRIX, 16>>> worldMatrixStack;
     };
 }
