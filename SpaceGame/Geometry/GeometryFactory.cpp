@@ -303,8 +303,8 @@ void GeometryFactory::CreateRectangle2(
         mirrorVerterx(vertexCount, vertexCount * 2, false, true);
         mirrorVerterx(vertexCount * 2, vertexCount * 3, true, false);
 
-        totalCount[i] = pos.size() - curIdx[i];
-        curIdxAA[i] = (uint32_t)pos.size();
+        totalCount[i] = static_cast<uint32_t>(pos.size() - curIdx[i]);
+        curIdxAA[i] = static_cast<uint32_t>(pos.size());
 
         for (uint32_t j = 0; j < totalCount[i]; j++) {
             uint32_t jPrev = j == 0 ? totalCount[i] - 1 : j - 1;
@@ -518,8 +518,8 @@ void GeometryFactory::CreateRectangleFilled(
     mirrorVerterx(vertexCount, vertexCount * 2, false, true);
     mirrorVerterx(vertexCount * 2, vertexCount * 3, true, false);
 
-    totalCount = pos.size() - curIdx;
-    curIdxAA = (uint32_t)pos.size();
+    totalCount = static_cast<uint32_t>(pos.size() - curIdx);
+    curIdxAA = static_cast<uint32_t>(pos.size());
 
     for (uint32_t j = 0; j < totalCount; j++) {
         uint32_t jPrev = j == 0 ? totalCount - 1 : j - 1;
@@ -534,7 +534,7 @@ void GeometryFactory::CreateRectangleFilled(
         aaDir.push_back(vecScale);
     }
 
-    uint32_t centerIdx = pos.size();
+    uint32_t centerIdx = static_cast<uint32_t>(pos.size());
 
     pos.push_back(DirectX::XMFLOAT2(0.0f, 0.0f));
     adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));

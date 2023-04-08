@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include <d2d1.h>
+#include <vector>
 
 class MatrixStack {
 public:

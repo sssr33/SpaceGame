@@ -14,7 +14,7 @@ namespace GameRenderer {
         hr = dwriteFactory->CreateTextFormat(font.data(), nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"en-us", textFmt.GetAddressOf());
         H::System::ThrowIfFailed(hr);
 
-        hr = dwriteFactory->CreateTextLayout(text.data(), text.size(), textFmt.Get(), (std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)(), this->textLayout.GetAddressOf());
+        hr = dwriteFactory->CreateTextLayout(text.data(), static_cast<UINT32>(text.size()), textFmt.Get(), (std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)(), this->textLayout.GetAddressOf());
         H::System::ThrowIfFailed(hr);
     }
 

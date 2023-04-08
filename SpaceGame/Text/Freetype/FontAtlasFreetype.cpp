@@ -134,7 +134,7 @@ std::vector<uint8_t> FontAtlasFreetype::ReadStream(Filesystem::IStream &stream) 
 
 uint32_t FontAtlasFreetype::RoundFontHeight(float fontPixelHeight) {
     auto pot = H::MathCP::RoundUpPOT((size_t)std::ceil(fontPixelHeight));
-    return pot;
+    return static_cast<uint32_t>(pot);
 }
 
 

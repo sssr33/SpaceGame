@@ -247,7 +247,7 @@ namespace GameRenderer {
         std::vector<ColorVertex2D> vertices;
         std::vector<uint16_t> indices;
 
-        this->indexCount = indices2.size();
+        this->indexCount = static_cast<uint32_t>(indices2.size());
 
         for (auto& i : indices2) {
             indices.push_back(i);
@@ -268,7 +268,7 @@ namespace GameRenderer {
         D3D11_BUFFER_DESC bufDesc;
         D3D11_SUBRESOURCE_DATA initData;
 
-        bufDesc.ByteWidth = vertices.size() * sizeof(ColorVertex2D);
+        bufDesc.ByteWidth = static_cast<UINT>(vertices.size() * sizeof(ColorVertex2D));
         bufDesc.Usage = D3D11_USAGE_DEFAULT;
         bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufDesc.CPUAccessFlags = 0;
@@ -281,7 +281,7 @@ namespace GameRenderer {
         hr = d3dDev->CreateBuffer(&bufDesc, &initData, this->vertexBuf.ReleaseAndGetAddressOf());
         H::System::ThrowIfFailed(hr);
 
-        bufDesc.ByteWidth = indices.size() * sizeof(uint16_t);
+        bufDesc.ByteWidth = static_cast<UINT>(indices.size() * sizeof(uint16_t));
         bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
         initData.pSysMem = indices.data();
