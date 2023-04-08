@@ -1,9 +1,5 @@
-#ifdef _WIN32
-#include <malloc.h>
-#endif
 #include <cstdint>
-#include <vector>
-#include <iostream>
+#include <stdexcept>
 
 /**
 * Allocator for aligned data.
@@ -109,7 +105,7 @@ public:
 		}
 
 		// Mallocator wraps malloc().
-		void * const pv = _mm_malloc(n * sizeof(T), Alignment);
+		void* const pv = ::operator new[](n * sizeof(T), static_cast<std::align_val_t>(Alignment));
 
 		// Allocators should throw std::bad_alloc in the case of memory allocation failure.
 		if (pv == NULL)
@@ -122,7 +118,7 @@ public:
 
 	void deallocate(T * const p, const std::size_t n) const
 	{
-		_mm_free(p);
+		::operator delete[](p, static_cast<std::align_val_t>(Alignment));
 	}
 
 
