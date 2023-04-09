@@ -49,6 +49,7 @@
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.h" />
+    <ClInclude Include="GameObjects\Stars.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.cpp" />
+    <ClCompile Include="GameObjects\Stars.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

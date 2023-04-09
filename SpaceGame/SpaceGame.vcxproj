@@ -165,6 +165,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\Stars.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\GameRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\GameRendererFactoryDx.h" />
@@ -220,6 +221,7 @@
     <ClInclude Include="Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\Stars.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\GameRendererDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\GameRendererFactoryDx.cpp" />

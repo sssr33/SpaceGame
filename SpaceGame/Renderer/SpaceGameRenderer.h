@@ -1,9 +1,12 @@
 #pragma once
 #include "GameRenderer/IGameRenderer.h"
+#include "GameObjects/Stars.h"
 
 #include <memory>
 #include <vector>
-#include <libhelpers\Dx\Renderer\IRenderer.h>
+#include <chrono>
+#include <optional>
+#include <libhelpers/Dx/Renderer/IRenderer.h>
 
 class SpaceGameRenderer : public IRenderer {
 public:
@@ -14,6 +17,19 @@ public:
     void OutputParametersChanged() override;
 
 private:
+    static constexpr float GameFieldMainWidth = 3.2f;
+    static constexpr float GameFieldMainHeight = 1.7f;
+    static constexpr float ShipLivesMainWidth = 0.28f;
+    static constexpr float ShipLivesMainHeight = 0.38f;
+    static constexpr float ShipLivesStateRectWidth = 0.16f;
+    static constexpr float ShipLivesStateRectHeight = 0.16f;
+
+    void Update();
+
+    std::unique_ptr<Stars> stars;
+
+    std::optional<std::chrono::high_resolution_clock::time_point> prevTime;
+
     std::shared_ptr<GameRenderer::IGameRenderer> renderer;
 
     float rectRoundnessAngle = 0.f;

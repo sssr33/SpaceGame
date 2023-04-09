@@ -69,8 +69,8 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
         GameRenderer::HollowRectangleGeometryParams rectGeom;
 
-        rectGeom.width = 0.16f;
-        rectGeom.height = 0.16f;
+        rectGeom.width = SpaceGameRenderer::ShipLivesStateRectWidth;
+        rectGeom.height = SpaceGameRenderer::ShipLivesStateRectHeight;
         rectGeom.thickness = 0.005f;
         rectGeom.color.r = 0;
         rectGeom.color.g = 255;
@@ -80,16 +80,13 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     }
 
     {
-        const float shipLivesMainWidth = 0.28f;
-        const float shipLivesMainHeight = 0.38f;
-
         {
             this->shipLivesMainBg = rendererFactory.MakeRectangleRenderer();
 
             GameRenderer::FilledRectangleGeometryParams rectGeom;
 
-            rectGeom.width = shipLivesMainWidth;
-            rectGeom.height = shipLivesMainHeight;
+            rectGeom.width = SpaceGameRenderer::ShipLivesMainWidth;
+            rectGeom.height = SpaceGameRenderer::ShipLivesMainHeight;
             rectGeom.color.r = 0;
             rectGeom.color.g = 0;
             rectGeom.color.b = 0;
@@ -102,8 +99,8 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
             GameRenderer::HollowRectangleGeometryParams rectGeom;
 
-            rectGeom.width = shipLivesMainWidth;
-            rectGeom.height = shipLivesMainHeight;
+            rectGeom.width = SpaceGameRenderer::ShipLivesMainWidth;
+            rectGeom.height = SpaceGameRenderer::ShipLivesMainHeight;
             rectGeom.thickness = 0.005f;
             rectGeom.color.r = 0;
             rectGeom.color.g = 0;
@@ -114,16 +111,13 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     }
 
     {
-        const float gameFieldMainWidth = 3.2f;
-        const float gameFieldMainHeight = 1.7f;
-
         {
             this->gameFieldMainBg = rendererFactory.MakeRectangleRenderer();
 
             GameRenderer::FilledRectangleGeometryParams rectGeom;
 
-            rectGeom.width = gameFieldMainWidth;
-            rectGeom.height = gameFieldMainHeight;
+            rectGeom.width = SpaceGameRenderer::GameFieldMainWidth;
+            rectGeom.height = SpaceGameRenderer::GameFieldMainHeight;
             rectGeom.color.r = 0;
             rectGeom.color.g = 0;
             rectGeom.color.b = 0;
@@ -136,8 +130,8 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
             GameRenderer::HollowRectangleGeometryParams rectGeom;
 
-            rectGeom.width = gameFieldMainWidth;
-            rectGeom.height = gameFieldMainHeight;
+            rectGeom.width = SpaceGameRenderer::GameFieldMainWidth;
+            rectGeom.height = SpaceGameRenderer::GameFieldMainHeight;
             rectGeom.thickness = 0.005f;
             rectGeom.color.r = 0;
             rectGeom.color.g = 0;
@@ -148,12 +142,12 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
         {
             const size_t zoneCount = 3;
-            const float stepX = gameFieldMainWidth / (zoneCount );
+            const float stepX = SpaceGameRenderer::GameFieldMainWidth / (zoneCount );
             const float zoneLineHeight = 0.7f;
-            const float zoneLineY = (gameFieldMainHeight * 0.5f) - (zoneLineHeight * 0.5f);
+            const float zoneLineY = (SpaceGameRenderer::GameFieldMainHeight * 0.5f) - (zoneLineHeight * 0.5f);
 
             for (size_t i = 1; i < zoneCount; ++i) {
-                float x = i * stepX + (-gameFieldMainWidth * 0.5f);
+                float x = i * stepX + (-SpaceGameRenderer::GameFieldMainWidth * 0.5f);
 
                 GameRenderer::FilledRectangleGeometryParams rectGeom;
 
@@ -178,6 +172,8 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
             }
         }
     }
+
+    this->stars = std::make_unique<Stars>(0.15f, 30, Math::Vector2{ SpaceGameRenderer::GameFieldMainWidth, SpaceGameRenderer::GameFieldMainHeight }, rendererFactory);
 }
 
 SpaceGameRenderer::~SpaceGameRenderer() {
@@ -195,6 +191,8 @@ void SpaceGameRenderer::Render() {
 
     //    auto symbol = fntAtlas->RenderSymbol(10.1f, 'A');*/
     //}
+
+    this->Update();
 
     auto opScope = this->renderer->OperationBeginScoped();
 
@@ -215,10 +213,9 @@ void SpaceGameRenderer::Render() {
     // shipLives
     //if(false)
     {
-        // -1.6f - 0.14f : -(gameFieldMainWidth * 0.5) - (shipLivesMainWidth * 0.5)
-        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(-1.6f - 0.14f, 0.1f));
+        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(-(SpaceGameRenderer::GameFieldMainWidth * 0.5f) - (SpaceGameRenderer::ShipLivesMainWidth * 0.5f), 0.1f));
 
-        const Math::Vector2 scissorScale = { 0.16f, 0.16f };
+        const Math::Vector2 scissorScale = { SpaceGameRenderer::ShipLivesStateRectWidth, SpaceGameRenderer::ShipLivesStateRectHeight };
         const Math::Vector2 scissorPos = { 0.f, 0.f };
 
         this->renderer->RenderRectangle(this->shipLivesMainBg);
@@ -240,6 +237,8 @@ void SpaceGameRenderer::Render() {
     {
         this->renderer->RenderRectangle(this->gameFieldMainBg);
 
+        this->stars->Draw(*this->renderer);
+
         for (const auto& zoneLine : this->gameFieldEnemyZoneLines) {
             this->renderer->RenderRectangle(zoneLine);
         }
@@ -254,4 +253,25 @@ void SpaceGameRenderer::Render() {
 
 void SpaceGameRenderer::OutputParametersChanged() {
     //auto ctxLk = this->dxDev->LockCtxScoped();
+}
+
+void SpaceGameRenderer::Update() {
+    float dt = 0.f;
+
+    auto curTime = std::chrono::high_resolution_clock::now();
+
+    if (this->prevTime) {
+        auto dtDuration = curTime - *this->prevTime;
+        auto dtSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::ratio<1, 1>>>(dtDuration);
+
+        dt = dtSeconds.count();
+
+        if (dt > 1.f) {
+            dt = 1.f;
+        }
+    }
+
+    this->prevTime = curTime;
+
+    this->stars->Update(dt);
 }
