@@ -59,8 +59,8 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
             rectRender2->SetGeometryParams(rectGeom);
             rectRender2->SetRectangleTransform(transform);
 
-            this->bgCrossHatchFill.push_back(std::move(rectRender));
-            this->bgCrossHatchFill.push_back(std::move(rectRender2));
+            this->shipLivesBgCrossHatchFill.push_back(std::move(rectRender));
+            this->shipLivesBgCrossHatchFill.push_back(std::move(rectRender2));
         }
     }
 
@@ -77,6 +77,106 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
         rectGeom.color.b = 0;
 
         this->shipLivesStateRect->SetGeometryParams(rectGeom);
+    }
+
+    {
+        const float shipLivesMainWidth = 0.28f;
+        const float shipLivesMainHeight = 0.38f;
+
+        {
+            this->shipLivesMainBg = rendererFactory.MakeRectangleRenderer();
+
+            GameRenderer::FilledRectangleGeometryParams rectGeom;
+
+            rectGeom.width = shipLivesMainWidth;
+            rectGeom.height = shipLivesMainHeight;
+            rectGeom.color.r = 0;
+            rectGeom.color.g = 0;
+            rectGeom.color.b = 0;
+
+            this->shipLivesMainBg->SetGeometryParams(rectGeom);
+        }
+
+        {
+            this->shipLivesMainFrame = rendererFactory.MakeRectangleRenderer();
+
+            GameRenderer::HollowRectangleGeometryParams rectGeom;
+
+            rectGeom.width = shipLivesMainWidth;
+            rectGeom.height = shipLivesMainHeight;
+            rectGeom.thickness = 0.005f;
+            rectGeom.color.r = 0;
+            rectGeom.color.g = 0;
+            rectGeom.color.b = 255;
+
+            this->shipLivesMainFrame->SetGeometryParams(rectGeom);
+        }
+    }
+
+    {
+        const float gameFieldMainWidth = 3.2f;
+        const float gameFieldMainHeight = 1.7f;
+
+        {
+            this->gameFieldMainBg = rendererFactory.MakeRectangleRenderer();
+
+            GameRenderer::FilledRectangleGeometryParams rectGeom;
+
+            rectGeom.width = gameFieldMainWidth;
+            rectGeom.height = gameFieldMainHeight;
+            rectGeom.color.r = 0;
+            rectGeom.color.g = 0;
+            rectGeom.color.b = 0;
+
+            this->gameFieldMainBg->SetGeometryParams(rectGeom);
+        }
+
+        {
+            this->gameFieldMainFrame = rendererFactory.MakeRectangleRenderer();
+
+            GameRenderer::HollowRectangleGeometryParams rectGeom;
+
+            rectGeom.width = gameFieldMainWidth;
+            rectGeom.height = gameFieldMainHeight;
+            rectGeom.thickness = 0.005f;
+            rectGeom.color.r = 0;
+            rectGeom.color.g = 0;
+            rectGeom.color.b = 255;
+
+            this->gameFieldMainFrame->SetGeometryParams(rectGeom);
+        }
+
+        {
+            const size_t zoneCount = 3;
+            const float stepX = gameFieldMainWidth / (zoneCount );
+            const float zoneLineHeight = 0.7f;
+            const float zoneLineY = (gameFieldMainHeight * 0.5f) - (zoneLineHeight * 0.5f);
+
+            for (size_t i = 1; i < zoneCount; ++i) {
+                float x = i * stepX + (-gameFieldMainWidth * 0.5f);
+
+                GameRenderer::FilledRectangleGeometryParams rectGeom;
+
+                rectGeom.width = 0.002f;
+                rectGeom.height = zoneLineHeight;
+                rectGeom.color.r = 255;
+                rectGeom.color.g = 255;
+                rectGeom.color.b = 255;
+
+                auto line = rendererFactory.MakeRectangleRenderer();
+
+                line->SetGeometryParams(rectGeom);
+
+                auto transform = line->GetRectangleTransform();
+
+                transform.position.x = x;
+                transform.position.y = zoneLineY;
+
+                line->SetRectangleTransform(transform);
+
+                this->gameFieldEnemyZoneLines.push_back(std::move(line));
+            }
+        }
     }
 }
 
@@ -112,21 +212,39 @@ void SpaceGameRenderer::Render() {
     this->renderer->RenderBackgroundBrush(this->bgBrush);
     //this->renderer->RenderRectangle(this->testRect);
 
+    // shipLives
+    //if(false)
     {
-        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(0.f, 0.4f));
+        // -1.6f - 0.14f : -(gameFieldMainWidth * 0.5) - (shipLivesMainWidth * 0.5)
+        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(-1.6f - 0.14f, 0.1f));
 
         const Math::Vector2 scissorScale = { 0.16f, 0.16f };
         const Math::Vector2 scissorPos = { 0.f, 0.f };
 
+        this->renderer->RenderRectangle(this->shipLivesMainBg);
+
         {
             auto scissorScope = this->renderer->PushScissorScoped(scissorPos, scissorScale);
 
-            for (auto& i : this->bgCrossHatchFill) {
+            for (auto& i : this->shipLivesBgCrossHatchFill) {
                 this->renderer->RenderRectangle(i);
             }
         }
 
         this->renderer->RenderRectangle(this->shipLivesStateRect);
+
+        this->renderer->RenderRectangle(this->shipLivesMainFrame);
+    }
+
+    // gameField
+    {
+        this->renderer->RenderRectangle(this->gameFieldMainBg);
+
+        for (const auto& zoneLine : this->gameFieldEnemyZoneLines) {
+            this->renderer->RenderRectangle(zoneLine);
+        }
+
+        this->renderer->RenderRectangle(this->gameFieldMainFrame);
     }
 
     this->renderer->RenderText(this->testText);

@@ -22,7 +22,12 @@ private:
     std::shared_ptr<GameRenderer::IRectangleRenderer> testRect;
     std::shared_ptr<GameRenderer::ITextRenderer> testText;
 
-
-    std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> bgCrossHatchFill;
+    std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> shipLivesBgCrossHatchFill;
     std::shared_ptr<GameRenderer::IRectangleRenderer> shipLivesStateRect;
+    std::shared_ptr<GameRenderer::IRectangleRenderer> shipLivesMainBg;
+    std::shared_ptr<GameRenderer::IRectangleRenderer> shipLivesMainFrame;
+
+    std::shared_ptr<GameRenderer::IRectangleRenderer> gameFieldMainBg;
+    std::shared_ptr<GameRenderer::IRectangleRenderer> gameFieldMainFrame;
+    std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> gameFieldEnemyZoneLines;
 };
