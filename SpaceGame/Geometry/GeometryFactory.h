@@ -13,6 +13,7 @@ public:
         float width, float height,
         float thickness, float roundnessOuter, float roundnessInner,
         std::vector<DirectX::XMFLOAT2> &pos,
+        std::vector<DirectX::XMFLOAT2> &texCoords,
         std::vector<DirectX::XMFLOAT2> &adjPrev,
         std::vector<DirectX::XMFLOAT2> &adjNext,
         std::vector<float> &aaDir,
@@ -22,6 +23,7 @@ public:
         float width, float height,
         float roundnessOuter,
         std::vector<DirectX::XMFLOAT2> &pos,
+        std::vector<DirectX::XMFLOAT2> &texCoords,
         std::vector<DirectX::XMFLOAT2> &adjPrev,
         std::vector<DirectX::XMFLOAT2> &adjNext,
         std::vector<float> &aaDir,
@@ -46,4 +48,6 @@ private:
     };
 
     static void GenLineIndexes(const GenLineIndexesParams &params);
+
+    static DirectX::XMFLOAT2 GenRectTexCoordsFromPos(float width, float height, const DirectX::XMFLOAT2& pos);
 };

@@ -134,6 +134,7 @@ void GeometryFactory::CreateRectangle2(
     float width, float height,
     float thickness, float roundnessOuter, float roundnessInner,
     std::vector<DirectX::XMFLOAT2> &pos,
+    std::vector<DirectX::XMFLOAT2> &texCoords,
     std::vector<DirectX::XMFLOAT2> &adjPrev,
     std::vector<DirectX::XMFLOAT2> &adjNext,
     std::vector<float> &aaDir,
@@ -258,6 +259,7 @@ void GeometryFactory::CreateRectangle2(
                 pt.y = H::Math::Lerp(ltStart[i].y, ltEnd[i].y, softT.y);
 
                 pos.push_back(pt);
+                texCoords.push_back(GeometryFactory::GenRectTexCoordsFromPos(width, height, pos.back()));
                 adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
                 adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
                 aaDir.push_back(0.0f);
@@ -274,6 +276,7 @@ void GeometryFactory::CreateRectangle2(
                 pt.y = H::Math::Lerp(ltEnd[i].y, rtStart[i].y, t);
 
                 pos.push_back(pt);
+                texCoords.push_back(GeometryFactory::GenRectTexCoordsFromPos(width, height, pos.back()));
                 adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
                 adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
                 aaDir.push_back(0.0f);
@@ -282,7 +285,7 @@ void GeometryFactory::CreateRectangle2(
 
         size_t vertexCount = pos.size() - curIdx[i];
 
-        auto mirrorVerterx = [&pos, &adjPrev, &adjNext, &aaDir, &curIdx, &i](size_t start, size_t vertexCount, bool mirrorX, bool mirrorY)
+        auto mirrorVerterx = [&pos, &texCoords, &adjPrev, &adjNext, &aaDir, &width, &height, &curIdx, &i](size_t start, size_t vertexCount, bool mirrorX, bool mirrorY)
         {
             auto mirror = DirectX::XMFLOAT2(mirrorX ? -1.f : 1.f, mirrorY ? -1.f : 1.f);
 
@@ -293,6 +296,7 @@ void GeometryFactory::CreateRectangle2(
                 vertex.y *= mirror.y;
 
                 pos.push_back(vertex);
+                texCoords.push_back(GeometryFactory::GenRectTexCoordsFromPos(width, height, pos.back()));
                 adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
                 adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
                 aaDir.push_back(0.0f);
@@ -313,6 +317,7 @@ void GeometryFactory::CreateRectangle2(
             auto vertex = pos[curIdx[i] + j];
             auto vNext = pos[curIdx[i] + jNext];
             pos.push_back(vertex);
+            texCoords.push_back(texCoords[curIdx[i] + j]);
 
             //DirectX::XMFLOAT2 vec0Tmp(vertex.x - vPrev.x, vertex.y - vPrev.y);
             //DirectX::XMFLOAT2 vec1Tmp(vNext.x - vertex.x, vNext.y - vertex.y);
@@ -422,6 +427,7 @@ void GeometryFactory::CreateRectangleFilled(
     float width, float height,
     float roundnessOuter,
     std::vector<DirectX::XMFLOAT2> &pos,
+    std::vector<DirectX::XMFLOAT2> &texCoords,
     std::vector<DirectX::XMFLOAT2> &adjPrev,
     std::vector<DirectX::XMFLOAT2> &adjNext,
     std::vector<float> &aaDir,
@@ -473,6 +479,7 @@ void GeometryFactory::CreateRectangleFilled(
             pt.y = H::Math::Lerp(ltStart.y, ltEnd.y, softT.y);
 
             pos.push_back(pt);
+            texCoords.push_back(GeometryFactory::GenRectTexCoordsFromPos(width, height, pos.back()));
             adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
             adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
             aaDir.push_back(0.0f);
@@ -489,6 +496,7 @@ void GeometryFactory::CreateRectangleFilled(
             pt.y = H::Math::Lerp(ltEnd.y, rtStart.y, t);
 
             pos.push_back(pt);
+            texCoords.push_back(GeometryFactory::GenRectTexCoordsFromPos(width, height, pos.back()));
             adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
             adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
             aaDir.push_back(0.0f);
@@ -497,7 +505,7 @@ void GeometryFactory::CreateRectangleFilled(
 
     size_t vertexCount = pos.size() - curIdx;
 
-    auto mirrorVerterx = [&pos, &adjPrev, &adjNext, &aaDir, &curIdx](size_t start, size_t vertexCount, bool mirrorX, bool mirrorY)
+    auto mirrorVerterx = [&pos, &texCoords, &adjPrev, &adjNext, &aaDir, &width, &height, &curIdx](size_t start, size_t vertexCount, bool mirrorX, bool mirrorY)
     {
         auto mirror = DirectX::XMFLOAT2(mirrorX ? -1.f : 1.f, mirrorY ? -1.f : 1.f);
 
@@ -508,6 +516,7 @@ void GeometryFactory::CreateRectangleFilled(
             vertex.y *= mirror.y;
 
             pos.push_back(vertex);
+            texCoords.push_back(GeometryFactory::GenRectTexCoordsFromPos(width, height, pos.back()));
             adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
             adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
             aaDir.push_back(0.0f);
@@ -528,6 +537,7 @@ void GeometryFactory::CreateRectangleFilled(
         auto vertex = pos[curIdx + j];
         auto vNext = pos[curIdx + jNext];
         pos.push_back(vertex);
+        texCoords.push_back(texCoords[curIdx + j]);
 
         adjPrev.push_back(vPrev);
         adjNext.push_back(vNext);
@@ -537,6 +547,7 @@ void GeometryFactory::CreateRectangleFilled(
     uint32_t centerIdx = static_cast<uint32_t>(pos.size());
 
     pos.push_back(DirectX::XMFLOAT2(0.0f, 0.0f));
+    texCoords.push_back(DirectX::XMFLOAT2(0.5f, 0.5f));
     adjPrev.push_back(DirectX::XMFLOAT2(0.f, 0.f));
     adjNext.push_back(DirectX::XMFLOAT2(0.f, 0.f));
     aaDir.push_back(0.0f);
@@ -660,4 +671,16 @@ void GeometryFactory::GenLineIndexes(const GenLineIndexesParams &params) {
     }
 
     int stop = 324;
+}
+
+DirectX::XMFLOAT2 GeometryFactory::GenRectTexCoordsFromPos(float width, float height, const DirectX::XMFLOAT2& pos) {
+    float xMin = -width * 0.5f;
+    float yMin = -height * 0.5f;
+
+    DirectX::XMFLOAT2 tex = {
+        std::clamp((pos.x - xMin) / width, 0.f, 1.f),
+        std::clamp((-pos.y - yMin) / height, 0.f, 1.f)
+    };
+
+    return tex;
 }

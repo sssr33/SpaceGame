@@ -176,6 +176,7 @@ void RectRenderer::Render(DxDevice *dxDev) {
             ColorVertex2D vertices[8 * 2];*/
 
             std::vector<DirectX::XMFLOAT2> pos;
+            std::vector<DirectX::XMFLOAT2> texCoords;
             std::vector<DirectX::XMFLOAT2> adjPrev;
             std::vector<DirectX::XMFLOAT2> adjNext;
             std::vector<float> aaDir;
@@ -188,7 +189,7 @@ void RectRenderer::Render(DxDevice *dxDev) {
             //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, std::fabsf(std::sin(angle2)), std::fabsf(std::sin(angle2 * 1.3f)), pos, adjPrev, adjNext, aaDir, indices2);
             //GeometryFactory::CreateRectangle2(1.0f, 1.0f, 0.01f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
             //GeometryFactory::CreateRectangleFilled(1.0f, 1.0f, 0.0f, pos, adjPrev, adjNext, aaDir, indices2);
-            GeometryFactory::CreateRectangleFilled(1.0f, 1.0f, std::fabsf(std::sin(angle2)), pos, adjPrev, adjNext, aaDir, indices2);
+            GeometryFactory::CreateRectangleFilled(1.0f, 1.0f, std::fabsf(std::sin(angle2)), pos, texCoords, adjPrev, adjNext, aaDir, indices2);
 
             this->indexCount = static_cast<uint32_t>(indices2.size());
             /*GeometryFactory::CreateRectangle(1.0f, 1.0f, 0.01f,

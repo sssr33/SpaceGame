@@ -114,7 +114,8 @@ namespace GameRenderer {
                 { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                 { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                 { "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-                { "TEXCOORD", 2, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                { "TEXCOORD", 2, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                { "TEXCOORD", 3, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
                 { "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
             };
 
@@ -218,6 +219,7 @@ namespace GameRenderer {
         this->geomParamsUpdated = false;
 
         std::vector<DirectX::XMFLOAT2> pos;
+        std::vector<DirectX::XMFLOAT2> texCoords;
         std::vector<DirectX::XMFLOAT2> adjPrev;
         std::vector<DirectX::XMFLOAT2> adjNext;
         std::vector<float> aaDir;
@@ -229,12 +231,12 @@ namespace GameRenderer {
             if constexpr (std::is_same_v<T, FilledRectangleGeometryParams>) {
                 const FilledRectangleGeometryParams& params = arg;
                 color = params.color;
-                GeometryFactory::CreateRectangleFilled(params.width, params.height, params.roundness, pos, adjPrev, adjNext, aaDir, indices2);
+                GeometryFactory::CreateRectangleFilled(params.width, params.height, params.roundness, pos, texCoords, adjPrev, adjNext, aaDir, indices2);
             }
             else if constexpr (std::is_same_v<T, HollowRectangleGeometryParams>) {
                 const HollowRectangleGeometryParams& params = arg;
                 color = params.color;
-                GeometryFactory::CreateRectangle2(params.width, params.height, params.thickness, params.outerRoundness, params.innerRoundness, pos, adjPrev, adjNext, aaDir, indices2);
+                GeometryFactory::CreateRectangle2(params.width, params.height, params.thickness, params.outerRoundness, params.innerRoundness, pos, texCoords, adjPrev, adjNext, aaDir, indices2);
             }
             else {
                 static_assert(false, "non-exhaustive visitor!");
@@ -258,6 +260,7 @@ namespace GameRenderer {
 
             v.color = color;
             v.pos = pos[i];
+            v.tex = texCoords[i];
             v.adjPrev = adjPrev[i];
             v.adjNext = adjNext[i];
             v.aaDir = aaDir[i];

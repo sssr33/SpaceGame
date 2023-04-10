@@ -21,6 +21,7 @@ struct RGBA8Color {
 
 struct ColorVertex2D {
     DirectX::XMFLOAT2 pos;
+    DirectX::XMFLOAT2 tex;
     DirectX::XMFLOAT2 adjPrev;
     DirectX::XMFLOAT2 adjNext;
     float aaDir;

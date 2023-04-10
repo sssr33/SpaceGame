@@ -8,15 +8,17 @@ cbuffer Matrices : register(b0) {
 
 struct VsInput {
     float2 pos : POSITION0;
-    float2 adjPrev : TEXCOORD0;
-    float2 adjNext : TEXCOORD1;
-    float aaDir : TEXCOORD2;
+    float2 tex : TEXCOORD0;
+    float2 adjPrev : TEXCOORD1;
+    float2 adjNext : TEXCOORD2;
+    float aaDir : TEXCOORD3;
     float4 color : COLOR0;
 };
 
 struct PsInput {
     float4 pos : SV_POSITION;
     float4 color : COLOR0;
+    float2 tex : TEXCOORD0;
 };
 
 float2 rot90cw(float2 v) {
@@ -103,6 +105,7 @@ PsInput main(VsInput input) {
     PsInput output = (PsInput)0;
 
     output.color = input.color;
+    output.tex = input.tex;
 
     if (input.aaDir != 0) {
         float4 posTmp = float4(input.pos, 0.0f, 1.0f);
