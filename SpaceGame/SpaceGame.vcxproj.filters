@@ -50,6 +50,9 @@
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.h" />
     <ClInclude Include="GameObjects\Stars.h" />
+    <ClInclude Include="Renderer\GameRenderer\ITexture2D.h" />
+    <ClInclude Include="Renderer\GameRenderer\TexturePixelFormat.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\Texture2DDx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -81,6 +84,7 @@
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.cpp" />
     <ClCompile Include="GameObjects\Stars.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\Texture2DDx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />
@@ -91,6 +95,7 @@
     <FxCompile Include="Shaders\Hlsl\TexPs.hlsl" />
     <FxCompile Include="Shaders\Hlsl\Color2DVs.hlsl" />
     <FxCompile Include="Shaders\Hlsl\Color2DPs.hlsl" />
+    <FxCompile Include="Shaders\Hlsl\ColorTex2DPs.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\NotoSans-Regular.ttf" />

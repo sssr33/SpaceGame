@@ -50,6 +50,7 @@ namespace GameRenderer {
 
         void DoRenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) override;
         void DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj) override;
+        void DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj, const std::shared_ptr<ITexture2D>& tex) override;
         void DoRenderText(const std::shared_ptr<ITextRenderer>& obj) override;
 
         void PushAlphaBlendState();

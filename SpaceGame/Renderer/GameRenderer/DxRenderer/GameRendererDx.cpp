@@ -2,6 +2,7 @@
 #include "BackgroundBrushRendererDx.h"
 #include "RectangleRendererDx.h"
 #include "TextRendererDx.h"
+#include "Texture2DDx.h"
 
 #include <libhelpers/HashString.h>
 #include <libhelpers/HSystem.h>
@@ -145,6 +146,12 @@ namespace GameRenderer {
     void GameRendererDx::DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj) {
         RectangleRendererDx& devObj = static_cast<RectangleRendererDx&>(*obj);
         devObj.Render(this->dxDev, this->GetCurrentWorldMatrix());
+    }
+
+    void GameRendererDx::DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj, const std::shared_ptr<ITexture2D>& tex) {
+        RectangleRendererDx& devObj = static_cast<RectangleRendererDx&>(*obj);
+        Texture2DDx& devTex = static_cast<Texture2DDx&>(*tex);
+        devObj.Render(this->dxDev, devTex, this->GetCurrentWorldMatrix());
     }
 
     void GameRendererDx::DoRenderText(const std::shared_ptr<ITextRenderer>& obj) {

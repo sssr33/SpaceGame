@@ -98,7 +98,7 @@ namespace GameRenderer {
             hr = d3dDev->CreateVertexShader(data.data(), data.size(), nullptr, this->vs.GetAddressOf());
             H::System::ThrowIfFailed(hr);
 
-            D3D11_BUFFER_DESC bufDesc;
+            D3D11_BUFFER_DESC bufDesc = {};
 
             bufDesc.ByteWidth = sizeof(DirectX::XMMATRIX) * 3 + sizeof(DirectX::XMVECTOR);
             bufDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -131,8 +131,16 @@ namespace GameRenderer {
             H::System::ThrowIfFailed(hr);
         }
 
+        // pixel shader tex
         {
-            D3D11_RASTERIZER_DESC rsDesc;
+            auto data = H::System::LoadPackageFile(L"ColorTex2DPs.cso");
+
+            hr = d3dDev->CreatePixelShader(data.data(), data.size(), nullptr, this->psTex.GetAddressOf());
+            H::System::ThrowIfFailed(hr);
+        }
+
+        {
+            D3D11_RASTERIZER_DESC rsDesc = {};
 
             rsDesc.FillMode = D3D11_FILL_SOLID;
             rsDesc.CullMode = D3D11_CULL_NONE;
@@ -146,6 +154,24 @@ namespace GameRenderer {
             rsDesc.AntialiasedLineEnable = FALSE;
 
             hr = d3dDev->CreateRasterizerState(&rsDesc, this->rsState.GetAddressOf());
+            H::System::ThrowIfFailed(hr);
+        }
+
+        {
+            D3D11_SAMPLER_DESC desc = {};
+
+            desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+            desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+            desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+            desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+            desc.MinLOD = -(std::numeric_limits<float>::max)();
+            desc.MaxLOD = (std::numeric_limits<float>::max)();
+            desc.MipLODBias = 0.f;
+            desc.MaxAnisotropy = 1;
+            desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+            std::fill(std::begin(desc.BorderColor), std::end(desc.BorderColor), 1.f);
+
+            hr = d3dDev->CreateSamplerState(&desc, this->sampler.GetAddressOf());
             H::System::ThrowIfFailed(hr);
         }
 
@@ -204,6 +230,39 @@ namespace GameRenderer {
         d3dCtx->VSSetShader(this->vs.Get(), nullptr, 0);
 
         d3dCtx->PSSetShader(this->ps.Get(), nullptr, 0);
+
+        //d3dCtx->RSSetState(this->rsState.Get()); // uncomment to see both sides
+        /*d3dCtx->OMSetDepthStencilState(this->dsState.Get(), 0);*/
+
+        d3dCtx->DrawIndexed(this->indexCount, 0, 0);
+    }
+
+    void RectangleRendererDx::Render(DxDevice* dxDev, Texture2DDx& tex, const DirectX::XMMATRIX& worldTransform) {
+        auto texSrv = tex.GetShaderResrouceView();
+        if (!texSrv) {
+            assert(false);
+            return;
+        }
+
+        auto d3dCtx = dxDev->D3D();
+
+        CheckGeometry(dxDev);
+        CheckTransform(dxDev, worldTransform);
+
+        uint32_t strides = sizeof(ColorVertex2D);
+        uint32_t offset = 0;
+
+        d3dCtx->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        d3dCtx->IASetInputLayout(this->inputLayout.Get());
+        d3dCtx->IASetVertexBuffers(0, 1, this->vertexBuf.GetAddressOf(), &strides, &offset);
+        d3dCtx->IASetIndexBuffer(this->idxBuf.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+        d3dCtx->VSSetConstantBuffers(0, 1, this->vsCBuf.GetAddressOf());
+        d3dCtx->VSSetShader(this->vs.Get(), nullptr, 0);
+
+        d3dCtx->PSSetSamplers(0, 1, this->sampler.GetAddressOf());
+        d3dCtx->PSSetShaderResources(0, 1, texSrv.GetAddressOf());
+        d3dCtx->PSSetShader(this->psTex.Get(), nullptr, 0);
 
         //d3dCtx->RSSetState(this->rsState.Get()); // uncomment to see both sides
         /*d3dCtx->OMSetDepthStencilState(this->dsState.Get(), 0);*/

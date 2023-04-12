@@ -1,7 +1,8 @@
 #pragma once
 #include "../IRectangleRenderer.h"
+#include "Texture2DDx.h"
 
-#include <libhelpers\Dx\Dx.h>
+#include <libhelpers/Dx/Dx.h>
 
 namespace GameRenderer {
     class RectangleRendererDx : public IRectangleRenderer {
@@ -15,6 +16,7 @@ namespace GameRenderer {
         void SetRectangleTransform(const RectangleTransform& transform) override;
 
         void Render(DxDevice* dxDev, const DirectX::XMMATRIX& worldTransform);
+        void Render(DxDevice* dxDev, Texture2DDx& tex, const DirectX::XMMATRIX& worldTransform);
 
     private:
         void CheckGeometry(DxDevice* dxDev);
@@ -36,6 +38,9 @@ namespace GameRenderer {
         Microsoft::WRL::ComPtr<ID3D11VertexShader> vs;
         Microsoft::WRL::ComPtr<ID3D11Buffer> vsCBuf;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> ps;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader> psTex;
+
+        Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler;
 
         uint32_t indexCount = 0;
 

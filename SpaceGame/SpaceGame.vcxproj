@@ -172,6 +172,7 @@
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\MakeDxRenderer.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.h" />
+    <ClInclude Include="Renderer\GameRenderer\DxRenderer\Texture2DDx.h" />
     <ClInclude Include="Renderer\GameRenderer\GameRendererId.h" />
     <ClInclude Include="Renderer\GameRenderer\IGameRenderer.h" />
     <ClInclude Include="Renderer\GameRenderer\IBackgroundBrushRenderer.h" />
@@ -179,6 +180,8 @@
     <ClInclude Include="Renderer\GameRenderer\IGameRendererObject.h" />
     <ClInclude Include="Renderer\GameRenderer\IRectangleRenderer.h" />
     <ClInclude Include="Renderer\GameRenderer\ITextRenderer.h" />
+    <ClInclude Include="Renderer\GameRenderer\ITexture2D.h" />
+    <ClInclude Include="Renderer\GameRenderer\TexturePixelFormat.h" />
     <ClInclude Include="Text\IDxSymbol.h" />
     <ClInclude Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlasSymbol.h" />
     <ClInclude Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlas.h" />
@@ -228,6 +231,7 @@
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\MakeDxRenderer.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\RectangleRendererDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\TextRendererDx.cpp" />
+    <ClCompile Include="Renderer\GameRenderer\DxRenderer\Texture2DDx.cpp" />
     <ClCompile Include="Renderer\GameRenderer\GameRendererId.cpp" />
     <ClCompile Include="Renderer\GameRenderer\IGameRenderer.cpp" />
     <ClCompile Include="Text\SimpleDxFontAtlas\SimpleDxFontAtlasSymbol.cpp" />
@@ -303,6 +307,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Hlsl\ColorTex2DPs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\Hlsl\TexPs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

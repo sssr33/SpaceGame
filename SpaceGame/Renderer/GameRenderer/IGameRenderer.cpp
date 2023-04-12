@@ -1,6 +1,8 @@
 #include "IGameRenderer.h"
 
 #include <cassert>
+#include <algorithm>
+#include <type_traits>
 
 namespace GameRenderer {
     IGameRenderer::OperationScope IGameRenderer::OperationBeginScoped() {
@@ -29,25 +31,34 @@ namespace GameRenderer {
     }
 
     void IGameRenderer::RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
-        this->CheckedRender(obj, &IGameRenderer::DoRenderBackgroundBrush);
+        this->CheckedRender(&IGameRenderer::DoRenderBackgroundBrush, obj);
     }
 
     void IGameRenderer::RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj) {
-        this->CheckedRender(obj, &IGameRenderer::DoRenderRectangle);
+        this->CheckedRender([&](auto&&... args) { this->DoRenderRectangle(args...); }, obj);
+    }
+
+    void IGameRenderer::RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj, const std::shared_ptr<ITexture2D>& tex) {
+        this->CheckedRender([&](auto&&... args) { this->DoRenderRectangle(args...); }, obj, tex);
     }
 
     void IGameRenderer::RenderText(const std::shared_ptr<ITextRenderer>& obj) {
-        this->CheckedRender(obj, &IGameRenderer::DoRenderText);
+        this->CheckedRender(&IGameRenderer::DoRenderText, obj);
     }
 
-    template<class ObjT, class FnT>
-    void IGameRenderer::CheckedRender(const ObjT& obj, FnT fn) {
-        if (!this->IsSameRenderer(*obj)) {
+    template<class FnT, typename... ArgsT>
+    void IGameRenderer::CheckedRender(FnT fn, ArgsT&&... args) {
+        if ((!this->IsSameRenderer(*std::forward<ArgsT>(args)) || ...)) {
             assert(false);
             return;
         }
 
-        (this->*fn)(obj);
+        if constexpr (std::is_member_function_pointer_v<FnT>) {
+            (this->*fn)(std::forward<ArgsT>(args)...);
+        }
+        else {
+            fn(std::forward<ArgsT>(args)...);
+        }
     }
 
     void IGameRenderer::OperationEndDestructor::operator()(IGameRenderer* renderer) {

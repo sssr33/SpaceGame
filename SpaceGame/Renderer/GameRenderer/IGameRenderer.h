@@ -61,14 +61,16 @@ namespace GameRenderer {
 
         void RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj);
         void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj);
+        void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj, const std::shared_ptr<ITexture2D>& tex);
         void RenderText(const std::shared_ptr<ITextRenderer>& obj);
 
     private:
         virtual void DoRenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) = 0;
         virtual void DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj) = 0;
+        virtual void DoRenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj, const std::shared_ptr<ITexture2D>& tex) = 0;
         virtual void DoRenderText(const std::shared_ptr<ITextRenderer>& obj) = 0;
 
-        template<class ObjT, class FnT>
-        void CheckedRender(const ObjT& obj, FnT fn);
+        template<class FnT, class... ArgsT>
+        void CheckedRender(FnT fn, ArgsT&&... args);
     };
 }
