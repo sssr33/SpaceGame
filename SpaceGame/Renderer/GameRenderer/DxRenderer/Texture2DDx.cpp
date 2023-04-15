@@ -10,7 +10,7 @@ namespace GameRenderer {
 
         desc.Width = width;
         desc.Height = height;
-        desc.MipLevels = 0;
+        desc.MipLevels = 1;
         desc.ArraySize = 1;
         desc.Format = pixFormat;
         desc.SampleDesc.Count = 1;
@@ -36,7 +36,7 @@ namespace GameRenderer {
 
         srvDesc.Format = desc.Format;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
+        srvDesc.Texture2D.MipLevels = 1;
         srvDesc.Texture2D.MostDetailedMip = 0;
 
         hr = dev->CreateShaderResourceView(this->texture.Get(), &srvDesc, this->srv.GetAddressOf());

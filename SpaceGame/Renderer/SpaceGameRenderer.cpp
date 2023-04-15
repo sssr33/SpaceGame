@@ -141,6 +141,22 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
         }
 
         {
+            RGBA8Color color[2] = {};
+
+            color[0].a = 0;
+            color[0].r = 255;
+            color[0].g = 255;
+            color[0].b = 255;
+
+            color[1].a = 255;
+            color[1].r = 255;
+            color[1].g = 255;
+            color[1].b = 255;
+
+            this->testTex = rendererFactory.MakeTexture2DFromMemory(1, 2, GameRenderer::TexturePixelFormat::BGRA8, &color, sizeof(color));
+        }
+
+        {
             const size_t zoneCount = 3;
             const float stepX = SpaceGameRenderer::GameFieldMainWidth / (zoneCount );
             const float zoneLineHeight = 0.7f;
@@ -154,8 +170,8 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
                 rectGeom.width = 0.002f;
                 rectGeom.height = zoneLineHeight;
                 rectGeom.color.r = 255;
-                rectGeom.color.g = 255;
-                rectGeom.color.b = 255;
+                rectGeom.color.g = 0;
+                rectGeom.color.b = 0;
 
                 auto line = rendererFactory.MakeRectangleRenderer();
 
@@ -240,7 +256,7 @@ void SpaceGameRenderer::Render() {
         this->stars->Draw(*this->renderer);
 
         for (const auto& zoneLine : this->gameFieldEnemyZoneLines) {
-            this->renderer->RenderRectangle(zoneLine);
+            this->renderer->RenderRectangle(zoneLine, this->testTex);
         }
 
         this->renderer->RenderRectangle(this->gameFieldMainFrame);
