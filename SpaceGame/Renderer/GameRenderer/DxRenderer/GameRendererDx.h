@@ -8,7 +8,7 @@
 #include <stack>
 
 namespace GameRenderer {
-    class GameRendererDx : public IGameRenderer {
+    class GameRendererDx final : public IGameRenderer {
     public:
         GameRendererDx(DxDevice* dxDev, IOutput* output);
 
@@ -28,6 +28,8 @@ namespace GameRenderer {
         void PushWorldMatrix(const Math::Matrix4& m) override;
         void PushWorldMatrixAdditive(const Math::Matrix4& m) override;
         void PopWorldMatrix() override;
+
+        Math::Vector3 GetWorldCoordsFromPixel(const Math::Vector2& pos) override;
 
     private:
         struct BlendState {

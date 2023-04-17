@@ -138,6 +138,28 @@ namespace GameRenderer {
         this->worldMatrixStack.pop();
     }
 
+    Math::Vector3 GameRendererDx::GetWorldCoordsFromPixel(const Math::Vector2& pos) {
+        Math::Vector3 worldCoords;
+        auto screenSize = this->GetScreenPixelSize();
+        float ar = screenSize.x / screenSize.y;
+        auto projMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), ar, 0.001f, 10.0f);
+
+        float fRange = 10.0f / (10.0f - 0.001f);
+        float zProj = 1.f * fRange + (-fRange * 0.001f);
+
+        auto unproj = DirectX::XMVector3Unproject(DirectX::XMVectorSet(pos.x, pos.y, zProj, 0.f), 0.f, 0.f, screenSize.x, screenSize.y, 0.f, 1.f, projMatrix, DirectX::XMMatrixIdentity(), DirectX::XMMatrixIdentity());
+
+        /*auto proj = DirectX::XMVector3Project(DirectX::XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, 0.f, screenSize.x, screenSize.y, 0.f, 1.f, projMatrix, DirectX::XMMatrixIdentity(), DirectX::XMMatrixIdentity());
+        proj = DirectX::XMVectorSetW(proj, 1.f);
+        auto unproj2 = DirectX::XMVector3Unproject(proj, 0.f, 0.f, screenSize.x, screenSize.y, 0.f, 1.f, projMatrix, DirectX::XMMatrixIdentity(), DirectX::XMMatrixIdentity());*/
+
+        worldCoords.x = DirectX::XMVectorGetX(unproj);
+        worldCoords.y = DirectX::XMVectorGetY(unproj);
+        worldCoords.z = DirectX::XMVectorGetZ(unproj);
+
+        return worldCoords;
+    }
+
     void GameRendererDx::DoRenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj) {
         BackgroundBrushRendererDx& devObj = static_cast<BackgroundBrushRendererDx&>(*obj);
         devObj.Render(this->dxDev);

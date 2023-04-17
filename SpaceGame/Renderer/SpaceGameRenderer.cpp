@@ -190,6 +190,17 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     }
 
     this->stars = std::make_unique<Stars>(0.15f, 30, Math::Vector2{ SpaceGameRenderer::GameFieldMainWidth, SpaceGameRenderer::GameFieldMainHeight }, rendererFactory);
+
+    AI::StartData startData;
+
+    startData.sectors = 3;
+
+    startData.mainRect.left = 0.f - SpaceGameRenderer::GameFieldMainWidth / 2.f;
+    startData.mainRect.top = 0.f + SpaceGameRenderer::GameFieldMainHeight / 2.f;
+    startData.mainRect.right = 0.f + SpaceGameRenderer::GameFieldMainWidth / 2.f;
+    startData.mainRect.bottom = 0.f - SpaceGameRenderer::GameFieldMainHeight / 2.f;
+
+    this->ai.StartGame(startData, rendererFactory);
 }
 
 SpaceGameRenderer::~SpaceGameRenderer() {
@@ -211,6 +222,24 @@ void SpaceGameRenderer::Render() {
     this->Update();
 
     auto opScope = this->renderer->OperationBeginScoped();
+
+    {
+        auto pixSz = this->renderer->GetScreenPixelSize();
+        auto pixCenter = Math::Vector2 { pixSz.x / 2.f, pixSz.y / 2.f };
+
+        auto pixLtSq = Math::Vector2{ pixCenter.x + -(pixSz.y * 0.5f), pixCenter.y + -(pixSz.y * 0.5f) };
+        auto pixRbSq = Math::Vector2{ pixCenter.x + (pixSz.y * 0.5f), pixCenter.y + (pixSz.y * 0.5f) };
+
+        auto worldCoordsCenter = this->renderer->GetWorldCoordsFromPixel(pixCenter);
+
+        auto worldCoordsBt = this->renderer->GetWorldCoordsFromPixel(pixLtSq);
+        auto worldCoordsTop = this->renderer->GetWorldCoordsFromPixel(pixRbSq);
+
+        auto worldCoordsBt2 = this->renderer->GetWorldCoordsFromPixel({ 0.f, 0.f });
+        auto worldCoordsTop2 = this->renderer->GetWorldCoordsFromPixel(pixSz);
+
+        int stop = 234;
+    }
 
     auto rectTransform = this->testRect->GetRectangleTransform();
     rectTransform.rotation.x += DirectX::XMConvertToRadians(0.4f);
@@ -255,6 +284,8 @@ void SpaceGameRenderer::Render() {
 
         this->stars->Draw(*this->renderer);
 
+        this->ai.Draw(*this->renderer);
+
         for (const auto& zoneLine : this->gameFieldEnemyZoneLines) {
             this->renderer->RenderRectangle(zoneLine, this->testTex);
         }
@@ -269,6 +300,21 @@ void SpaceGameRenderer::Render() {
 
 void SpaceGameRenderer::OutputParametersChanged() {
     //auto ctxLk = this->dxDev->LockCtxScoped();
+}
+
+void SpaceGameRenderer::MouseMove(const Math::Vector2& pos) {
+    auto opScope = this->renderer->OperationBeginScoped();
+    auto worldCoords = this->renderer->GetWorldCoordsFromPixel(pos);
+
+    this->ai.PlayerSetPos(worldCoords.x);
+}
+
+void SpaceGameRenderer::MouseDown(const Math::Vector2& pos) {
+    this->ai.PlayerGunShot();
+}
+
+void SpaceGameRenderer::MouseUp(const Math::Vector2& pos) {
+
 }
 
 void SpaceGameRenderer::Update() {
@@ -290,4 +336,5 @@ void SpaceGameRenderer::Update() {
     this->prevTime = curTime;
 
     this->stars->Update(dt);
+    this->ai.Update(dt);
 }

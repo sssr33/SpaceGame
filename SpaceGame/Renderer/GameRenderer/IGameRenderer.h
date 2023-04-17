@@ -59,6 +59,8 @@ namespace GameRenderer {
         virtual void PushWorldMatrixAdditive(const Math::Matrix4& m) = 0;
         virtual void PopWorldMatrix() = 0;
 
+        virtual Math::Vector3 GetWorldCoordsFromPixel(const Math::Vector2& pos) = 0;
+
         void RenderBackgroundBrush(const std::shared_ptr<IBackgroundBrushRenderer>& obj);
         void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj);
         void RenderRectangle(const std::shared_ptr<IRectangleRenderer>& obj, const std::shared_ptr<ITexture2D>& tex);

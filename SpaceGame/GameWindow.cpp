@@ -31,6 +31,21 @@ ProcessMsgResult GameWindow::ProcessMsg(uint32_t msg, WPARAM wparam, LPARAM lpar
 
         break;
     }
+    case WM_MOUSEMOVE: {
+        auto pos = Math::Vector2 { static_cast<float>(LOWORD(lparam)), static_cast<float>(HIWORD(lparam)) };
+        this->renderer->MouseMove(pos);
+        break;
+    }
+    case WM_LBUTTONDOWN: {
+        auto pos = Math::Vector2{ static_cast<float>(LOWORD(lparam)), static_cast<float>(HIWORD(lparam)) };
+        this->renderer->MouseDown(pos);
+        break;
+    }
+    case WM_LBUTTONUP: {
+        auto pos = Math::Vector2{ static_cast<float>(LOWORD(lparam)), static_cast<float>(HIWORD(lparam)) };
+        this->renderer->MouseUp(pos);
+        break;
+    }
     default: {
         do {
             res = this->ProcessInput(msg, wparam, lparam);

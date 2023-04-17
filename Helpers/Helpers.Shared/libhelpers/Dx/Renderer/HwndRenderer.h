@@ -3,9 +3,12 @@
 
 #include <thread>
 #include <type_traits>
-#include <libhelpers\Thread\critical_section.h>
-#include <libhelpers\Thread\condition_variable.h>
-#include <libhelpers\Dx\Renderer\IRenderer.h>
+#include <vector>
+#include <functional>
+#include <libhelpers/Thread/critical_section.h>
+#include <libhelpers/Thread/condition_variable.h>
+#include <libhelpers/Dx\Renderer/IRenderer.h>
+#include <libhelpers/Math/Vector.h>
 
 template<class T>
 class HwndRenderer {
@@ -59,6 +62,30 @@ public:
         this->newSize = size;
     }
 
+    void MouseMove(const Math::Vector2& pos) {
+        thread::critical_section::scoped_lock lk(this->cs);
+
+        this->inputQueue.push_back([this, pos]() {
+            this->renderer.MouseMove(pos);
+            });
+    }
+
+    void MouseDown(const Math::Vector2& pos) {
+        thread::critical_section::scoped_lock lk(this->cs);
+
+        this->inputQueue.push_back([this, pos]() {
+            this->renderer.MouseDown(pos);
+            });
+    }
+
+    void MouseUp(const Math::Vector2& pos) {
+        thread::critical_section::scoped_lock lk(this->cs);
+
+        this->inputQueue.push_back([this, pos]() {
+            this->renderer.MouseUp(pos);
+            });
+    }
+
 private:
     enum class RenderThreadState {
         Work,
@@ -77,8 +104,11 @@ private:
 
     DirectX::XMFLOAT2 newSize;
     bool resizeRequested;
+    std::vector<std::function<void()>> inputQueue;
 
     void RenderProc() {
+        std::vector<std::function<void()>> threadInputQueue;
+
         while (this->CheckRenderThreadState()) {
             bool resize = false;
             DirectX::XMFLOAT2 size;
@@ -90,6 +120,8 @@ private:
                     size = this->newSize;
                     this->resizeRequested = false;
                 }
+
+                std::swap(threadInputQueue, this->inputQueue);
             }
 
             if (resize) {
@@ -99,8 +131,14 @@ private:
             }
 
             this->output.BeginRender();
+            for (const auto& i : threadInputQueue) {
+                i();
+            }
+
             this->renderer.Render();
             this->output.EndRender();
+
+            threadInputQueue.clear();
         }
     }
 
