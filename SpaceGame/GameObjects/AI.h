@@ -1,8 +1,11 @@
 #pragma once
 #include "Player.h"
+#include "Bullet.h"
 #include "Renderer/GameRenderer/IGameRenderer.h"
 #include "Renderer/GameRenderer/IRectangleRenderer.h"
 
+#include <vector>
+#include <list>
 #include <libhelpers/Math/Box.h>
 
 class AI {
@@ -16,14 +19,18 @@ public:
 
     void Update(float dt); // main_calc
 
-    void Draw(GameRenderer::IGameRenderer& renderer); // main_draw
+    void Draw(GameRenderer::IGameRenderer& renderer, float dt); // main_draw
 
     void PlayerSetPos(float x); // player_pos_set
-    void PlayerGunShot(); // player_gun_shoot
+    void PlayerGunShot(GameRenderer::IGameRendererFactory& factory); // player_gun_shoot
 
 private:
     void DrawPlayer(GameRenderer::IGameRenderer& renderer); // draw_player
     void DrawPlayerFire(GameRenderer::IGameRenderer& renderer); // draw_player_fire
+
+    void DrawBullets(GameRenderer::IGameRenderer& renderer, std::list<Bullet>& g, float smokeLenght, float speed, float dt, RGBA8Color smokeColor); // draw_bullets
+
+    void Hit(std::list<Bullet>& g); // hit
 
     Math::FBox GetPlayerShipBox() const; // player_ship
 
@@ -39,4 +46,7 @@ private:
     int maxKills; // max_kills
     std::shared_ptr<GameRenderer::IRectangleRenderer> playerRectRenderer;
     std::shared_ptr<GameRenderer::IRectangleRenderer> playerRectFillRenderer;
+
+    std::vector<std::list<Bullet>> gun;
+    std::shared_ptr<GameRenderer::ITexture2D> gunSmokeTex;
 };

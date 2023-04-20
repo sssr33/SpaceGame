@@ -141,22 +141,6 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
         }
 
         {
-            RGBA8Color color[2] = {};
-
-            color[0].a = 0;
-            color[0].r = 255;
-            color[0].g = 255;
-            color[0].b = 255;
-
-            color[1].a = 255;
-            color[1].r = 255;
-            color[1].g = 255;
-            color[1].b = 255;
-
-            this->testTex = rendererFactory.MakeTexture2DFromMemory(1, 2, GameRenderer::TexturePixelFormat::BGRA8, &color, sizeof(color));
-        }
-
-        {
             const size_t zoneCount = 3;
             const float stepX = SpaceGameRenderer::GameFieldMainWidth / (zoneCount );
             const float zoneLineHeight = 0.7f;
@@ -284,10 +268,10 @@ void SpaceGameRenderer::Render() {
 
         this->stars->Draw(*this->renderer);
 
-        this->ai.Draw(*this->renderer);
+        this->ai.Draw(*this->renderer, this->lastDt);
 
         for (const auto& zoneLine : this->gameFieldEnemyZoneLines) {
-            this->renderer->RenderRectangle(zoneLine, this->testTex);
+            this->renderer->RenderRectangle(zoneLine);
         }
 
         this->renderer->RenderRectangle(this->gameFieldMainFrame);
@@ -310,7 +294,10 @@ void SpaceGameRenderer::MouseMove(const Math::Vector2& pos) {
 }
 
 void SpaceGameRenderer::MouseDown(const Math::Vector2& pos) {
-    this->ai.PlayerGunShot();
+    auto opScope = this->renderer->OperationBeginScoped();
+    auto& rendererFactory = this->renderer->GetFactory();
+
+    this->ai.PlayerGunShot(rendererFactory);
 }
 
 void SpaceGameRenderer::MouseUp(const Math::Vector2& pos) {
@@ -334,6 +321,7 @@ void SpaceGameRenderer::Update() {
     }
 
     this->prevTime = curTime;
+    this->lastDt = dt;
 
     this->stars->Update(dt);
     this->ai.Update(dt);

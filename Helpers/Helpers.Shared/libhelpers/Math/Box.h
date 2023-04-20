@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector.h"
 
 namespace Math {
     struct IBox {
@@ -13,5 +14,7 @@ namespace Math {
         float top = 0.f;
         float right = 0.f;
         float bottom = 0.f;
+
+        bool IsInside(const Math::Vector2& v) const noexcept;
     };
 }

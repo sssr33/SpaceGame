@@ -34,6 +34,7 @@ private:
     AI ai;
     std::unique_ptr<Stars> stars;
 
+    float lastDt = 0.f;
     std::optional<std::chrono::high_resolution_clock::time_point> prevTime;
 
     std::shared_ptr<GameRenderer::IGameRenderer> renderer;
@@ -52,6 +53,4 @@ private:
     std::shared_ptr<GameRenderer::IRectangleRenderer> gameFieldMainBg;
     std::shared_ptr<GameRenderer::IRectangleRenderer> gameFieldMainFrame;
     std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> gameFieldEnemyZoneLines;
-
-    std::shared_ptr<GameRenderer::ITexture2D> testTex;
 };
