@@ -36,6 +36,8 @@ private:
 
     void EnemyUpdate(float dt); // enemy_control
 
+    void EnemyAttack(GameRenderer::IGameRendererFactory& factory);
+
     Math::FBox GetPlayerShipBox() const; // player_ship
 
     const Math::FBox& GetMainRect() const; // mainRect
@@ -46,6 +48,8 @@ private:
 
     void Division(float maxCoord, float minCoord, float top, float bottom, GameRenderer::IGameRendererFactory& factory); // division
     void SetRespawnPointsAndCreateEnemies(GameRenderer::IGameRendererFactory& factory); // set_respawn_points
+
+    static constexpr float EnemyAttackInverval = 0.8f; // 800ms
 
     StartData startData;
 
@@ -67,4 +71,5 @@ private:
 
     std::vector<Math::Vector2> respawnPoint; // respawn_point
     std::vector<Enemy> enemyShips; // en_ship
+    float enemyAttackTimer = AI::EnemyAttackInverval;
 };

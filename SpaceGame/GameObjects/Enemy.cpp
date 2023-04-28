@@ -145,6 +145,10 @@ bool Enemy::GetStatus() const {
     return this->status;
 }
 
+bool Enemy::GetUnset() const {
+    return this->unset;
+}
+
 bool Enemy::GetNeedExplosion() const {
     return this->needExplosion;
 }

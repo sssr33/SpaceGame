@@ -49,6 +49,14 @@ void AI::Update(float dt) {
 }
 
 void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
+    if (this->enemyAttackTimer > 0.f) {
+        this->enemyAttackTimer -= dt;
+    }
+    else {
+        this->enemyAttackTimer = AI::EnemyAttackInverval;
+        this->EnemyAttack(renderer.GetFactory());
+    }
+
     this->DrawPlayer(renderer);
 
     for (auto& enemy : this->enemyShips) {
@@ -93,7 +101,7 @@ void AI::PlayerGunShot(GameRenderer::IGameRendererFactory& factory) {
 
     pos.y += this->playerShipSize / 2.f;
 
-    gun[0].push_front(Bullet(pos, factory, this->gunSmokeTex));
+    gun[0].emplace_back(pos, factory, this->gunSmokeTex);
 }
 
 void AI::DrawPlayer(GameRenderer::IGameRenderer& renderer) {
@@ -178,6 +186,25 @@ void AI::EnemyUpdate(float dt) {
         }
         start = end;
         end += this->GetEnemiesPerSector();
+    }
+}
+
+void AI::EnemyAttack(GameRenderer::IGameRendererFactory& factory) {
+    // TODO: refactor
+
+    const size_t enemiesPerSector = this->GetEnemiesPerSector();
+    size_t enemyGunIndex = 1;
+
+    for (size_t i = 0; i < this->enemyShips.size(); i += enemiesPerSector) {
+        for (size_t k = i; k < i + enemiesPerSector; ++k) {
+            auto& enemy = this->enemyShips[k];
+
+            if (enemy.GetStatus() && !enemy.GetUnset() && enemyGunIndex < this->gun.size()) {
+                this->gun[enemyGunIndex].emplace_back(enemy.GetGunPos(), factory, this->gunSmokeTex);
+                ++enemyGunIndex;
+                break;
+            }
+        }
     }
 }
 

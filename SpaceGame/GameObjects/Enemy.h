@@ -17,6 +17,7 @@ public:
     void AnimTest(float x, float lim1, float lim2, float dt); // anim_test
     Math::Vector2 GetGunPos(); // get_gun_pos
     bool GetStatus() const; // get_status
+    bool GetUnset() const; // unset
 
     bool GetNeedExplosion() const; // need_explosion
     void SetNeedExplosion(bool need); // need_explosion
