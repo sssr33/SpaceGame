@@ -9,13 +9,6 @@ void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactor
     this->playerColor = RGBA8Color(0, 72, 145);
     this->playerShipSize = 0.2f;
 
-    Math::Vector2 playerStart;
-
-    playerStart.x = (this->GetMainRect().left + this->GetMainRect().right) / 2.f;
-    playerStart.y = this->GetMainRect().bottom + (this->playerShipSize / 2.f) + 0.03f;
-
-    this->player.SetPos(playerStart);
-
     this->playerRectRenderer = factory.MakeRectangleRenderer();
     this->playerRectFillRenderer = factory.MakeRectangleRenderer();
 
@@ -36,9 +29,20 @@ void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactor
     }
 
     this->gun.resize(this->startData.sectors + 1);
+
+    this->Division(this->GetMainRect().Right(), this->GetMainRect().Left(), this->GetMainRect().Top(), this->GetMainRect().Center().y, factory);
+    this->sectorMiddle = (this->sectors.front().Left() + this->sectors.front().Right()) / 2.f;
+    this->SetRespawnPointsAndCreateEnemies(factory);
+
+    Math::Vector2 playerStart;
+    playerStart.x = (this->GetMainRect().Left() + this->GetMainRect().Right()) / 2.f;
+    playerStart.y = this->GetMainRect().Bottom() + (this->playerShipSize / 2.f) + 0.03f;
+    this->player.SetPos(playerStart);
 }
 
 void AI::Update(float dt) {
+    this->EnemyUpdate(dt);
+
     for (auto& g : this->gun) {
         this->Hit(g);
     }
@@ -46,6 +50,18 @@ void AI::Update(float dt) {
 
 void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
     this->DrawPlayer(renderer);
+
+    for (auto& enemy : this->enemyShips) {
+        enemy.Draw(renderer);
+
+        if (!enemy.GetStatus()) {
+            enemy.DrawRespawnPortal(renderer);
+        }
+    }
+
+    for (int i = 0; i < this->GetSectorsNum() - 1; ++i) {
+        this->sectors[i].Draw(renderer);
+    }
 
     if (!gun.empty()) {
         constexpr float SmokeLength = 0.5f;
@@ -60,8 +76,8 @@ void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
 }
 
 void AI::PlayerSetPos(float x) {
-    if ((x > this->GetMainRect().left + this->playerShipSize / 2.f)
-        && (x < this->GetMainRect().right - this->playerShipSize / 2.f)
+    if ((x > this->GetMainRect().Left() + this->playerShipSize / 2.f)
+        && (x < this->GetMainRect().Right() - this->playerShipSize / 2.f)
         )
     {
         this->player.SetPosX(x);
@@ -87,13 +103,13 @@ void AI::DrawPlayer(GameRenderer::IGameRenderer& renderer) {
 
     geom.color = this->playerColor;
     geom.thickness = 0.001f;
-    geom.width = playerBox.right - playerBox.left;
-    geom.height = playerBox.top - playerBox.bottom;
+    geom.width = playerBox.Width();
+    geom.height = playerBox.Height();
 
     auto transform = this->playerRectRenderer->GetRectangleTransform();
 
-    transform.position.x = (playerBox.right + playerBox.left) / 2.f;
-    transform.position.y = (playerBox.bottom + playerBox.top) / 2.f;
+    transform.position.x = playerBox.Center().x;
+    transform.position.y = playerBox.Center().y;
 
     GameRenderer::FilledRectangleGeometryParams fillGeom;
 
@@ -139,19 +155,91 @@ void AI::Hit(std::list<Bullet>& g) {
         });
 }
 
+void AI::EnemyUpdate(float dt) {
+    size_t start = 0;
+    size_t end = this->GetEnemiesPerSector();
+    const auto playerPos = this->player.GetPos();
+
+    for (size_t i = 0; i < this->GetSectorsNum(); ++i) {
+        const auto& sector = this->sectors[i];
+
+        for (; start < end; ++start) {
+            auto& enemy = this->enemyShips[start];
+
+            enemy.AnimTest(playerPos.x, sector.Left(), sector.Right(), dt);
+            if (!enemy.GetStatus() && enemy.GetNeedExplosion()) {
+                this->kills++;
+                for (int i = 0; i < 5; i++) {
+                    /*get_expl(expl, en_ship[start].get_enemy_rect(), 40);
+                    explosions.push_front(expl);*/
+                }
+                enemy.SetNeedExplosion(false);
+            }
+        }
+        start = end;
+        end += this->GetEnemiesPerSector();
+    }
+}
+
 Math::FBox AI::GetPlayerShipBox() const {
-    Math::FBox box;
-    const auto& playerPos = this->player.GetPos();
-    const float halfSize = this->playerShipSize / 2.f;
-
-    box.left = playerPos.x - halfSize;
-    box.top = playerPos.y + halfSize;
-    box.right = playerPos.x + halfSize;
-    box.bottom = playerPos.y - halfSize;
-
-    return box;
+    return Math::FBox::FromSquare(this->playerShipSize, this->player.GetPos());
 }
 
 const Math::FBox& AI::GetMainRect() const {
     return this->startData.mainRect;
+}
+
+size_t AI::GetEnemyNum() const {
+    return this->startData.sectors * 3;
+}
+
+size_t AI::GetEnemiesPerSector() const {
+    return this->GetEnemyNum() / this->GetSectorsNum();
+}
+
+size_t AI::GetSectorsNum() const {
+    return this->startData.sectors;
+}
+
+void AI::Division(float maxCoord, float minCoord, float top, float bottom, GameRenderer::IGameRendererFactory& factory) {
+    this->sectors.clear();
+    this->sectors.reserve(this->GetSectorsNum());
+
+    this->sectorLength = (maxCoord - minCoord) / static_cast<float>(this->GetSectorsNum());
+    float tempLenght = this->sectorLength;
+    float tempLenght2 = 0.f;
+    for (size_t i = 0; i < this->GetSectorsNum(); ++i) {
+        float left = maxCoord - tempLenght;
+        float right = maxCoord - tempLenght2;
+
+        this->sectors.emplace_back(Math::FBox::FromLTRB(left, top, right, bottom), factory);
+
+        tempLenght += this->sectorLength;
+        tempLenght2 += this->sectorLength;
+    }
+}
+
+void AI::SetRespawnPointsAndCreateEnemies(GameRenderer::IGameRendererFactory& factory) {
+    this->enemyShips.reserve(this->GetEnemyNum());
+    this->respawnPoint.reserve(this->GetEnemyNum());
+
+    const size_t enemiesPerSector = this->GetEnemiesPerSector();
+    const float enemyOffsetInSector = (this->sectors.front().Top() - this->sectors.front().Bottom()) / static_cast<float>(enemiesPerSector + 1);
+    size_t start = 0;
+    size_t end = enemiesPerSector;
+    float offsetY = enemyOffsetInSector;
+    float offsetX = this->sectorMiddle;
+
+    for (size_t i = 0; i < this->GetSectorsNum(); ++i, offsetX -= this->sectorLength) {
+        for (size_t j = start; j < end; ++j, offsetY += enemyOffsetInSector) {
+            this->respawnPoint.emplace_back(offsetX, sectors[i].Bottom() + offsetY);
+            this->enemyShips.emplace_back(factory);
+
+            this->enemyShips.back().SetModelPos(this->respawnPoint.back());
+        }
+
+        offsetY = enemyOffsetInSector;
+        start = end;
+        end += enemiesPerSector;
+    }
 }

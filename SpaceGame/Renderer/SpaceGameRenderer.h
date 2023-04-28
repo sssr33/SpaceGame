@@ -52,5 +52,4 @@ private:
 
     std::shared_ptr<GameRenderer::IRectangleRenderer> gameFieldMainBg;
     std::shared_ptr<GameRenderer::IRectangleRenderer> gameFieldMainFrame;
-    std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> gameFieldEnemyZoneLines;
 };

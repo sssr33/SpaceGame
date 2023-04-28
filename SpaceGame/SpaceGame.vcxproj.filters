@@ -56,6 +56,8 @@
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\AI.h" />
     <ClInclude Include="GameObjects\Bullet.h" />
+    <ClInclude Include="GameObjects\Enemy.h" />
+    <ClInclude Include="GameObjects\Sector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -92,6 +94,8 @@
     <ClCompile Include="GameObjects\AI.cpp" />
     <ClCompile Include="Geometry\TexVertex.cpp" />
     <ClCompile Include="GameObjects\Bullet.cpp" />
+    <ClCompile Include="GameObjects\Enemy.cpp" />
+    <ClCompile Include="GameObjects\Sector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

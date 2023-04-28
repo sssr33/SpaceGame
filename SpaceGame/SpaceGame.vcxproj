@@ -104,6 +104,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,6 +120,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +137,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,6 +156,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\3rdParty\freetype\freetype\include\;$(ProjectDir)..\Helpers\Helpers.Desktop\;$(ProjectDir)..\Helpers\Helpers.Shared\;$(IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,7 +171,9 @@
   <ItemGroup>
     <ClInclude Include="GameObjects\AI.h" />
     <ClInclude Include="GameObjects\Bullet.h" />
+    <ClInclude Include="GameObjects\Enemy.h" />
     <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\Sector.h" />
     <ClInclude Include="GameObjects\Stars.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.h" />
     <ClInclude Include="Renderer\GameRenderer\DxRenderer\GameRendererDx.h" />
@@ -229,7 +235,9 @@
   <ItemGroup>
     <ClCompile Include="GameObjects\AI.cpp" />
     <ClCompile Include="GameObjects\Bullet.cpp" />
+    <ClCompile Include="GameObjects\Enemy.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameObjects\Sector.cpp" />
     <ClCompile Include="GameObjects\Stars.cpp" />
     <ClCompile Include="Geometry\TexVertex.cpp" />
     <ClCompile Include="Renderer\GameRenderer\DxRenderer\BackgroundBrushRendererDx.cpp" />

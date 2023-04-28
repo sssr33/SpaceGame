@@ -1,12 +1,14 @@
 #include "SpaceGameRenderer.h"
 
-#include <libhelpersDesktop/Filesystem/StreamFILE.h>
 #include <cmath>
+#include <libhelpersDesktop/Filesystem/StreamFILE.h>
 #include <libhelpers/Math/Matrix.h>
 
 SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer> renderer)
     : renderer(std::move(renderer))
 {
+    srand(static_cast<uint32_t>(time(NULL)));
+
     auto opScope = this->renderer->OperationBeginScoped();
     auto& rendererFactory = this->renderer->GetFactory();
 
@@ -139,38 +141,6 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
             this->gameFieldMainFrame->SetGeometryParams(rectGeom);
         }
-
-        {
-            const size_t zoneCount = 3;
-            const float stepX = SpaceGameRenderer::GameFieldMainWidth / (zoneCount );
-            const float zoneLineHeight = 0.7f;
-            const float zoneLineY = (SpaceGameRenderer::GameFieldMainHeight * 0.5f) - (zoneLineHeight * 0.5f);
-
-            for (size_t i = 1; i < zoneCount; ++i) {
-                float x = i * stepX + (-SpaceGameRenderer::GameFieldMainWidth * 0.5f);
-
-                GameRenderer::FilledRectangleGeometryParams rectGeom;
-
-                rectGeom.width = 0.002f;
-                rectGeom.height = zoneLineHeight;
-                rectGeom.color.r = 255;
-                rectGeom.color.g = 0;
-                rectGeom.color.b = 0;
-
-                auto line = rendererFactory.MakeRectangleRenderer();
-
-                line->SetGeometryParams(rectGeom);
-
-                auto transform = line->GetRectangleTransform();
-
-                transform.position.x = x;
-                transform.position.y = zoneLineY;
-
-                line->SetRectangleTransform(transform);
-
-                this->gameFieldEnemyZoneLines.push_back(std::move(line));
-            }
-        }
     }
 
     this->stars = std::make_unique<Stars>(0.15f, 30, Math::Vector2{ SpaceGameRenderer::GameFieldMainWidth, SpaceGameRenderer::GameFieldMainHeight }, rendererFactory);
@@ -179,10 +149,7 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
     startData.sectors = 3;
 
-    startData.mainRect.left = 0.f - SpaceGameRenderer::GameFieldMainWidth / 2.f;
-    startData.mainRect.top = 0.f + SpaceGameRenderer::GameFieldMainHeight / 2.f;
-    startData.mainRect.right = 0.f + SpaceGameRenderer::GameFieldMainWidth / 2.f;
-    startData.mainRect.bottom = 0.f - SpaceGameRenderer::GameFieldMainHeight / 2.f;
+    startData.mainRect = Math::FBox::FromRect(SpaceGameRenderer::GameFieldMainWidth, SpaceGameRenderer::GameFieldMainHeight);
 
     this->ai.StartGame(startData, rendererFactory);
 }
@@ -269,10 +236,6 @@ void SpaceGameRenderer::Render() {
         this->stars->Draw(*this->renderer);
 
         this->ai.Draw(*this->renderer, this->lastDt);
-
-        for (const auto& zoneLine : this->gameFieldEnemyZoneLines) {
-            this->renderer->RenderRectangle(zoneLine);
-        }
 
         this->renderer->RenderRectangle(this->gameFieldMainFrame);
     }
