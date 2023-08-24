@@ -58,6 +58,7 @@
     <ClInclude Include="GameObjects\Bullet.h" />
     <ClInclude Include="GameObjects\Enemy.h" />
     <ClInclude Include="GameObjects\Sector.h" />
+    <ClInclude Include="GameObjects\Explosion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="GameObjects\Bullet.cpp" />
     <ClCompile Include="GameObjects\Enemy.cpp" />
     <ClCompile Include="GameObjects\Sector.cpp" />
+    <ClCompile Include="GameObjects\Explosion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

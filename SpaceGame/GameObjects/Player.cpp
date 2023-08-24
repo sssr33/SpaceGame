@@ -21,3 +21,7 @@ void Player::Damage(float damage) {
 float Player::GetHealth() const {
     return this->health;
 }
+
+bool Player::IsImmortal() const {
+    return this->immortal;
+}

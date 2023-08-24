@@ -3,6 +3,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Sector.h"
+#include "Explosion.h"
 #include "Renderer/GameRenderer/IGameRenderer.h"
 #include "Renderer/GameRenderer/IRectangleRenderer.h"
 
@@ -17,37 +18,59 @@ public:
         Math::FBox mainRect;
     };
 
-    void StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory); // start_game
+    // start_game
+    void StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory);
 
-    void Update(float dt); // main_calc
+    // main_calc
+    void Update(float dt);
 
-    void Draw(GameRenderer::IGameRenderer& renderer, float dt); // main_draw
+    // main_draw
+    void Draw(GameRenderer::IGameRenderer& renderer, float dt);
 
-    void PlayerSetPos(float x); // player_pos_set
-    void PlayerGunShot(GameRenderer::IGameRendererFactory& factory); // player_gun_shoot
+    // player_pos_set
+    void PlayerSetPos(float x);
+    // player_gun_shoot
+    void PlayerGunShot(GameRenderer::IGameRendererFactory& factory);
 
 private:
-    void DrawPlayer(GameRenderer::IGameRenderer& renderer); // draw_player
-    void DrawPlayerFire(GameRenderer::IGameRenderer& renderer); // draw_player_fire
+    // draw_player
+    void DrawPlayer(GameRenderer::IGameRenderer& renderer);
+    // draw_player_fire
+    void DrawPlayerFire(GameRenderer::IGameRenderer& renderer);
 
-    void DrawBullets(GameRenderer::IGameRenderer& renderer, std::list<Bullet>& g, float smokeLenght, float speed, float dt, RGBA8Color smokeColor); // draw_bullets
+    // draw_bullets
+    void DrawBullets(GameRenderer::IGameRenderer& renderer, std::list<Bullet>& g, float smokeLenght, float speed, float dt, RGBA8Color smokeColor);
 
-    void Hit(std::list<Bullet>& g); // hit
+    // draw_explosions
+    void DrawExplosions(GameRenderer::IGameRenderer& renderer, float dt);
+    // calc_explosions
+    void UpdateExplosions();
+    // get_expl
+    Explosion MakeExplosion(const Math::FBox& zone, float finalRadius) const;
 
-    void EnemyUpdate(float dt); // enemy_control
+    // hit
+    void Hit(std::list<Bullet>& g);
+
+    // enemy_control
+    void EnemyUpdate(float dt);
 
     void EnemyAttack(GameRenderer::IGameRendererFactory& factory);
 
-    Math::FBox GetPlayerShipBox() const; // player_ship
+    // player_ship
+    Math::FBox GetPlayerShipBox() const;
 
-    const Math::FBox& GetMainRect() const; // mainRect
+    // mainRect
+    const Math::FBox& GetMainRect() const;
 
     size_t GetEnemyNum() const;
     size_t GetEnemiesPerSector() const;
-    size_t GetSectorsNum() const;// sectors_num
+    // sectors_num
+    size_t GetSectorsNum() const;
 
-    void Division(float maxCoord, float minCoord, float top, float bottom, GameRenderer::IGameRendererFactory& factory); // division
-    void SetRespawnPointsAndCreateEnemies(GameRenderer::IGameRendererFactory& factory); // set_respawn_points
+    // division
+    void Division(float maxCoord, float minCoord, float top, float bottom, GameRenderer::IGameRendererFactory& factory);
+    // set_respawn_points
+    void SetRespawnPointsAndCreateEnemies(GameRenderer::IGameRendererFactory& factory);
 
     static constexpr float EnemyAttackInverval = 0.8f; // 800ms
 
@@ -72,4 +95,6 @@ private:
     std::vector<Math::Vector2> respawnPoint; // respawn_point
     std::vector<Enemy> enemyShips; // en_ship
     float enemyAttackTimer = AI::EnemyAttackInverval;
+
+    std::list<Explosion> explosions;
 };

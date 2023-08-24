@@ -46,6 +46,8 @@ void AI::Update(float dt) {
     for (auto& g : this->gun) {
         this->Hit(g);
     }
+
+    this->UpdateExplosions();
 }
 
 void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
@@ -81,6 +83,8 @@ void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
             DrawBullets(renderer, gun[i], SmokeLength, -BulletSpeed, dt, RGBA8Color(255, 0, 0));
         }
     }
+
+    this->DrawExplosions(renderer, dt);
 }
 
 void AI::PlayerSetPos(float x) {
@@ -149,6 +153,31 @@ void AI::DrawBullets(GameRenderer::IGameRenderer& renderer, std::list<Bullet>& g
     }
 }
 
+void AI::DrawExplosions(GameRenderer::IGameRenderer& renderer, float dt) {
+    for (auto& i : this->explosions) {
+        i.Draw(renderer, dt);
+    }
+}
+
+void AI::UpdateExplosions() {
+    std::remove_if(std::begin(this->explosions), std::end(this->explosions), [](const Explosion& i)
+        {
+            return !i.IsActive();
+        });
+}
+
+Explosion AI::MakeExplosion(const Math::FBox& zone, float finalRadius) const {
+    Math::Vector2 randPos;
+
+    float fltRndX = static_cast<float>(rand() % 1000) / 1000.f;
+    float fltRndY = static_cast<float>(rand() % 1000) / 1000.f;
+
+    randPos.x = zone.Left() + fltRndX * zone.Width();
+    randPos.y = zone.Top() + fltRndY * zone.Height();
+
+    return Explosion(randPos, finalRadius);
+}
+
 void AI::Hit(std::list<Bullet>& g) {
     const auto& mainRect = this->GetMainRect();
 
@@ -157,6 +186,26 @@ void AI::Hit(std::list<Bullet>& g) {
 
         if (!mainRect.IsInside(checkPos)) {
             return true;
+        }
+
+        auto playerShip = this->GetPlayerShipBox();
+        if (playerShip.IsInside(checkPos)) {
+            if (!this->player.IsImmortal()) {
+                this->explosions.push_back(Explosion(checkPos, 0.05f));
+                this->player.Damage(5.f);
+                return true;
+            }
+        }
+        else {
+            for (auto& enShip : this->enemyShips) {
+                auto enemyBox = enShip.GetEnemyRect();
+
+                if (enemyBox.IsInside(checkPos)) {
+                    this->explosions.push_back(Explosion(checkPos, 0.05f));
+                    this->player.Damage(20.f);
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -178,6 +227,7 @@ void AI::EnemyUpdate(float dt) {
             if (!enemy.GetStatus() && enemy.GetNeedExplosion()) {
                 this->kills++;
                 for (int i = 0; i < 5; i++) {
+                    this->explosions.push_back(this->MakeExplosion(enemy.GetEnemyRect(), 0.4f));
                     /*get_expl(expl, en_ship[start].get_enemy_rect(), 40);
                     explosions.push_front(expl);*/
                 }
