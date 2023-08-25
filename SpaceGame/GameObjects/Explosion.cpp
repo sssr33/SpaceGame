@@ -48,6 +48,12 @@ void Explosion::CheckRenderers(GameRenderer::IGameRendererFactory& factory) {
     this->innerPart = factory.MakeRectangleRenderer();
     this->outerPart = factory.MakeRectangleRenderer();
 
+    // TODO add outline
+    // pen - outline - brush fill
+    // expl_color_out = (HBRUSH)SelectObject(hdc, CreateSolidBrush(RGB(236, 0, 0)));
+    // expl_out = (HPEN)SelectObject(hdc, CreatePen(PS_SOLID, 2, RGB(255, 56, 6)));
+    // expl_color_inner = (HBRUSH)SelectObject(hdc, CreateSolidBrush(RGB(255, 100, 100)));
+    // expl_inner = (HPEN)SelectObject(hdc, CreatePen(PS_SOLID, 2, RGB(255, 56, 56)));
     GameRenderer::FilledRectangleGeometryParams innerGeom;
 
     innerGeom.width = 1.f;
