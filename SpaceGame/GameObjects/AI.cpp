@@ -160,7 +160,7 @@ void AI::DrawExplosions(GameRenderer::IGameRenderer& renderer, float dt) {
 }
 
 void AI::UpdateExplosions() {
-    std::remove_if(std::begin(this->explosions), std::end(this->explosions), [](const Explosion& i)
+    (void)std::remove_if(std::begin(this->explosions), std::end(this->explosions), [](const Explosion& i)
         {
             return !i.IsActive();
         });
