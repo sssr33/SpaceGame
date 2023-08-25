@@ -10,25 +10,43 @@ class Enemy {
 public:
     explicit Enemy(GameRenderer::IGameRendererFactory& factory);
 
-    void Draw(GameRenderer::IGameRenderer& renderer); // draw_enemy
-    void DrawRespawnPortal(GameRenderer::IGameRenderer& renderer); // Draw_respawn_portal
+    // draw_enemy
+    void Draw(GameRenderer::IGameRenderer& renderer);
+    // Draw_respawn_portal
+    void DrawRespawnPortal(GameRenderer::IGameRenderer& renderer);
 
-    void SetModelPos(const Math::Vector2& pos); // set_model_pos
-    void AnimTest(float x, float lim1, float lim2, float dt); // anim_test
-    Math::Vector2 GetGunPos(); // get_gun_pos
-    bool GetStatus() const; // get_status
-    bool GetUnset() const; // unset
+    // set_model_pos
+    void SetModelPos(const Math::Vector2& pos);
+    // anim_test
+    void AnimTest(float x, float lim1, float lim2, float dt);
+    // get_gun_pos
+    Math::Vector2 GetGunPos();
+    // get_status
+    bool GetStatus() const;
+    // unset
+    bool GetUnset() const;
 
-    bool GetNeedExplosion() const; // need_explosion
-    void SetNeedExplosion(bool need); // need_explosion
+    // need_explosion
+    bool GetNeedExplosion() const;
+    // need_explosion
+    void SetNeedExplosion(bool need);
 
-    Math::FBox GetEnemyRect() const; // get_enemy_rect
-    void Damage(float damage); // damage
-    //void after_respawn_sync(RECT, bool); // after_respawn_sync
-    bool GetDirection(); // get_direction
-    void SetDirection(size_t direct); // set_direction
-    Math::Vector2 GetCenter(); // get_xy
-    void Respawn(const Math::Vector2& pos, size_t direct); // respawn
+    // get_enemy_rect
+    Math::FBox GetEnemyRect() const;
+    // damage
+    void Damage(float damage);
+
+    // after_respawn_sync
+    //void after_respawn_sync(RECT, bool);
+
+    // get_direction
+    bool GetDirection();
+    // set_direction
+    void SetDirection(size_t direct);
+    // get_xy
+    Math::Vector2 GetCenter();
+    // respawn
+    void Respawn(const Math::Vector2& pos, size_t direct);
 
 private:
     class Switch {
