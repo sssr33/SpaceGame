@@ -13,7 +13,7 @@ public:
     // draw_enemy
     void Draw(GameRenderer::IGameRenderer& renderer);
     // Draw_respawn_portal
-    void DrawRespawnPortal(GameRenderer::IGameRenderer& renderer);
+    void DrawRespawnPortal(GameRenderer::IGameRenderer& renderer, float dt);
 
     // set_model_pos
     void SetModelPos(const Math::Vector2& pos);
@@ -65,7 +65,10 @@ private:
     Math::FBox model;
 
     float portalPulse = 0.f; // portal_pulse
+    int portalPulseCount = 0;
     float respawnTime = 0.f; // respawn_time
+    float respawnTimer = 0.f;
+    bool portalStarted = false;
 
     bool respawned = false;
     bool needExplosion = true; // need_explosion
@@ -77,4 +80,7 @@ private:
     std::shared_ptr<GameRenderer::IRectangleRenderer> modelRenderer;
     std::shared_ptr<GameRenderer::IRectangleRenderer> modelFillRenderer;
     std::shared_ptr<GameRenderer::IRectangleRenderer> modelCenterDotRenderer;
+
+    std::shared_ptr<GameRenderer::IRectangleRenderer> portalInnerFillRenderer;
+    std::shared_ptr<GameRenderer::IRectangleRenderer> portalOuterFillRenderer;
 };

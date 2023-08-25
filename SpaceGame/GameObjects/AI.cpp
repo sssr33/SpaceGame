@@ -65,7 +65,7 @@ void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
         enemy.Draw(renderer);
 
         if (!enemy.GetStatus()) {
-            enemy.DrawRespawnPortal(renderer);
+            enemy.DrawRespawnPortal(renderer, dt);
         }
     }
 

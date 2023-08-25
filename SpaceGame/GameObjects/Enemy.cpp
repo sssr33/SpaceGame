@@ -9,6 +9,29 @@ Enemy::Enemy(GameRenderer::IGameRendererFactory& factory)
     this->modelRenderer = factory.MakeRectangleRenderer();
     this->modelFillRenderer = factory.MakeRectangleRenderer();
     this->modelCenterDotRenderer = factory.MakeRectangleRenderer();
+
+    // TODO add outline
+    // pen - outline - brush fill
+    // pen = (HPEN)SelectObject(hdc, CreatePen(PS_SOLID, 3, RGB(0, 23, 40)));
+    // brush = (HBRUSH)SelectObject(hdc, CreateSolidBrush(RGB(0, 35, 62)));
+    // pen = (HPEN)SelectObject(hdc, CreatePen(PS_SOLID, 1, RGB(0, 23, 40)));
+    // brush = (HBRUSH)SelectObject(hdc, CreateSolidBrush(RGB(0, 49, 85)));
+    this->portalInnerFillRenderer = factory.MakeRectangleRenderer();
+    this->portalOuterFillRenderer = factory.MakeRectangleRenderer();
+
+    GameRenderer::FilledRectangleGeometryParams portalInnerGeom;
+
+    portalInnerGeom.color = RGBA8Color(0, 35, 62);
+    portalInnerGeom.width = 1.f;
+    portalInnerGeom.height = 1.f;
+    portalInnerGeom.roundness = 1.f;
+
+    auto portalOuterGeom = portalInnerGeom;
+
+    portalOuterGeom.color = RGBA8Color(0, 49, 85);
+
+    this->portalInnerFillRenderer->SetGeometryParams(portalInnerGeom);
+    this->portalOuterFillRenderer->SetGeometryParams(portalOuterGeom);
 }
 
 void Enemy::Draw(GameRenderer::IGameRenderer& renderer) {
@@ -52,24 +75,44 @@ void Enemy::Draw(GameRenderer::IGameRenderer& renderer) {
     }
 }
 
-void Enemy::DrawRespawnPortal(GameRenderer::IGameRenderer& renderer) {
-    //respawn_time = 5 + rand() % 35;
-
+void Enemy::DrawRespawnPortal(GameRenderer::IGameRenderer& renderer, float dt) {
     if (!this->status && !this->unset) {
-        //pen = (HPEN)SelectObject(hdc, CreatePen(PS_SOLID, 3, RGB(0, 23, 40)));
-        //brush = (HBRUSH)SelectObject(hdc, CreateSolidBrush(RGB(0, 35, 62)));
-        //Ellipse(hdc, model[1].x, model[1].y - 7, model[0].x, model[0].y + 7);
-        //DeleteObject(SelectObject(hdc, pen));
-        //DeleteObject(SelectObject(hdc, brush));
-        //pen = (HPEN)SelectObject(hdc, CreatePen(PS_SOLID, 1, RGB(0, 23, 40)));
-        //brush = (HBRUSH)SelectObject(hdc, CreateSolidBrush(RGB(0, 49, 85)));
-        //Ellipse(hdc, model[1].x - portal_pulse, model[1].y - 7 - portal_pulse, model[0].x + portal_pulse, model[0].y + 7 + portal_pulse);
-        //DeleteObject(SelectObject(hdc, pen));
-        //DeleteObject(SelectObject(hdc, brush));
+        if (!this->portalStarted) {
+            this->portalStarted = true;
 
+            this->respawnTime = 1 + rand() % 5;
+            this->respawnTimer = 0.f;
+            this->portalPulse = 0.f;
+            this->portalPulseCount = 0;
+        }
 
-        //if (mytimer > respawn_time /*&& i < 8*/) { portal_pulse++; mytimer = 0; }
-        //if (portal_pulse > 10) { portal_pulse = 0; respawned = 1; }
+        this->respawnTimer += dt;
+
+        auto innerTransform = this->portalOuterFillRenderer->GetRectangleTransform();
+        innerTransform.position.x = this->model.Center().x;
+        innerTransform.position.y = this->model.Center().y;
+        innerTransform.scale.x = this->model.Width();
+        innerTransform.scale.y = 0.07f;
+        this->portalOuterFillRenderer->SetRectangleTransform(innerTransform);
+
+        auto outerTransform = this->portalInnerFillRenderer->GetRectangleTransform();
+        outerTransform.position = innerTransform.position;
+        outerTransform.scale = innerTransform.scale;
+        outerTransform.scale.x -= this->portalPulse;
+        outerTransform.scale.y -= this->portalPulse;
+        this->portalInnerFillRenderer->SetRectangleTransform(outerTransform);
+
+        renderer.RenderRectangle(this->portalOuterFillRenderer);
+        renderer.RenderRectangle(this->portalInnerFillRenderer);
+
+        if (this->respawnTimer >= this->respawnTime) {
+            this->portalPulse += 0.01f;
+            ++this->portalPulseCount;
+            this->respawnTimer = 0.f;
+        }
+        if (this->portalPulseCount > 10) {
+            this->respawned = true;
+        }
     }
 }
 
@@ -200,6 +243,7 @@ void Enemy::Respawn(const Math::Vector2& pos, size_t direct) {
     this->direction.SetActive(direct);
 
     this->needExplosion = true;
+    this->portalStarted = false;
 }
 
 
