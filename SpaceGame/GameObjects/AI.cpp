@@ -173,7 +173,7 @@ Explosion AI::MakeExplosion(const Math::FBox& zone, float finalRadius) const {
     float fltRndY = static_cast<float>(rand() % 1000) / 1000.f;
 
     randPos.x = zone.Left() + fltRndX * zone.Width();
-    randPos.y = zone.Top() + fltRndY * zone.Height();
+    randPos.y = zone.Top() - fltRndY * zone.Height();
 
     return Explosion(randPos, finalRadius);
 }
@@ -202,7 +202,7 @@ void AI::Hit(std::list<Bullet>& g) {
 
                 if (enemyBox.IsInside(checkPos)) {
                     this->explosions.push_back(Explosion(checkPos, 0.05f));
-                    this->player.Damage(20.f);
+                    enShip.Damage(20.f);
                     return true;
                 }
             }
@@ -228,8 +228,6 @@ void AI::EnemyUpdate(float dt) {
                 this->kills++;
                 for (int i = 0; i < 5; i++) {
                     this->explosions.push_back(this->MakeExplosion(enemy.GetEnemyRect(), 0.4f));
-                    /*get_expl(expl, en_ship[start].get_enemy_rect(), 40);
-                    explosions.push_front(expl);*/
                 }
                 enemy.SetNeedExplosion(false);
             }
