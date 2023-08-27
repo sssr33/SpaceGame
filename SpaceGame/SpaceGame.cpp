@@ -10,19 +10,6 @@
 #include <map>
 #include <algorithm>
 
-struct MemoryRecord {
-    size_t sz;
-    void *mem;
-
-    MemoryRecord(size_t sz)
-        : sz(sz), mem(nullptr)
-    {}
-
-    bool operator<(const MemoryRecord &other) const {
-        return this->sz < other.sz;
-    }
-};
-
 int main() {
     (void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
     srand(static_cast<uint32_t>(time(NULL)));
