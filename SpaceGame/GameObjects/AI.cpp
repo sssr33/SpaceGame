@@ -177,7 +177,7 @@ void AI::EnemyRespawnInSector() {
 
             bool isAllEnemiesInSectorReadyForRespawn = std::all_of(
                 std::begin(this->enemyShips) + sectorShipStartIdx,
-                std::begin(this->enemyShips) + sectorShipEndIdx, 
+                std::begin(this->enemyShips) + sectorShipEndIdx,
                 [](const Enemy& enemy)
                 {
                     return enemy.IsRespawned();
