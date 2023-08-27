@@ -27,6 +27,7 @@ int main() {
     (void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
     srand(static_cast<uint32_t>(time(NULL)));
 
+    // uncomment if need to hide console window
     /*HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);*/
 
