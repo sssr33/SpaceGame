@@ -63,7 +63,7 @@ private:
 
     // enemy_control
     void EnemyUpdate(float dt);
-
+    // enemy_attack
     void EnemyAttack(GameRenderer::IGameRendererFactory& factory);
 
     // player_ship
