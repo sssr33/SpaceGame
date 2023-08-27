@@ -7,8 +7,6 @@
 SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer> renderer)
     : renderer(std::move(renderer))
 {
-    srand(static_cast<uint32_t>(time(NULL)));
-
     auto opScope = this->renderer->OperationBeginScoped();
     auto& rendererFactory = this->renderer->GetFactory();
 

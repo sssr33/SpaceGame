@@ -5,8 +5,6 @@ Stars::Stars(float speed, size_t starCount, const Math::Vector2& gameFieldSize, 
     , starSpeed(speed)
     , starSize(0.001f)
 {
-    srand(static_cast<uint32_t>(time(NULL)));
-
     this->stars.reserve(starCount);
 
     for (size_t i = 0; i < starCount; ++i) {

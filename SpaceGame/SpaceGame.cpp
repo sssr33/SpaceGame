@@ -25,6 +25,7 @@ struct MemoryRecord {
 
 int main() {
     (void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    srand(static_cast<uint32_t>(time(NULL)));
 
     /*HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);*/
