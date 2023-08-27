@@ -47,6 +47,8 @@ public:
     Math::Vector2 GetCenter();
     // respawn
     void Respawn(const Math::Vector2& pos, size_t direct);
+    // respawned
+    bool IsRespawned() const;
 
 private:
     class Switch {

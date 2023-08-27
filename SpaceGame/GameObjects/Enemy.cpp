@@ -80,7 +80,7 @@ void Enemy::DrawRespawnPortal(GameRenderer::IGameRenderer& renderer, float dt) {
         if (!this->portalStarted) {
             this->portalStarted = true;
 
-            this->respawnTime = 1 + rand() % 5;
+            this->respawnTime = static_cast<float>(1 + rand() % 5);
             this->respawnTimer = 0.f;
             this->portalPulse = 0.f;
             this->portalPulseCount = 0;
@@ -244,6 +244,10 @@ void Enemy::Respawn(const Math::Vector2& pos, size_t direct) {
 
     this->needExplosion = true;
     this->portalStarted = false;
+}
+
+bool Enemy::IsRespawned() const {
+    return this->respawned;
 }
 
 

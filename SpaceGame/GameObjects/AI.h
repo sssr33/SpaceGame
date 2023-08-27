@@ -45,6 +45,8 @@ private:
     void DrawExplosions(GameRenderer::IGameRenderer& renderer, float dt);
     // calc_explosions
     void UpdateExplosions();
+    // enemy_respawn_in_sector
+    void EnemyRespawnInSector();
     // get_expl
     Explosion MakeExplosion(const Math::FBox& zone, float finalRadius) const;
 
@@ -62,8 +64,8 @@ private:
     // mainRect
     const Math::FBox& GetMainRect() const;
 
-    size_t GetEnemyNum() const;
     size_t GetEnemiesPerSector() const;
+    size_t GetEnemyNum() const;
     // sectors_num
     size_t GetSectorsNum() const;
 

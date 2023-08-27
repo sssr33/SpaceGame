@@ -5,6 +5,8 @@
 void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory) {
     this->startData = startData;
 
+    this->maxKills = 20 + rand() % 30;
+
     this->playerStartHealth = this->player.GetHealth();
     this->playerColor = RGBA8Color(0, 72, 145);
     this->playerShipSize = 0.2f;
@@ -48,6 +50,7 @@ void AI::Update(float dt) {
     }
 
     this->UpdateExplosions();
+    this->EnemyRespawnInSector();
 }
 
 void AI::Draw(GameRenderer::IGameRenderer& renderer, float dt) {
@@ -166,6 +169,34 @@ void AI::UpdateExplosions() {
         });
 }
 
+void AI::EnemyRespawnInSector() {
+    if (this->kills < this->maxKills) {
+        for (size_t i = 0; i < this->sectors.size(); ++i) {
+            size_t sectorShipStartIdx = i * this->GetEnemiesPerSector();
+            size_t sectorShipEndIdx = (i + 1) * this->GetEnemiesPerSector();
+
+            bool isAllEnemiesInSectorReadyForRespawn = std::all_of(
+                std::begin(this->enemyShips) + sectorShipStartIdx,
+                std::begin(this->enemyShips) + sectorShipEndIdx, 
+                [](const Enemy& enemy)
+                {
+                    return enemy.IsRespawned();
+                });
+
+            if (isAllEnemiesInSectorReadyForRespawn) {
+                size_t direction = static_cast<size_t>(rand()) % 1;
+                float posX = (this->sectors[i].Left() + this->sectors[i].Right()) / 2.f;
+
+                for (size_t j = sectorShipStartIdx; j < sectorShipEndIdx; ++j) {
+                    auto pos = this->enemyShips[j].GetCenter();
+                    pos.x = posX;
+                    this->enemyShips[j].Respawn(pos, direction);
+                }
+            }
+        }
+    }
+}
+
 Explosion AI::MakeExplosion(const Math::FBox& zone, float finalRadius) const {
     Math::Vector2 randPos;
 
@@ -264,12 +295,12 @@ const Math::FBox& AI::GetMainRect() const {
     return this->startData.mainRect;
 }
 
-size_t AI::GetEnemyNum() const {
-    return this->startData.sectors * 3;
+size_t AI::GetEnemiesPerSector() const {
+    return 3;
 }
 
-size_t AI::GetEnemiesPerSector() const {
-    return this->GetEnemyNum() / this->GetSectorsNum();
+size_t AI::GetEnemyNum() const {
+    return this->startData.sectors * this->GetEnemiesPerSector();
 }
 
 size_t AI::GetSectorsNum() const {
