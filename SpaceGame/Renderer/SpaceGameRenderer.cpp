@@ -30,87 +30,6 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     }
 
     {
-        float startY = 0.f;
-        float stepY = 0.02f;
-        float height = 0.00001f;
-        int lineCount = 40;
-
-        for (int i = 0; i < lineCount; i++) {
-            auto rectRender = rendererFactory.MakeRectangleRenderer();
-            auto rectRender2 = rendererFactory.MakeRectangleRenderer();
-
-            GameRenderer::FilledRectangleGeometryParams rectGeom;
-
-            rectGeom.height = height;
-            rectGeom.color.r = 0;
-            rectGeom.color.g = 255;
-            rectGeom.color.b = 0;
-
-            auto transform = rectRender->GetRectangleTransform();
-
-            transform.position.y = (i * stepY) + ((lineCount / -2) * stepY);
-            transform.rotation.z = DirectX::XMConvertToRadians(45.f);
-
-            rectRender->SetGeometryParams(rectGeom);
-            rectRender->SetRectangleTransform(transform);
-
-            transform.rotation.z = DirectX::XMConvertToRadians(-45.f);
-
-            rectRender2->SetGeometryParams(rectGeom);
-            rectRender2->SetRectangleTransform(transform);
-
-            this->shipLivesBgCrossHatchFill.push_back(std::move(rectRender));
-            this->shipLivesBgCrossHatchFill.push_back(std::move(rectRender2));
-        }
-    }
-
-    {
-        this->shipLivesStateRect = rendererFactory.MakeRectangleRenderer();
-
-        GameRenderer::HollowRectangleGeometryParams rectGeom;
-
-        rectGeom.width = SpaceGameRenderer::ShipLivesStateRectWidth;
-        rectGeom.height = SpaceGameRenderer::ShipLivesStateRectHeight;
-        rectGeom.thickness = 0.005f;
-        rectGeom.color.r = 0;
-        rectGeom.color.g = 255;
-        rectGeom.color.b = 0;
-
-        this->shipLivesStateRect->SetGeometryParams(rectGeom);
-    }
-
-    {
-        {
-            this->shipLivesMainBg = rendererFactory.MakeRectangleRenderer();
-
-            GameRenderer::FilledRectangleGeometryParams rectGeom;
-
-            rectGeom.width = SpaceGameRenderer::ShipLivesMainWidth;
-            rectGeom.height = SpaceGameRenderer::ShipLivesMainHeight;
-            rectGeom.color.r = 0;
-            rectGeom.color.g = 0;
-            rectGeom.color.b = 0;
-
-            this->shipLivesMainBg->SetGeometryParams(rectGeom);
-        }
-
-        {
-            this->shipLivesMainFrame = rendererFactory.MakeRectangleRenderer();
-
-            GameRenderer::HollowRectangleGeometryParams rectGeom;
-
-            rectGeom.width = SpaceGameRenderer::ShipLivesMainWidth;
-            rectGeom.height = SpaceGameRenderer::ShipLivesMainHeight;
-            rectGeom.thickness = 0.005f;
-            rectGeom.color.r = 0;
-            rectGeom.color.g = 0;
-            rectGeom.color.b = 255;
-
-            this->shipLivesMainFrame->SetGeometryParams(rectGeom);
-        }
-    }
-
-    {
         {
             this->gameFieldMainBg = rendererFactory.MakeRectangleRenderer();
 
@@ -204,27 +123,9 @@ void SpaceGameRenderer::Render() {
     this->renderer->RenderBackgroundBrush(this->bgBrush);
     //this->renderer->RenderRectangle(this->testRect);
 
-    // shipLives
-    //if(false)
     {
-        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(-(SpaceGameRenderer::GameFieldMainWidth * 0.5f) - (SpaceGameRenderer::ShipLivesMainWidth * 0.5f), 0.1f));
-
-        const Math::Vector2 scissorScale = { SpaceGameRenderer::ShipLivesStateRectWidth, SpaceGameRenderer::ShipLivesStateRectHeight };
-        const Math::Vector2 scissorPos = { 0.f, 0.f };
-
-        this->renderer->RenderRectangle(this->shipLivesMainBg);
-
-        {
-            auto scissorScope = this->renderer->PushScissorScoped(scissorPos, scissorScale);
-
-            for (auto& i : this->shipLivesBgCrossHatchFill) {
-                this->renderer->RenderRectangle(i);
-            }
-        }
-
-        this->renderer->RenderRectangle(this->shipLivesStateRect);
-
-        this->renderer->RenderRectangle(this->shipLivesMainFrame);
+        auto matrixScope = this->renderer->PushWorldMatrixScoped(Math::Matrix4::Translate(-(SpaceGameRenderer::GameFieldMainWidth * 0.5f) - (Stats::ShipLivesMainWidth * 0.5f), 0.1f));
+        stats.Draw(*this->renderer);
     }
 
     // gameField
