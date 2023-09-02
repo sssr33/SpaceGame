@@ -12,14 +12,6 @@
 #include <list>
 #include <libhelpers/Math/Box.h>
 
-/*
-* ::TODO::
-* stat_control
-* player_immortal
-* set_player_color
-* unfinished boos logic: start_boss_demo, boss_setup, boss_portal_draw
-* player destroy logic
-*/
 class AI {
 public:
     struct StartData {
