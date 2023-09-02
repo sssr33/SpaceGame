@@ -28,9 +28,9 @@ private:
 
     void Update();
 
+    Stats stats;
     AI ai;
     std::unique_ptr<Stars> stars;
-    Stats stats;
 
     float lastDt = 0.f;
     std::optional<std::chrono::high_resolution_clock::time_point> prevTime;

@@ -25,6 +25,8 @@ private:
 
     std::optional<RGBA8Color> shieldColor = Stats::ShieldColorGreen;
     std::optional<RGBA8Color> caseColor = Stats::CaseColorGreen;
+    std::optional<RGBA8Color> shieldColorPrev;
+    std::optional<RGBA8Color> caseColorPrev;
 
     std::vector<std::shared_ptr<GameRenderer::IRectangleRenderer>> shipLivesBgCrossHatchFill;
     std::shared_ptr<GameRenderer::IRectangleRenderer> shipLivesStateRect;

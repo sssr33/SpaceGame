@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Sector.h"
 #include "Explosion.h"
+#include "Stats.h"
 #include "Renderer/GameRenderer/IGameRenderer.h"
 #include "Renderer/GameRenderer/IRectangleRenderer.h"
 
@@ -27,7 +28,7 @@ public:
     };
 
     // start_game
-    void StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory);
+    void StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory, Stats* gameStat);
 
     // main_calc
     void Update(float dt);
@@ -65,6 +66,9 @@ private:
     void EnemyUpdate(float dt);
     // enemy_attack
     void EnemyAttack(GameRenderer::IGameRendererFactory& factory);
+
+    // stat_control
+    void StatUpdate();
 
     // player_ship
     Math::FBox GetPlayerShipBox() const;
@@ -107,4 +111,7 @@ private:
     float enemyAttackTimer = AI::EnemyAttackInverval;
 
     std::list<Explosion> explosions;
+
+    // non owning ptr
+    Stats* gameStat = nullptr;
 };

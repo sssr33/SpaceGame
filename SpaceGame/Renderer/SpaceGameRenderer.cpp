@@ -65,10 +65,9 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     AI::StartData startData;
 
     startData.sectors = 3;
-
     startData.mainRect = Math::FBox::FromRect(SpaceGameRenderer::GameFieldMainWidth, SpaceGameRenderer::GameFieldMainHeight);
 
-    this->ai.StartGame(startData, rendererFactory);
+    this->ai.StartGame(startData, rendererFactory, &this->stats);
 }
 
 SpaceGameRenderer::~SpaceGameRenderer() {

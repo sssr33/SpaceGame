@@ -2,8 +2,9 @@
 
 #include <algorithm>
 
-void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory) {
+void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactory& factory, Stats* gameStat) {
     this->startData = startData;
+    this->gameStat = gameStat;
 
     this->maxKills = 20 + rand() % 30;
 
@@ -43,6 +44,7 @@ void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactor
 }
 
 void AI::Update(float dt) {
+    this->StatUpdate();
     this->EnemyUpdate(dt);
 
     for (auto& g : this->gun) {
@@ -283,6 +285,48 @@ void AI::EnemyAttack(GameRenderer::IGameRendererFactory& factory) {
                 ++enemyGunIndex;
                 break;
             }
+        }
+    }
+}
+
+void AI::StatUpdate() {
+    if (this->gameStat) {
+        constexpr auto ColorYellow = RGBA8Color(255, 194, 63);
+        constexpr auto ShiledColorRed = RGBA8Color(255, 40, 2);
+        constexpr auto CaseColorLightBlue = RGBA8Color(181, 203, 255);
+        constexpr auto ShieldColorBlue = RGBA8Color(53, 90, 255);
+        constexpr auto CaseColorRed = RGBA8Color(198, 31, 1);
+        constexpr auto CaseColorBlack = RGBA8Color(0, 0, 0);
+        constexpr auto ShieldColorGray = RGBA8Color(128, 128, 128);
+        const float playerHealth = this->player.GetHealth();
+
+        if (this->player.IsImmortal()) {
+            this->gameStat->SetCaseColor(CaseColorLightBlue);
+            this->gameStat->SetShieldColor(ShieldColorBlue);
+        }
+        else if (playerHealth > 85.f) {
+            this->gameStat->SetCaseColor(Stats::CaseColorGreen);
+            this->gameStat->SetShieldColor(Stats::ShieldColorGreen);
+        }
+        else if (playerHealth > 70.f) {
+            this->gameStat->SetCaseColor(Stats::CaseColorGreen);
+            this->gameStat->SetShieldColor(ColorYellow);
+        }
+        else if (playerHealth > 40.f) {
+            this->gameStat->SetCaseColor(Stats::CaseColorGreen);
+            this->gameStat->SetShieldColor(ShiledColorRed);
+        }
+        else if (playerHealth > 25.f) {
+            this->gameStat->SetCaseColor(ColorYellow);
+            this->gameStat->SetShieldColor(ShiledColorRed);
+        }
+        else if (playerHealth > 0.f) {
+            this->gameStat->SetCaseColor(CaseColorRed);
+            this->gameStat->SetShieldColor(ShiledColorRed);
+        }
+        else {
+            this->gameStat->SetCaseColor(CaseColorBlack);
+            this->gameStat->SetShieldColor(ShieldColorGray);
         }
     }
 }

@@ -44,6 +44,10 @@ void Stats::UpdateShieldColor(GameRenderer::IGameRendererFactory& factory) {
         return;
     }
 
+    if (this->shieldColor == this->shieldColorPrev) {
+        return;
+    }
+
     {
         float startY = 0.f;
         float stepY = 0.02f;
@@ -117,11 +121,16 @@ void Stats::UpdateShieldColor(GameRenderer::IGameRendererFactory& factory) {
         this->shipLivesMainFrame->SetGeometryParams(rectGeom);
     }
 
+    this->shieldColorPrev = this->shieldColor;
     this->shieldColor = {};
 }
 
 void Stats::UpdateCaseColor(GameRenderer::IGameRendererFactory& factory) {
     if (!this->caseColor) {
+        return;
+    }
+
+    if (this->caseColor == this->caseColorPrev) {
         return;
     }
 
@@ -137,5 +146,6 @@ void Stats::UpdateCaseColor(GameRenderer::IGameRendererFactory& factory) {
         this->shipLivesStateRectBg->SetGeometryParams(rectGeom);
     }
 
+    this->caseColorPrev = this->caseColor;
     this->caseColor = {};
 }
