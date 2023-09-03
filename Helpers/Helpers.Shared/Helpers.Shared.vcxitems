@@ -33,6 +33,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\HwndOutput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\HwndRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\ISurface9Access.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\KeyboardKeyEnum.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\OrientationTypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\Texture9On11Output.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\Texture9On11Renderer.h" />

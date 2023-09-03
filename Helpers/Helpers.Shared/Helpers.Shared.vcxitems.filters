@@ -131,6 +131,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Box.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Math\Matrix.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMMathHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\KeyboardKeyEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />

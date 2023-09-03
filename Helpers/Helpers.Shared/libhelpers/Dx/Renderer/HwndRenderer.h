@@ -86,6 +86,22 @@ public:
             });
     }
 
+    void KeyDown(KeyboardKey key) {
+        thread::critical_section::scoped_lock lk(this->cs);
+
+        this->inputQueue.push_back([this, key]() {
+            this->renderer.KeyDown(key);
+            });
+    }
+
+    void KeyUp(KeyboardKey key) {
+        thread::critical_section::scoped_lock lk(this->cs);
+
+        this->inputQueue.push_back([this, key]() {
+            this->renderer.KeyUp(key);
+            });
+    }
+
 private:
     enum class RenderThreadState {
         Work,

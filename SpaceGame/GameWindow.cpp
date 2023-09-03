@@ -46,6 +46,18 @@ ProcessMsgResult GameWindow::ProcessMsg(uint32_t msg, WPARAM wparam, LPARAM lpar
         this->renderer->MouseUp(pos);
         break;
     }
+    case WM_KEYDOWN: {
+        if (auto mappedKey = GameWindow::MapWinKeyboardKey(wparam)) {
+            this->renderer->KeyDown(*mappedKey);
+        }
+        break;
+    }
+    case WM_KEYUP: {
+        if (auto mappedKey = GameWindow::MapWinKeyboardKey(wparam)) {
+            this->renderer->KeyUp(*mappedKey);
+        }
+        break;
+    }
     default: {
         do {
             res = this->ProcessInput(msg, wparam, lparam);
@@ -118,4 +130,22 @@ ProcessMsgResult GameWindow::ProcessInput(uint32_t msg, WPARAM wparam, LPARAM lp
     }
 
     return res;
+}
+
+std::optional<KeyboardKey> GameWindow::MapWinKeyboardKey(WPARAM wparam) {
+    constexpr WPARAM VK_A = 0x41;
+    constexpr WPARAM VK_Z = 0x5A;
+
+    if (wparam < VK_A) {
+        return {};
+    }
+
+    if (wparam > VK_Z) {
+        return {};
+    }
+
+    auto keyIdx = wparam - VK_A;
+    auto key = static_cast<KeyboardKey>(static_cast<WPARAM>(KeyboardKey::A) + keyIdx);
+
+    return key;
 }

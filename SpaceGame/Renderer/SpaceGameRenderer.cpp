@@ -165,6 +165,16 @@ void SpaceGameRenderer::MouseUp(const Math::Vector2& pos) {
 
 }
 
+void SpaceGameRenderer::KeyDown(KeyboardKey key) {
+    if (key == KeyboardKey::I) {
+        this->ai.TogglePlayerImmortal();
+    }
+}
+
+void SpaceGameRenderer::KeyUp(KeyboardKey key) {
+
+}
+
 void SpaceGameRenderer::Update() {
     float dt = 0.f;
 

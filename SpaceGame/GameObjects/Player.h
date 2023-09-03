@@ -9,7 +9,9 @@ public:
     const Math::Vector2& GetPos() const;
     void Damage(float damage);
     float GetHealth() const;
+
     bool IsImmortal() const;
+    void SetImmortal(bool immortal);
 
 private:
     Math::Vector2 playerPos = { 0.f, 0.f };

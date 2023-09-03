@@ -22,6 +22,9 @@ public:
     void MouseDown(const Math::Vector2& pos) override;
     void MouseUp(const Math::Vector2& pos) override;
 
+    void KeyDown(KeyboardKey key) override;
+    void KeyUp(KeyboardKey key) override;
+
 private:
     static constexpr float GameFieldMainWidth = 3.2f;
     static constexpr float GameFieldMainHeight = 1.7f;

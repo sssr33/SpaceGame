@@ -41,6 +41,46 @@ void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactor
     playerStart.x = (this->GetMainRect().Left() + this->GetMainRect().Right()) / 2.f;
     playerStart.y = this->GetMainRect().Bottom() + (this->playerShipSize / 2.f) + 0.03f;
     this->player.SetPos(playerStart);
+
+    {
+        const uint32_t width = 128;
+        const uint32_t height = width;
+
+        const float maxDist = 0.5f;
+        const float minDist = maxDist * 0.5f;
+        const float distRange = maxDist - minDist;
+        Math::Vector2 center = { 0.5f, 0.5f };
+
+        std::vector<RGBA8Color> texData(width * height, RGBA8Color(255, 255, 255, 0));
+
+        for (uint32_t y = 0; y < height; ++y) {
+            for (uint32_t x = 0; x < width; ++x) {
+                uint32_t idx = y * width + x;
+
+                Math::Vector2 point = { static_cast<float>(x) / static_cast<float>(width - 1), static_cast<float>(y) / static_cast<float>(height - 1) };
+                const float dist = (point - center).Length();
+                const float rangedDist = dist - minDist;
+                const float alphaF = std::clamp(rangedDist / distRange, 0.f, 1.f);
+                uint8_t alpha = static_cast<uint8_t>(alphaF * 255.f);
+
+                texData[idx] = RGBA8Color(255, 255, 255, alpha);
+            }
+        }
+
+        this->playerImmortalFieldTex = factory.MakeTexture2DFromMemory(width, height, GameRenderer::TexturePixelFormat::BGRA8, texData.data(), texData.size() * sizeof(RGBA8Color));
+    }
+
+    this->playerImmortalFieldRenderer = factory.MakeRectangleRenderer();
+    {
+        GameRenderer::FilledRectangleGeometryParams fillGeom;
+
+        fillGeom.color = RGBA8Color(0, 0, 255, 100);
+        fillGeom.width = 1.f;
+        fillGeom.height = 1.f;
+        fillGeom.roundness = 1.f;
+
+        this->playerImmortalFieldRenderer->SetGeometryParams(fillGeom);
+    }
 }
 
 void AI::Update(float dt) {
@@ -113,6 +153,10 @@ void AI::PlayerGunShot(GameRenderer::IGameRendererFactory& factory) {
     gun[0].emplace_back(pos, factory, this->gunSmokeTex);
 }
 
+void AI::TogglePlayerImmortal() {
+    this->player.SetImmortal(!this->player.IsImmortal());
+}
+
 void AI::DrawPlayer(GameRenderer::IGameRenderer& renderer) {
     auto playerBox = this->GetPlayerShipBox();
 
@@ -142,6 +186,16 @@ void AI::DrawPlayer(GameRenderer::IGameRenderer& renderer) {
 
     renderer.RenderRectangle(this->playerRectFillRenderer);
     renderer.RenderRectangle(this->playerRectRenderer);
+
+    if (this->player.IsImmortal()) {
+        auto fieldTransform = transform;
+        const float scale = 0.7f;
+
+        fieldTransform.scale = { scale, scale };
+
+        this->playerImmortalFieldRenderer->SetRectangleTransform(fieldTransform);
+        renderer.RenderRectangle(this->playerImmortalFieldRenderer, this->playerImmortalFieldTex);
+    }
 }
 
 void AI::DrawPlayerFire(GameRenderer::IGameRenderer& renderer) {

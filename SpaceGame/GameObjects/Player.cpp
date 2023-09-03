@@ -25,3 +25,7 @@ float Player::GetHealth() const {
 bool Player::IsImmortal() const {
     return this->immortal;
 }
+
+void Player::SetImmortal(bool immortal) {
+    this->immortal = immortal;
+}

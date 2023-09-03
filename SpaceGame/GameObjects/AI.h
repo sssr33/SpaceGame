@@ -32,6 +32,8 @@ public:
     void PlayerSetPos(float x);
     // player_gun_shoot
     void PlayerGunShot(GameRenderer::IGameRendererFactory& factory);
+    // player_immortal
+    void TogglePlayerImmortal();
 
 private:
     // draw_player
@@ -90,6 +92,8 @@ private:
     int maxKills = 0; // max_kills
     std::shared_ptr<GameRenderer::IRectangleRenderer> playerRectRenderer;
     std::shared_ptr<GameRenderer::IRectangleRenderer> playerRectFillRenderer;
+    std::shared_ptr<GameRenderer::ITexture2D> playerImmortalFieldTex;
+    std::shared_ptr<GameRenderer::IRectangleRenderer> playerImmortalFieldRenderer;
 
     std::vector<std::list<Bullet>> gun;
     std::shared_ptr<GameRenderer::ITexture2D> gunSmokeTex;
