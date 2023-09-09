@@ -60,6 +60,7 @@
     <ClInclude Include="GameObjects\Sector.h" />
     <ClInclude Include="GameObjects\Explosion.h" />
     <ClInclude Include="GameObjects\Stats.h" />
+    <ClInclude Include="Geometry\RGBA8Color.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SpaceGame.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="GameObjects\Sector.cpp" />
     <ClCompile Include="GameObjects\Explosion.cpp" />
     <ClCompile Include="GameObjects\Stats.cpp" />
+    <ClCompile Include="Geometry\RGBA8Color.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\back.bmp" />

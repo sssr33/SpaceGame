@@ -8,9 +8,9 @@ Sector::Sector(Math::FBox rect, GameRenderer::IGameRendererFactory& factory)
 
     geom.width = 0.002f;
     geom.height = rect.Height();
-    geom.color.r = 255;
-    geom.color.g = 255;
-    geom.color.b = 255;
+    geom.color.r(255);
+    geom.color.g(255);
+    geom.color.b(255);
 
     this->renderer->SetGeometryParams(geom);
 

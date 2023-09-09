@@ -211,10 +211,10 @@ void RectRenderer::Render(DxDevice *dxDev) {
             for (size_t i = 0; i < pos.size(); i++) {
                 ColorVertex2D v;
 
-                v.color.r = 0;
-                v.color.g = 255;
-                v.color.b = 0;
-                v.color.a = 255;
+                v.color.r(0);
+                v.color.g(255);
+                v.color.b(0);
+                v.color.a(255);
                 v.pos = pos[i];
                 v.adjPrev = adjPrev[i];
                 v.adjNext = adjNext[i];

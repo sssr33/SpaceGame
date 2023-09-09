@@ -15,9 +15,9 @@ Bullet::Bullet(const Math::Vector2& startPos, GameRenderer::IGameRendererFactory
 
         geom.width = Bullet::ModelWidth;
         geom.height = Bullet::ModelHeight;
-        geom.color.r = 255;
-        geom.color.g = 0;
-        geom.color.b = 0;
+        geom.color.r(255);
+        geom.color.g(0);
+        geom.color.b(0);
 
         this->model->SetGeometryParams(geom);
     }

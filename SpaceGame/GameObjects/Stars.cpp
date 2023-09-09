@@ -14,9 +14,9 @@ Stars::Stars(float speed, size_t starCount, const Math::Vector2& gameFieldSize, 
 
         geom.width = this->starSize;
         geom.height = geom.width;
-        geom.color.r = 255;
-        geom.color.g = 255;
-        geom.color.b = 255;
+        geom.color.r(255);
+        geom.color.g(255);
+        geom.color.b(255);
 
         star->SetGeometryParams(geom);
         this->ResetStarPos(*star, false);

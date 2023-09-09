@@ -20,8 +20,8 @@ namespace GameRenderer {
         return std::make_shared<RectangleRendererDx>(this->GetRendererId(), this->dxDev);
     }
 
-    std::shared_ptr<ITextRenderer> GameRendererFactoryDx::MakeTextRenderer(const std::wstring_view& font, float fontSize, const std::wstring_view& text) {
-        return std::make_shared<TextRendererDx>(this->GetRendererId(), this->dxDev, font, fontSize, text);
+    std::shared_ptr<ITextRenderer> GameRendererFactoryDx::MakeTextRenderer(const std::wstring_view& font, float fontSize, const std::wstring_view& text, RGBA8Color textColor) {
+        return std::make_shared<TextRendererDx>(this->GetRendererId(), this->dxDev, font, fontSize, text, textColor);
     }
 
     std::shared_ptr<ITexture2D> GameRendererFactoryDx::MakeTexture2DFromMemory(uint32_t width, uint32_t height, TexturePixelFormat pixFormat, const void* mem, size_t memSize) {

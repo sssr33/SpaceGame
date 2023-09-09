@@ -4,8 +4,9 @@
 #include <libhelpers\HSystem.h>
 
 namespace GameRenderer {
-    TextRendererDx::TextRendererDx(uint32_t rendererId, DxDevice* dxDev, const std::wstring_view& font, float fontSize, const std::wstring_view& text)
+    TextRendererDx::TextRendererDx(uint32_t rendererId, DxDevice* dxDev, const std::wstring_view& font, float fontSize, const std::wstring_view& text, RGBA8Color textColor)
         : ITextRenderer(rendererId)
+        , textColor(textColor)
     {
         HRESULT hr = S_OK;
         auto dwriteFactory = dxDev->GetDwriteFactory();
@@ -23,7 +24,7 @@ namespace GameRenderer {
         Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush;
         HRESULT hr = S_OK;
 
-        hr = d2dCtx->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green), brush.GetAddressOf());
+        hr = d2dCtx->CreateSolidColorBrush(D2D1::ColorF(this->textColor.GetBGRA8(), textColor.af()), brush.GetAddressOf());
         H::System::ThrowIfFailed(hr);
 
         d2dCtx->BeginDraw();

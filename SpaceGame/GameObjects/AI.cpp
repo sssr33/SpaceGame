@@ -18,15 +18,15 @@ void AI::StartGame(const StartData& startData, GameRenderer::IGameRendererFactor
     {
         RGBA8Color color[2] = {};
 
-        color[0].a = 0;
-        color[0].r = 255;
-        color[0].g = 255;
-        color[0].b = 255;
+        color[0].a(0);
+        color[0].r(255);
+        color[0].g(255);
+        color[0].b(255);
 
-        color[1].a = 255;
-        color[1].r = 255;
-        color[1].g = 255;
-        color[1].b = 255;
+        color[1].a(255);
+        color[1].r(255);
+        color[1].g(255);
+        color[1].b(255);
 
         this->gunSmokeTex = factory.MakeTexture2DFromMemory(1, 2, GameRenderer::TexturePixelFormat::BGRA8, &color, sizeof(color));
     }

@@ -4,6 +4,18 @@
 #include <libhelpersDesktop/Filesystem/StreamFILE.h>
 #include <libhelpers/Math/Matrix.h>
 
+#include <bit>
+#include <array>
+struct RGBA8Color22
+{
+    uint32_t r : 8;
+    uint32_t g : 8;
+    uint32_t b : 8;
+    uint32_t a : 8;
+
+    constexpr bool operator==(const RGBA8Color22& other) const = default;
+};
+
 SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer> renderer)
     : renderer(std::move(renderer))
 {
@@ -11,16 +23,16 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
     auto& rendererFactory = this->renderer->GetFactory();
 
     this->bgBrush = rendererFactory.MakeBackgroundBrushRenderer(L"Assets\\back.bmp");
-    this->testText = rendererFactory.MakeTextRenderer(L"Arial", 15.f, L"Exit");
+    this->testText = rendererFactory.MakeTextRenderer(L"Arial", 15.f, L"Exit", RGBA8Color(0, 0, 255));
 
     {
         this->testRect = rendererFactory.MakeRectangleRenderer();
 
         GameRenderer::FilledRectangleGeometryParams rectGeom;
 
-        rectGeom.color.r = 0;
-        rectGeom.color.g = 255;
-        rectGeom.color.b = 0;
+        rectGeom.color.r(0);
+        rectGeom.color.g(255);
+        rectGeom.color.b(0);
 
         rectGeom.width = 1.5f;
 
@@ -37,9 +49,9 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
 
             rectGeom.width = SpaceGameRenderer::GameFieldMainWidth;
             rectGeom.height = SpaceGameRenderer::GameFieldMainHeight;
-            rectGeom.color.r = 0;
-            rectGeom.color.g = 0;
-            rectGeom.color.b = 0;
+            rectGeom.color.r(0);
+            rectGeom.color.g(0);
+            rectGeom.color.b(0);
 
             this->gameFieldMainBg->SetGeometryParams(rectGeom);
         }
@@ -52,9 +64,9 @@ SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer
             rectGeom.width = SpaceGameRenderer::GameFieldMainWidth;
             rectGeom.height = SpaceGameRenderer::GameFieldMainHeight;
             rectGeom.thickness = 0.005f;
-            rectGeom.color.r = 0;
-            rectGeom.color.g = 0;
-            rectGeom.color.b = 255;
+            rectGeom.color.r(0);
+            rectGeom.color.g(0);
+            rectGeom.color.b(255);
 
             this->gameFieldMainFrame->SetGeometryParams(rectGeom);
         }
