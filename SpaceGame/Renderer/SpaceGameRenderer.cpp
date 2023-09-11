@@ -4,18 +4,6 @@
 #include <libhelpersDesktop/Filesystem/StreamFILE.h>
 #include <libhelpers/Math/Matrix.h>
 
-#include <bit>
-#include <array>
-struct RGBA8Color22
-{
-    uint32_t r : 8;
-    uint32_t g : 8;
-    uint32_t b : 8;
-    uint32_t a : 8;
-
-    constexpr bool operator==(const RGBA8Color22& other) const = default;
-};
-
 SpaceGameRenderer::SpaceGameRenderer(std::shared_ptr<GameRenderer::IGameRenderer> renderer)
     : renderer(std::move(renderer))
 {
